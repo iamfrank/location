@@ -4,10 +4,8 @@
 
 var x = document.getElementById("location");
 
-getLocation();
-
 function getLocation() {
-    if (navigator.geolocation) {
+    if ("geolocation" in navigator) {
         navigator.geolocation.watchPosition(showPosition, showError);
     } else {
         x.innerHTML = "Geolocation is not supported by this browser.";
@@ -40,6 +38,8 @@ function showError(error) {
             break;
     }
 }
+
+getLocation();
 
 
 /*
