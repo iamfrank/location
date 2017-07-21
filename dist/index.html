@@ -63,9 +63,11 @@
         <link rel="icon" href="apple-touch-icon.png" type="image/png">
     </head>
     <body>
-        <main id="location">
+        <main>
             
-            <p>Retreiving location data <span class="spinner"></span></p>
+            <div id="location">
+                <p>Retreiving location data <span class="spinner"></span></p>
+            </div>
             
             <div id="map"></div>
             
@@ -93,10 +95,9 @@
                 
                 function init() {
                     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                         maxZoom: 18
                     }).addTo(geo_map);
-                    geo_map.locate({setView: true, maxZoom: 16});
+                    getLocation();
                 }
                 
                 function getLocation() {
@@ -108,6 +109,7 @@
                 }
                 
                 function geo_success(position) {
+                    // Make accuracy value human readable
                     var accuracy = position.coords.accuracy + 'm';
                     if (position.coords.accuracy < 10) {
                         accuracy = '~ 10m';
@@ -126,6 +128,7 @@
                     } else if (position.coords.accuracy >= 1000) {
                         accuracy = 'not great <span style="opacity: .75;">( > 10km )</span>';
                     }
+                    // Display geolocation data on screen
                     geo.display.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude + "</dd>"
                                 + "<dt>Longitude</dt><dd>" + position.coords.longitude + "</dd>"
                                 + "<dt>Accuracy</dt><dd>" + accuracy + "</dd>";
@@ -142,7 +145,8 @@
                         geo.display.innerHTML += "<dt>Timestamp</dt><dd>" + position.coords.timestamp + "</dd>";
                     }
                     geo.display.innerHTML += "</dl>";
-                   
+                    // Update map with current location
+                    L.marker([position.coords.latitude, position.coords.longitude]).addTo(geo_map);
                 }
                 
                 function geo_error(error) {
