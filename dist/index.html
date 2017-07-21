@@ -63,17 +63,16 @@
         <script>
             
             
+            /*
+            * Javascript for Geolocation webapp
+            */
             var geolocator = (function() {
-                
-                /*
-                * Javascript for Geolocation webapp
-                */
                
                 var geo = {},
                     geo_options = {
-                        enableHighAccuracy: true, 
-                        maximumAge        : 30000, 
-                        timeout           : 27000
+                        enableHighAccuracy: true,
+                        maximumAge: 90000,
+                        timeout: 60000
                     };
                 
                 geo.display = document.getElementById("location");
@@ -88,14 +87,41 @@
                 }
                 
                 function geo_success(position) {
-                    geo.display.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude
-                                + "</dd><dt>Longitude</dt><dd>" + position.coords.longitude
-                                + "</dd><dt>Accuracy</dt><dd>" + position.coords.accuracy
-                                + "</dd><dt>Altitude</dt><dd>" + position.coords.altitude
-                                + "</dd><dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy
-                                + "</dd><dt>Heading</dt><dd>" + position.coords.heading
-                                + "</dd><dt>Timestamp</dt><dd>" + position.coords.timestamp
-                                + "</dd></dl>";
+                    var accuracy = position.coords.accuracy + 'm';
+                    if (position.coords.accuracy < 10) {
+                        accuracy = '~ 10m';
+                    } else if (position.coords.accuracy < 50) {
+                        accuracy = '~ 50m';
+                    } else if (position.coords.accuracy < 100) {
+                        accuracy = '~ 100m';
+                    } else if (position.coords.accuracy < 200) {
+                        accuracy = '~ 200m';
+                    } else if (position.coords.accuracy < 500) {
+                        accuracy = '~ 500m';
+                    } else if (position.coords.accuracy < 1000) {
+                        accuracy = '~ 1km';
+                    } else if (position.coords.accuracy < 1000) {
+                        accuracy = '~ 10km';
+                    } else if (position.coords.accuracy >= 1000) {
+                        accuracy = 'not great <span style="opacity: .75;">( > 10km )</span>';
+                    }
+                    geo.display.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude + "</dd>"
+                                + "<dt>Longitude</dt><dd>" + position.coords.longitude + "</dd>"
+                                + "<dt>Accuracy</dt><dd>" + accuracy + "</dd>";
+                    if (position.coords.altitude !== null) {
+                        geo.display.innerHTML += "<dt>Altitude</dt><dd>" + position.coords.altitude + "</dd>";
+                    }
+                    if (position.coords.altitudeAccuracy !== null) {
+                        geo.display.innerHTML += "<dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy + "</dd>";
+                    }
+                    if (position.coords.heading !== null) {
+                        geo.display.innerHTML += "<dt>Heading</dt><dd>" + position.coords.heading + "</dd>";
+                    }
+                    if (position.coords.timestamp !== undefined) {
+                        geo.display.innerHTML += "<dt>Timestamp</dt><dd>" + position.coords.timestamp + "</dd>";
+                    }
+                    geo.display.innerHTML += "</dl>";
+                   
                 }
                 
                 function geo_error(error) {
@@ -128,18 +154,31 @@
              * Register service worker
              * (Does nothing at present. Is needed to display Chrome install web app banner.)
              */
+            var service_worker = (function() {
+                
+                var sw = {};
+                
+                sw.init = init;
+                
+                function init() {
+                    if ('serviceWorker' in navigator) {
+                      window.addEventListener('load', function() {
+                        navigator.serviceWorker.register('../dist/sw.js').then(function(registration) {
+                          // Registration was successful
+                          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        }).catch(function(err) {
+                          // registration failed :(
+                          console.log('ServiceWorker registration failed: ', err);
+                        });
+                      });
+                    }
+                }
+                
+                return sw;
+                
+            }());
             
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', function() {
-                navigator.serviceWorker.register('../dist/sw.js').then(function(registration) {
-                  // Registration was successful
-                  console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }).catch(function(err) {
-                  // registration failed :(
-                  console.log('ServiceWorker registration failed: ', err);
-                });
-              });
-            }
+            service_worker.init();
 
             
         </script>
