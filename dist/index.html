@@ -20,8 +20,18 @@
             body {
                 background-color: #122;
                 color: #fff;
-                font: 1rem/1.3 Roboto, sans-serif;
+                font: 125%/1.3 Roboto, sans-serif;
                 padding: 2rem;
+            }
+            
+            dt {
+                opacity: .66;
+                font-size: smaller;
+            }
+            
+            dd {
+                margin: 0 0 .5rem;
+                padding: 0;
             }
             
             .spinner {
@@ -78,13 +88,14 @@
                 }
                 
                 function geo_success(position) {
-                    geo.display.innerHTML = "Latitude: " + position.coords.latitude
-                                + "<br>Longitude: " + position.coords.longitude
-                                + "<br>Accuracy: " + position.coords.accuracy
-                                + "<br>Altitude: " + position.coords.altitude
-                                + "<br>Altitude accuracy: " + position.coords.altitudeAccuracy
-                                + "<br>Heading: " + position.coords.heading
-                                + "<br>Timestamp: " + position.coords.timestamp;
+                    geo.display.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude
+                                + "</dd><dt>Longitude</dt><dd>" + position.coords.longitude
+                                + "</dd><dt>Accuracy</dt><dd>" + position.coords.accuracy
+                                + "</dd><dt>Altitude</dt><dd>" + position.coords.altitude
+                                + "</dd><dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy
+                                + "</dd><dt>Heading</dt><dd>" + position.coords.heading
+                                + "</dd><dt>Timestamp</dt><dd>" + position.coords.timestamp
+                                + "</dd></dl>";
                 }
                 
                 function geo_error(error) {
