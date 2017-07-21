@@ -36,6 +36,8 @@ function showError(error) {
         case error.UNKNOWN_ERROR:
             x.innerHTML = "An unknown error occurred."
             break;
+        default:
+            x.innerHTML = "Something strange is going on."
     }
 }
 
