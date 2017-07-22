@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-#v2.2
+#v2.3
 
 apple-touch-icon.png
 browserconfig.xml
@@ -8,6 +8,4 @@ index.html
 manifest.json
 tile.png
 tile-wide.png
-css/main.css
 css/normalize.min.css
-js/main.js
