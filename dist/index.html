@@ -70,6 +70,7 @@
             </div>
             
             <h2>Log</h2>
+            <button onclick="geolocator.stopTracking()"></button>
             <div id="log"></div>
             
             <div id="map"></div>
@@ -92,6 +93,7 @@
                 locdisplay = document.getElementById("location");
                 logdisplay = document.getElementById("log");
                 geo.init = init;
+                geo.stopTracking = stopTracking;
                 
                 function init() {
                     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -179,6 +181,10 @@
                         logdisplay.innerHTML += "<li> " + geo_route[g].latitude + "," + geo_route[g].longitude + " </li>";    
                     }
                     logdisplay.innerHTML += "</ol>";
+                }
+                
+                function stopTracking() {
+                    
                 }
                 
                 return geo;
