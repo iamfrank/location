@@ -70,7 +70,8 @@
             </div>
             
             <h2>Log</h2>
-            <button onclick="geolocator.stopTracking()"></button>
+            <button onclick="geolocator.startTracking()">Start tracking</button>
+            <button onclick="geolocator.stopTracking()">Stop tracking</button>
             <div id="log"></div>
             
             <div id="map"></div>
@@ -88,14 +89,24 @@
                
                 var geo = {},
                     geo_map = L.map('map').fitWorld(),
-                    geo_route = [];
+                    geo_route = [],
+                    geo_routes = [],
+                    geo_watch;
                 
                 locdisplay = document.getElementById("location");
                 logdisplay = document.getElementById("log");
                 geo.init = init;
+                geo.startTracking = startTracking;
                 geo.stopTracking = stopTracking;
                 
                 function init() {
+                    // Fetch already saved routes
+                    if (typeof(Storage) !== "undefined" && localStorage.geolocatorSavedRoutes) {
+                        geo_routes = JSON.parse(localStorage.geolocatorSavedRoutes);
+                    } else {
+                        // No support for web storage
+                    }
+                    console.log(geo_routes);
                     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 18
                     }).addTo(geo_map);
@@ -104,38 +115,17 @@
                 
                 function getLocation() {
                     if ("geolocation" in navigator) {
-                        navigator.geolocation.watchPosition(geo_success, geo_error);
+                        navigator.geolocation.getPosition(geo_success, geo_error);
                     } else {
                         locdisplay.innerHTML = "Geolocation is not supported by this browser.";
                     }
                 }
                 
                 function geo_success(position) {
-                    // Make accuracy value human readable
-                    var accuracy = position.coords.accuracy + 'm';
-                    if (position.coords.accuracy < 10) {
-                        accuracy = '~ 10m';
-                    } else if (position.coords.accuracy < 50) {
-                        accuracy = '~ 50m';
-                    } else if (position.coords.accuracy < 100) {
-                        accuracy = '~ 100m';
-                    } else if (position.coords.accuracy < 200) {
-                        accuracy = '~ 200m';
-                    } else if (position.coords.accuracy < 500) {
-                        accuracy = '~ 500m';
-                    } else if (position.coords.accuracy < 1000) {
-                        accuracy = '~ 1km';
-                    } else if (position.coords.accuracy < 10000) {
-                        accuracy = '~ 10km';
-                    } else if (position.coords.accuracy < 50000) {
-                        accuracy = 'not great <span style="opacity: .75;">( ~ 50km )</span>';
-                    } else if (position.coords.accuracy >= 50000) {
-                        accuracy = 'terrible <span style="opacity: .75;">( 50km+ )</span>';
-                    }
                     // Display geolocation data on screen
                     locdisplay.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude + "</dd>"
                                 + "<dt>Longitude</dt><dd>" + position.coords.longitude + "</dd>"
-                                + "<dt>Accuracy</dt><dd>" + accuracy + "</dd>";
+                                + "<dt>Accuracy</dt><dd>" + position.coords.accuracy + "</dd>";
                     if (position.coords.altitude !== null) {
                         locdisplay.innerHTML += "<dt>Altitude</dt><dd>" + position.coords.altitude + "</dd>";
                     }
@@ -183,8 +173,23 @@
                     logdisplay.innerHTML += "</ol>";
                 }
                 
+                function startTracking() {
+                    if ("geolocation" in navigator) {
+                        geo_watch = navigator.geolocation.watchPosition(geo_success, geo_error);
+                    } else {
+                        locdisplay.innerHTML = "Geolocation is not supported by this browser.";
+                    }
+                }
+                
                 function stopTracking() {
-                    
+                    geo_watch.clearWatch();
+                    geo_routes.push(geo_route);
+                    if (typeof(Storage) !== "undefined") {
+                        localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(geo_routes));
+                    } else {
+                        alert('No support for web storage');
+                        // Sorry! No Web Storage support..
+                    }
                 }
                 
                 return geo;
