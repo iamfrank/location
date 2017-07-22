@@ -69,6 +69,8 @@
                 <p>Retrieving location data <span class="spinner"></span></p>
             </div>
             
+            <div id="log"></div>
+            
             <div id="map"></div>
             
         </main>
@@ -83,14 +85,11 @@
             var geolocator = (function() {
                
                 var geo = {},
-                    geo_options = {
-                        enableHighAccuracy: false,
-                        maximumAge: 90000,
-                        timeout: 60000
-                    },
-                    geo_map = L.map('map').fitWorld();
+                    geo_map = L.map('map').fitWorld(),
+                    geo_route = [];
                 
-                geo.display = document.getElementById("location");
+                locdisplay = document.getElementById("location");
+                logdisplay = document.getElementById("log");
                 geo.init = init;
                 
                 function init() {
@@ -102,9 +101,9 @@
                 
                 function getLocation() {
                     if ("geolocation" in navigator) {
-                        navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+                        navigator.geolocation.watchPosition(geo_success, geo_error);
                     } else {
-                        geo.display.innerHTML = "Geolocation is not supported by this browser.";
+                        locdisplay.innerHTML = "Geolocation is not supported by this browser.";
                     }
                 }
                 
@@ -123,49 +122,61 @@
                         accuracy = '~ 500m';
                     } else if (position.coords.accuracy < 1000) {
                         accuracy = '~ 1km';
-                    } else if (position.coords.accuracy < 1000) {
+                    } else if (position.coords.accuracy < 10000) {
                         accuracy = '~ 10km';
-                    } else if (position.coords.accuracy >= 1000) {
-                        accuracy = 'not great <span style="opacity: .75;">( > 10km )</span>';
+                    } else if (position.coords.accuracy < 50000) {
+                        accuracy = 'not great <span style="opacity: .75;">( ~ 50km )</span>';
+                    } else if (position.coords.accuracy >= 50000) {
+                        accuracy = 'terrible <span style="opacity: .75;">( 50km+ )</span>';
                     }
                     // Display geolocation data on screen
-                    geo.display.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude + "</dd>"
+                    locdisplay.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude + "</dd>"
                                 + "<dt>Longitude</dt><dd>" + position.coords.longitude + "</dd>"
                                 + "<dt>Accuracy</dt><dd>" + accuracy + "</dd>";
                     if (position.coords.altitude !== null) {
-                        geo.display.innerHTML += "<dt>Altitude</dt><dd>" + position.coords.altitude + "</dd>";
+                        locdisplay.innerHTML += "<dt>Altitude</dt><dd>" + position.coords.altitude + "</dd>";
                     }
                     if (position.coords.altitudeAccuracy !== null) {
-                        geo.display.innerHTML += "<dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy + "</dd>";
+                        locdisplay.innerHTML += "<dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy + "</dd>";
                     }
                     if (position.coords.heading !== null) {
-                        geo.display.innerHTML += "<dt>Heading</dt><dd>" + position.coords.heading + "</dd>";
+                        locdisplay.innerHTML += "<dt>Heading</dt><dd>" + position.coords.heading + "</dd>";
                     }
                     if (position.coords.timestamp !== undefined) {
-                        geo.display.innerHTML += "<dt>Timestamp</dt><dd>" + position.coords.timestamp + "</dd>";
+                        locdisplay.innerHTML += "<dt>Timestamp</dt><dd>" + position.coords.timestamp + "</dd>";
                     }
-                    geo.display.innerHTML += "</dl>";
+                    locdisplay.innerHTML += "</dl>";
                     // Update map with current location
                     L.marker([position.coords.latitude, position.coords.longitude]).addTo(geo_map);
+                    // Push current position to route
+                    geo_route.push(position.coords);
                 }
                 
                 function geo_error(error) {
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
-                            geo.display.innerHTML = "User denied the request for Geolocation."
+                            locdisplay.innerHTML = "User denied the request for Geolocation."
                             break;
                         case error.POSITION_UNAVAILABLE:
-                            geo.display.innerHTML = "Location information is unavailable."
+                            locdisplay.innerHTML = "Location information is unavailable."
                             break;
                         case error.TIMEOUT:
-                            geo.display.innerHTML = "The request to get user location timed out."
+                            locdisplay.innerHTML = "The request to get user location timed out."
                             break;
                         case error.UNKNOWN_ERROR:
-                            geo.display.innerHTML = "An unknown error occurred."
+                            locdisplay.innerHTML = "An unknown error occurred."
                             break;
                         default:
-                            geo.display.innerHTML = "Something strange is going on."
+                            locdisplay.innerHTML = "Something strange is going on."
                     }
+                }
+                
+                function geo_redraw_log() {
+                    logdisplay.innerHTML = "<ol>";
+                    for (var g in geo_route) {
+                        logdisplay.innerHTML += "<li> " + geo_route[g].lattitude + "," + geo_route[g].longitude + " </li>";    
+                    }
+                    logdisplay.innerHTML += "</ol>";
                 }
                 
                 return geo;
