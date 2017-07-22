@@ -150,6 +150,7 @@
                     L.marker([position.coords.latitude, position.coords.longitude]).addTo(geo_map);
                     // Push current position to route
                     geo_route.push(position.coords);
+                    geo_redraw_log();
                 }
                 
                 function geo_error(error) {
