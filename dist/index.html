@@ -18,6 +18,9 @@
         
         <style>
             
+            * {
+                box-sizing: border-box;
+            }
             
             body {
                 background-color: #122;
@@ -66,13 +69,14 @@
             #routes {
                 display: none;
                 position: fixed;
-                top: 3rem;
+                top: 0;
                 left: 0;
                 width: 100%;
-                height: calc(100% - 3rem);
+                height: 100vh;
                 overflow: auto;
                 background-color: black;
-                z-index: 501;
+                z-index: 1001;
+                padding-bottom: 4rem;
             }
             
             #log:target,
@@ -84,26 +88,44 @@
                 position: absolute;
                 top: 0;
                 right: 0;
-                width: 33vw;
+                width: 25vw;
                 height: 100vh;
                 color: #000;
                 z-index: 500;
                 text-align: right;
                 padding: .5rem;
-                box-sizing: border-box;
+                overflow: hidden;
             }
             
-            #actions {
+            #nav {
                 position: absolute;
-                z-index: 502;
+                z-index: 1002;
                 bottom: 0;
                 left: 0;
                 width: 100%;
             }
             
-            #map {
+            #routeslist {
+                list-style: none;
+                padding: 0;
+            }
+            
+            #routeslist button {
+                display: block;
+                width: 100%;
+                text-align: left;
+            }
+            
+            #maplayer {
                 height: 100vh;
                 width: 100%;
+            }
+            
+            #trackcontrols {
+                position: absolute;
+                bottom: 4rem;
+                left: .5rem;
+                z-index: 501;
             }
             
             .spinner {
@@ -131,16 +153,14 @@
     <body>
         <main>
             
-            <nav id="actions">
-                <button onclick="geolocator.start_tracking();">Start tracking</button>
-                <button onclick="geolocator.stop_tracking();">Stop tracking</button>
+            <nav id="nav">
                 <a class="btn" href="#">Map</a>
                 <a class="btn" href="#log">Log</a>
                 <a class="btn" href="#routes">Routes</a>
             </nav>
             
             <section id="location">
-                <p>Retrieving location data <span class="spinner"></span></p>
+                <!-- <p>Retrieving location data <span class="spinner"></span></p> -->
             </section>
             
             <section id="log">
@@ -151,7 +171,13 @@
                 <ul id="routeslist"></ul>
             </section>
             
-            <div id="map"></div>
+            <section id="map">
+                <div id="trackcontrols">
+                    <button onclick="geolocator.start_tracking();">Start tracking</button>
+                    <button onclick="geolocator.stop_tracking();">Stop tracking</button>
+                </div>
+                <div id="maplayer"></div>
+            </section>
             
         </main>
         
@@ -165,7 +191,7 @@
             var geolocator = (function() {
                
                 var geo = {},
-                    geo_map = L.map('map').fitWorld(),
+                    geo_map = L.map('maplayer').fitWorld(),
                     geo_route = [],
                     geo_routes = [],
                     geo_watch,
@@ -177,7 +203,7 @@
                 
                 locdisplay = document.getElementById("location");
                 logdisplay = document.getElementById("loglist");
-                routedisplay = document.getElementById("routes");
+                routedisplay = document.getElementById("routeslist");
                 geo.init = init;
                 geo.start_tracking = start_tracking;
                 geo.stop_tracking = stop_tracking;
@@ -248,47 +274,31 @@
                         });
                         geo_map.on('locationfound', onLocationFound);
                         geo_map.on('locationerror', onLocationError);
-                        listRoutes(geo_routes);
+                        list_routes(geo_routes);
                     } else {
                         locdisplay.innerHTML = "Geolocation is not supported by this browser.";
                     }
                 }
                 
                 function onLocationFound(e) {
-                    console.log('location info');
-                    console.log(e);
                     var radius = e.accuracy / 2;
-                    L.marker(e.latlng).addTo(geo_map).bindPopup("You are within " + radius + " meters from this point").openPopup();
+                    L.marker(e.latlng).addTo(geo_map).bindPopup("You are within " + radius + " meters from this point");
                     L.circle(e.latlng, radius).addTo(geo_map);
+                    // Push current position to route
+                    geo_route.push({
+                        latitude: e.latitude,
+                        longitude: e.longitude
+                    });
+                    redraw_map(geo_route);
+                    redraw_log(geo_route);
+                    // Display geolocation data on screen
+                    locdisplay.innerHTML = "<dl><dt>Latitude</dt><dd>" + e.latitude + "</dd>"
+                                + "<dt>Longitude</dt><dd>" + e.longitude + "</dd>"
+                                + "</dl>";
                 }
                 
                 function onLocationError(e) {
                     alert(e.message);
-                }
-                
-                function geo_success(position) {
-                    // Display geolocation data on screen
-                    locdisplay.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude + "</dd>"
-                                + "<dt>Longitude</dt><dd>" + position.coords.longitude + "</dd>"
-                                + "<dt>Accuracy</dt><dd>" + position.coords.accuracy + "</dd>"
-                                + "<dt>Altitude</dt><dd>" + position.coords.altitude + "</dd>"
-                                + "<dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy + "</dd>"
-                                + "<dt>Heading</dt><dd>" + position.coords.heading + "</dd>"
-                                + "<dt>Timestamp</dt><dd>" + position.coords.timestamp + "</dd>"
-                                + "</dl>";
-                    // Push current position to route
-                    geo_route.push({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        accuracy: position.coords.accuracy,
-                        altitude: position.coords.altitude,
-                        altitudeAccuracy: position.coords.altitudeAccuracy,
-                        timestamp: position.coords.timestamp,
-                        heading: position.coords.heading,
-                        speed: position.coords.speed
-                    });
-                    redraw_map(geo_route);
-                    redraw_log();
                 }
                 
                 function geo_error(error) {
@@ -313,7 +323,7 @@
                 function redraw_map(route) {
                     // Clear map
                     geo_map.remove();
-                    geo_map = L.map('map').fitWorld();
+                    geo_map = L.map('maplayer');
                     // Get positions for new map markers
                     var latlngs = [];
                     for (var c in route) {
@@ -327,25 +337,30 @@
                     geo_map.fitBounds(polyline.getBounds());
                 }
                 
-                function redraw_log() {
+                function redraw_log(route) {
                     logdisplay.innerHTML = '';
-                    for (var g in geo_route) {
-                        logdisplay.innerHTML += "<li>latlong: " + geo_route[g].latitude + "," + geo_route[g].longitude + "; acc:" + geo_route[g].accuracy + "; time: " + geo_route[g].timestamp + "</li>";    
+                    for (var r in route) {
+                        logdisplay.innerHTML += "<li>latlong: " + route[r].latitude + "," + route[r].longitude + "</li>";    
                     }
                 }
                 
                 function start_tracking() {
                     geo_route = [];
-                    geo_watch = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+                    geo_map.locate({
+                        setView: true,
+                        enableHighAccuracy: true,
+                        watch: true
+                    });
                 }
                 
                 function stop_tracking() {
-                    navigator.geolocation.clearWatch(geo_watch);
+                    geo_map.stopLocate();
                     geo_routes.push(geo_route);
                     localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(geo_routes));
-                    listRoutes(geo_routes);
+                    list_routes(geo_routes);
                 }
                 
+                /*
                 function calculate_distance(lat1,lon1,lat2,lon2) {
                     var R = 6371; // Radius of the earth in km
                     var dLat = deg_to_rad(lat2-lat1);  // deg2rad below
@@ -363,8 +378,9 @@
                 function deg_to_rad(deg) {
                     return deg * (Math.PI/180);
                 }
+                */
                 
-                function listRoutes(routes) {
+                function list_routes(routes) {
                     routedisplay.innerHTML = '';
                     for (var r in routes) {
                         routedisplay.innerHTML += '<li><button class="btn" onclick="geolocator.load_route(' + r + ')">' + r + '</button></li>';
