@@ -110,10 +110,13 @@
                 padding: 0;
             }
             
-            #routeslist button {
-                display: block;
+            #routeslist > li {
+                display: flex;
                 width: 100%;
-                text-align: left;
+            }
+            
+            #routeslist button:first-child {
+                flex-grow: 1;
             }
             
             #maplayer {
@@ -164,7 +167,7 @@
             </section>
             
             <section id="log">
-                <ol id="loglist"></ol>
+                <div id="loglist"></div>
             </section>
             
             <section id="routes">
@@ -192,8 +195,11 @@
                
                 var geo = {},
                     geo_map = L.map('maplayer').fitWorld(),
-                    geo_route = [],
                     geo_routes = [],
+                    geo_route = {
+                        name: 'Undefined',
+                        coords: []
+                    },
                     geo_watch,
                     geo_options = {
                         enableHighAccuracy: true, 
@@ -208,6 +214,7 @@
                 geo.startTracking = startTracking;
                 geo.stopTracking = stopTracking;
                 geo.loadRoute = loadRoute;
+                geo.deleteRoute = deleteRoute;
                 
                 /*
                 var testroute = [
@@ -285,16 +292,13 @@
                     L.marker(e.latlng).addTo(geo_map).bindPopup("You are within " + radius + " meters from this point");
                     L.circle(e.latlng, radius).addTo(geo_map);
                     // Push current position to route
-                    geo_route.push({
+                    geo_route.coords.push({
                         latitude: e.latitude,
                         longitude: e.longitude
                     });
                     redrawMap(geo_route);
                     redrawLog(geo_route);
-                    // Display geolocation data on screen
-                    locdisplay.innerHTML = "<dl><dt>Latitude</dt><dd>" + e.latitude + "</dd>"
-                                + "<dt>Longitude</dt><dd>" + e.longitude + "</dd>"
-                                + "</dl>";
+                    redrawLocationInfo(geo_route, e);
                 }
                 
                 function onLocationError(e) {
@@ -307,8 +311,8 @@
                     //geo_map = L.map('maplayer');
                     // Get positions for new map markers
                     var latlngs = [];
-                    for (var c in route) {
-                        latlngs.push([ route[c].latitude, route[c].longitude ]);
+                    for (var c in route.coords) {
+                        latlngs.push([ route.coords[c].latitude, route.coords[c].longitude ]);
                     }
                     // Draw the route
                     var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(geo_map);
@@ -317,14 +321,27 @@
                 }
                 
                 function redrawLog(route) {
-                    logdisplay.innerHTML = '';
-                    for (var r in route) {
-                        logdisplay.innerHTML += "<li>latlong: " + route[r].latitude + "," + route[r].longitude + "</li>";    
+                    logdisplay.innerHTML = "<strong>" + route.name + "</strong><ol>";
+                    for (var r in route.coords) {
+                        logdisplay.innerHTML += "<li>latlong: " + route.coords[r].latitude + "," + route.coords[r].longitude + "</li>";    
                     }
+                    logdisplay.innerHTML += "</ol>";
+                }
+                
+                function redrawLocationInfo(route, coord) {
+                    // Display geolocation data on screen
+                    locdisplay.innerHTML = "<dl>"
+                                + "<dt>Route</dt><dd>" + route.name + "</dd>"
+                                + "<dt>Latitude</dt><dd>" + coord.latitude + "</dd>"
+                                + "<dt>Longitude</dt><dd>" + coord.longitude + "</dd>"
+                                + "</dl>";
                 }
                 
                 function startTracking() {
-                    geo_route = [];
+                    geo_route = {
+                        name: 'New route ' + geo_routes.length,
+                        coords: []
+                    };
                     geo_map.locate({
                         setView: true,
                         enableHighAccuracy: true,
@@ -335,8 +352,12 @@
                 function stopTracking() {
                     geo_map.stopLocate();
                     geo_routes.push(geo_route);
-                    localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(geo_routes));
+                    saveRoutes(geo_routes);
                     listRoutes(geo_routes);
+                }
+                
+                function saveRoutes(routes) {
+                    localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(routes));
                 }
                 
                 /*
@@ -362,7 +383,7 @@
                 function listRoutes(routes) {
                     routedisplay.innerHTML = '';
                     for (var r in routes) {
-                        routedisplay.innerHTML += '<li><button class="btn" onclick="geolocator.loadRoute(' + r + ')">' + r + '</button></li>';
+                        routedisplay.innerHTML += '<li><button class="btn" onclick="geolocator.loadRoute(' + r + ')">' + routes[r].name + '</button><button class="btn" onclick="geolocator.deleteRoute(' + r + ')">Delete</button></li>';
                     }
                 }
                 
@@ -370,7 +391,18 @@
                     location.hash = '';
                     geo_route = geo_routes[route_id];
                     redrawLog(geo_route);
+                    console.log('route info');
+                    console.log(geo_route.coords);
+                    redrawLocationInfo(geo_route, geo_route.coords[geo_route.coords.length - 1]);
                     redrawMap(geo_route);
+                }
+                
+                function deleteRoute(route_id) {
+                    if (confirm('Delete?')) {
+                        geo_routes.splice(route_id, 1);
+                        saveRoutes(geo_routes);
+                        listRoutes(geo_routes);    
+                    }
                 }
                 
                 return geo;
