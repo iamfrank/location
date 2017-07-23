@@ -291,14 +291,25 @@
                     var radius = e.accuracy / 2;
                     L.marker(e.latlng).addTo(geo_map).bindPopup("You are within " + radius + " meters from this point");
                     L.circle(e.latlng, radius).addTo(geo_map);
+                    // Get prior coord to compare
+                    console.log('dist calc');
+                    console.log(geo_route.coords.length);
+                    var pre_coord = geo_route.coords[geo_route.coords.length - 1];
+                    var dist;
+                    if (pre_coord) {
+                        geo_map.distance( [e.latitude, e.longitude], [pre_coord.latitude, pre_coord.longitude] );
+                    } else {
+                        dist = 0;
+                    }
                     // Push current position to route
                     geo_route.coords.push({
                         latitude: e.latitude,
-                        longitude: e.longitude
+                        longitude: e.longitude,
+                        distance: dist
                     });
                     redrawMap(geo_route);
                     redrawLog(geo_route);
-                    redrawLocationInfo(geo_route, e);
+                    redrawLocationInfo(geo_route);
                 }
                 
                 function onLocationError(e) {
@@ -321,19 +332,21 @@
                 }
                 
                 function redrawLog(route) {
-                    logdisplay.innerHTML = "<strong>" + route.name + "</strong><ol>";
+                    logdisplay.innerHTML = "<strong>" + route.name + "</strong>";
                     for (var r in route.coords) {
-                        logdisplay.innerHTML += "<li>latlong: " + route.coords[r].latitude + "," + route.coords[r].longitude + "</li>";    
+                        logdisplay.innerHTML += "<p>latlong: " + route.coords[r].latitude + "," + route.coords[r].longitude + "</p>";    
                     }
-                    logdisplay.innerHTML += "</ol>";
                 }
                 
-                function redrawLocationInfo(route, coord) {
+                function redrawLocationInfo(route) {
                     // Display geolocation data on screen
+                    var coord = route.coords[route.coords.length - 1];
+                    route.distance = calcTotalDistance(route);
                     locdisplay.innerHTML = "<dl>"
                                 + "<dt>Route</dt><dd>" + route.name + "</dd>"
                                 + "<dt>Latitude</dt><dd>" + coord.latitude + "</dd>"
                                 + "<dt>Longitude</dt><dd>" + coord.longitude + "</dd>"
+                                + "<dt>Distance</dt><dd>" + route.distance + "</dd>"
                                 + "</dl>";
                 }
                 
@@ -358,6 +371,14 @@
                 
                 function saveRoutes(routes) {
                     localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(routes));
+                }
+                
+                function calcTotalDistance(route) {
+                    var total_dist = 0;
+                    for (var c in route.coords) {
+                        total_dist = total_dist + route.coords[c].distance;
+                    }
+                    return total_dist;
                 }
                 
                 /*
