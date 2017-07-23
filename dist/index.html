@@ -173,8 +173,8 @@
             
             <section id="map">
                 <div id="trackcontrols">
-                    <button onclick="geolocator.start_tracking();">Start tracking</button>
-                    <button onclick="geolocator.stop_tracking();">Stop tracking</button>
+                    <button onclick="geolocator.startTracking();">Start tracking</button>
+                    <button onclick="geolocator.stopTracking();">Stop tracking</button>
                 </div>
                 <div id="maplayer"></div>
             </section>
@@ -205,9 +205,9 @@
                 logdisplay = document.getElementById("loglist");
                 routedisplay = document.getElementById("routeslist");
                 geo.init = init;
-                geo.start_tracking = start_tracking;
-                geo.stop_tracking = stop_tracking;
-                geo.load_route = load_route;
+                geo.startTracking = startTracking;
+                geo.stopTracking = stopTracking;
+                geo.loadRoute = loadRoute;
                 
                 /*
                 var testroute = [
@@ -274,7 +274,7 @@
                         });
                         geo_map.on('locationfound', onLocationFound);
                         geo_map.on('locationerror', onLocationError);
-                        list_routes(geo_routes);
+                        listRoutes(geo_routes);
                     } else {
                         locdisplay.innerHTML = "Geolocation is not supported by this browser.";
                     }
@@ -289,8 +289,8 @@
                         latitude: e.latitude,
                         longitude: e.longitude
                     });
-                    redraw_map(geo_route);
-                    redraw_log(geo_route);
+                    redrawMap(geo_route);
+                    redrawLog(geo_route);
                     // Display geolocation data on screen
                     locdisplay.innerHTML = "<dl><dt>Latitude</dt><dd>" + e.latitude + "</dd>"
                                 + "<dt>Longitude</dt><dd>" + e.longitude + "</dd>"
@@ -301,50 +301,29 @@
                     alert(e.message);
                 }
                 
-                function geo_error(error) {
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            locdisplay.innerHTML = "User denied the request for Geolocation."
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            locdisplay.innerHTML = "Location information is unavailable."
-                            break;
-                        case error.TIMEOUT:
-                            locdisplay.innerHTML = "The request to get user location timed out."
-                            break;
-                        case error.UNKNOWN_ERROR:
-                            locdisplay.innerHTML = "An unknown error occurred."
-                            break;
-                        default:
-                            locdisplay.innerHTML = "Something strange is going on."
-                    }
-                }
-                
-                function redraw_map(route) {
+                function redrawMap(route) {
                     // Clear map
-                    geo_map.remove();
-                    geo_map = L.map('maplayer');
+                    //geo_map.remove();
+                    //geo_map = L.map('maplayer');
                     // Get positions for new map markers
                     var latlngs = [];
                     for (var c in route) {
                         latlngs.push([ route[c].latitude, route[c].longitude ]);
                     }
-                    // Add marker for last known position
-                    L.marker([ route[route.length - 1].latitude, route[route.length - 1].longitude ]).addTo(geo_map);
                     // Draw the route
-                    var polyline = L.polyline(latlngs, {color: 'red'}).addTo(geo_map);
+                    var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(geo_map);
                     // zoom the map to the polyline
                     geo_map.fitBounds(polyline.getBounds());
                 }
                 
-                function redraw_log(route) {
+                function redrawLog(route) {
                     logdisplay.innerHTML = '';
                     for (var r in route) {
                         logdisplay.innerHTML += "<li>latlong: " + route[r].latitude + "," + route[r].longitude + "</li>";    
                     }
                 }
                 
-                function start_tracking() {
+                function startTracking() {
                     geo_route = [];
                     geo_map.locate({
                         setView: true,
@@ -353,11 +332,11 @@
                     });
                 }
                 
-                function stop_tracking() {
+                function stopTracking() {
                     geo_map.stopLocate();
                     geo_routes.push(geo_route);
                     localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(geo_routes));
-                    list_routes(geo_routes);
+                    listRoutes(geo_routes);
                 }
                 
                 /*
@@ -380,18 +359,18 @@
                 }
                 */
                 
-                function list_routes(routes) {
+                function listRoutes(routes) {
                     routedisplay.innerHTML = '';
                     for (var r in routes) {
-                        routedisplay.innerHTML += '<li><button class="btn" onclick="geolocator.load_route(' + r + ')">' + r + '</button></li>';
+                        routedisplay.innerHTML += '<li><button class="btn" onclick="geolocator.loadRoute(' + r + ')">' + r + '</button></li>';
                     }
                 }
                 
-                function load_route(route_id) {
+                function loadRoute(route_id) {
                     location.hash = '';
                     geo_route = geo_routes[route_id];
-                    redraw_log();
-                    redraw_map(geo_route);
+                    redrawLog(geo_route);
+                    redrawMap(geo_route);
                 }
                 
                 return geo;
