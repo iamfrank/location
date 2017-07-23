@@ -14,7 +14,9 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
         <link rel="stylesheet" href="css/normalize.min.css">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw==" crossorigin="">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
+              integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw=="
+              crossorigin="">
         
         <style>
             
@@ -23,13 +25,6 @@
                 background-color: #122;
                 color: #fff;
                 font: 125%/1.3 Roboto, sans-serif;
-                padding: 2rem;
-            }
-            
-            button {
-                background-color: #233;
-                border: solid .125rem;
-                border-radius: .25rem;
             }
             
             dt {
@@ -42,8 +37,67 @@
                 padding: 0;
             }
             
+            a.btn,
+            a.btn:link,
+            a.btn:visited,
+            button {
+                color: teal;
+                text-decoration: none;
+                padding: .5rem;
+                background-color: #233;
+                border: solid .125rem;
+                border-radius: .25rem;
+            }
+            
+            a.btn:hover,
+            a.btn:active,
+            button:hover,
+            button:active {
+                background-color: #344;
+            }
+            
+            #log,
+            #routes {
+                display: none;
+                position: fixed;
+                top: 3rem;
+                left: 0;
+                width: 100%;
+                height: calc(100% - 3rem);
+                overflow: auto;
+                background-color: black;
+                z-index: 501;
+            }
+            
+            #log:target,
+            #routes:target {
+                display: block;
+            }
+            
+            #location {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 33vw;
+                height: 100vh;
+                color: #000;
+                z-index: 500;
+                text-align: right;
+                padding: .5rem;
+                box-sizing: border-box;
+            }
+            
+            #actions {
+                position: absolute;
+                z-index: 502;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+            }
+            
             #map {
-                height: 60vh;
+                height: 100vh;
+                width: 100%;
             }
             
             .spinner {
@@ -71,20 +125,34 @@
     <body>
         <main>
             
-            <div id="location">
-                <p>Retrieving location data <span class="spinner"></span></p>
-            </div>
+            <nav id="actions">
+                <button onclick="geolocator.start_tracking();">Start tracking</button>
+                <button onclick="geolocator.stop_tracking();">Stop tracking</button>
+                <a class="btn" href="#">Map</a>
+                <a class="btn" href="#log">Log</a>
+                <a class="btn" href="#routes">Routes</a>
+            </nav>
             
-            <h2>Log</h2>
-            <button onclick="geolocator.startTracking()">Start tracking</button>
-            <button onclick="geolocator.stopTracking()">Stop tracking</button>
-            <div id="log"></div>
+            <section id="location">
+                <p>Retrieving location data <span class="spinner"></span></p>
+            </section>
+            
+            <section id="log">
+                <ol id="loglist"></ol>
+            </section>
+            
+            <section id="routes">
+                <ul id="routeslist"></ul>
+            </section>
             
             <div id="map"></div>
             
         </main>
         
-        <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA==" crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"
+                integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA=="
+                crossorigin="">
+        </script>
         <script>
             
             
@@ -97,59 +165,114 @@
                     geo_map = L.map('map').fitWorld(),
                     geo_route = [],
                     geo_routes = [],
-                    geo_watch;
+                    geo_watch,
+                    geo_options = {
+                        enableHighAccuracy: true, 
+                        maximumAge: 30000, 
+                        timeout: 27000
+                    };
                 
                 locdisplay = document.getElementById("location");
-                logdisplay = document.getElementById("log");
+                logdisplay = document.getElementById("loglist");
+                routedisplay = document.getElementById("routes");
                 geo.init = init;
-                geo.startTracking = startTracking;
-                geo.stopTracking = stopTracking;
+                geo.start_tracking = start_tracking;
+                geo.stop_tracking = stop_tracking;
+                geo.load_route = load_route;
+                
+                /*
+                var testroute = [
+                    {
+                        latitude: 55.11,
+                        longitude: 12.00,
+                        accuracy: 9000,
+                        altitude: null,
+                        altitudeAccuracy: null,
+                        timestamp: null,
+                        heading: 0,
+                        speed: null
+                    },
+                    {
+                        latitude: 55.12,
+                        longitude: 12.01,
+                        accuracy: 9000,
+                        altitude: null,
+                        altitudeAccuracy: null,
+                        timestamp: null,
+                        heading: 0,
+                        speed: null
+                    },
+                    {
+                        latitude: 55.13,
+                        longitude: 12.02,
+                        accuracy: 9000,
+                        altitude: null,
+                        altitudeAccuracy: null,
+                        timestamp: null,
+                        heading: 0,
+                        speed: null
+                    },
+                    {
+                        latitude: 55.14,
+                        longitude: 12.00,
+                        accuracy: 9000,
+                        altitude: null,
+                        altitudeAccuracy: null,
+                        timestamp: null,
+                        heading: 0,
+                        speed: null
+                    }
+                ];
+                geo_routes.push(testroute);
+                */
+                
+                
                 
                 function init() {
-                    // Fetch already saved routes
-                    if (typeof(Storage) !== "undefined" && localStorage.geolocatorSavedRoutes) {
-                        geo_routes = JSON.parse(localStorage.geolocatorSavedRoutes);
-                    } else {
-                        // No support for web storage
-                    }
-                    console.log(geo_routes);
-                    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 18
-                    }).addTo(geo_map);
-                    getLocation();
-                }
-                
-                function getLocation() {
                     if ("geolocation" in navigator) {
-                        navigator.geolocation.getCurrentPosition(geo_success, geo_error);
+                        // Fetch already saved routes
+                        if (typeof(Storage) !== "undefined" && localStorage.geolocatorSavedRoutes) {
+                            geo_routes = JSON.parse(localStorage.geolocatorSavedRoutes);
+                        } else {
+                            // No support for web storage
+                        }
+                        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 18
+                        }).addTo(geo_map);
+                        getLocation();
+                        listRoutes(geo_routes);
                     } else {
                         locdisplay.innerHTML = "Geolocation is not supported by this browser.";
                     }
+                }
+                
+                function getLocation() {
+                    navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
                 }
                 
                 function geo_success(position) {
                     // Display geolocation data on screen
                     locdisplay.innerHTML = "<dl><dt>Latitude</dt><dd>" + position.coords.latitude + "</dd>"
                                 + "<dt>Longitude</dt><dd>" + position.coords.longitude + "</dd>"
-                                + "<dt>Accuracy</dt><dd>" + position.coords.accuracy + "</dd>";
-                    if (position.coords.altitude !== null) {
-                        locdisplay.innerHTML += "<dt>Altitude</dt><dd>" + position.coords.altitude + "</dd>";
-                    }
-                    if (position.coords.altitudeAccuracy !== null) {
-                        locdisplay.innerHTML += "<dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy + "</dd>";
-                    }
-                    if (position.coords.heading !== null) {
-                        locdisplay.innerHTML += "<dt>Heading</dt><dd>" + position.coords.heading + "</dd>";
-                    }
-                    if (position.coords.timestamp !== undefined) {
-                        locdisplay.innerHTML += "<dt>Timestamp</dt><dd>" + position.coords.timestamp + "</dd>";
-                    }
-                    locdisplay.innerHTML += "</dl>";
-                    // Update map with current location
-                    L.marker([position.coords.latitude, position.coords.longitude]).addTo(geo_map);
+                                + "<dt>Accuracy</dt><dd>" + position.coords.accuracy + "</dd>"
+                                + "<dt>Altitude</dt><dd>" + position.coords.altitude + "</dd>"
+                                + "<dt>Altitude accuracy</dt><dd>" + position.coords.altitudeAccuracy + "</dd>"
+                                + "<dt>Heading</dt><dd>" + position.coords.heading + "</dd>"
+                                + "<dt>Timestamp</dt><dd>" + position.coords.timestamp + "</dd>"
+                                + "</dl>";
                     // Push current position to route
-                    geo_route.push(position.coords);
-                    geo_redraw_log();
+                    geo_route.push({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        altitude: position.coords.altitude,
+                        altitudeAccuracy: position.coords.altitudeAccuracy,
+                        timestamp: position.coords.timestamp,
+                        heading: position.coords.heading,
+                        speed: position.coords.speed
+                    });
+                    redraw_log();
+                    redraw_map(geo_route)
                 }
                 
                 function geo_error(error) {
@@ -171,31 +294,69 @@
                     }
                 }
                 
-                function geo_redraw_log() {
-                    logdisplay.innerHTML = "<ol>";
+                function redraw_map(route) {
+                    // Update map with current route and current position
+                    var latlngs = [];
+                    for (var c in route) {
+                        latlngs.push([[route[c].latitude, route[c].longitude]]);
+                    }
+                    // Add marker for last known position
+                    console.log('route info');
+                    console.log(route);
+                    console.log(route.length);
+                    L.marker([ route[route.length - 1].latitude, route[route.length - 1].longitude ]).addTo(geo_map);
+                    // Draw the route
+                    var polyline = L.polyline(latlngs, {color: 'red'}).addTo(geo_map);
+                    // zoom the map to the polyline
+                    geo_map.fitBounds(polyline.getBounds());
+                }
+                
+                function redraw_log() {
                     for (var g in geo_route) {
-                        logdisplay.innerHTML += "<li> " + geo_route[g].latitude + "," + geo_route[g].longitude + " </li>";    
-                    }
-                    logdisplay.innerHTML += "</ol>";
-                }
-                
-                function startTracking() {
-                    if ("geolocation" in navigator) {
-                        geo_watch = navigator.geolocation.watchPosition(geo_success, geo_error);
-                    } else {
-                        locdisplay.innerHTML = "Geolocation is not supported by this browser.";
+                        logdisplay.innerHTML += "<li>latlong: " + geo_route[g].latitude + "," + geo_route[g].longitude + "; acc:" + geo_route[g].accuracy + "; time: " + geo_route[g].timestamp + "</li>";    
                     }
                 }
                 
-                function stopTracking() {
-                    geo_watch.clearWatch();
+                function start_tracking() {
+                    geo_route = [];
+                    geo_watch = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+                }
+                
+                function stop_tracking() {
+                    navigator.geolocation.clearWatch(geo_watch);
                     geo_routes.push(geo_route);
-                    if (typeof(Storage) !== "undefined") {
-                        localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(geo_routes));
-                    } else {
-                        alert('No support for web storage');
-                        // Sorry! No Web Storage support..
+                    localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(geo_routes));
+                }
+                
+                function calculate_distance(lat1,lon1,lat2,lon2) {
+                    var R = 6371; // Radius of the earth in km
+                    var dLat = deg_to_rad(lat2-lat1);  // deg2rad below
+                    var dLon = deg_to_rad(lon2-lon1); 
+                    var a = 
+                      Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(deg_to_rad(lat1)) * Math.cos(deg_to_rad(lat2)) * 
+                      Math.sin(dLon/2) * Math.sin(dLon/2)
+                      ; 
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                    var d = R * c; // Distance in km
+                    return d;
+                }
+                  
+                function deg_to_rad(deg) {
+                    return deg * (Math.PI/180);
+                }
+                
+                function listRoutes(routes) {
+                    for (var r in routes) {
+                        routedisplay.innerHTML += '<li><button class="btn" onclick="geolocator.load_route(' + r + ')">' + r + '</button></li>';
                     }
+                }
+                
+                function load_route(route_id) {
+                    location.hash = '';
+                    geo_route = geo_routes[route_id];
+                    redraw_log();
+                    redraw_map();
                 }
                 
                 return geo;
@@ -218,7 +379,7 @@
                 function init() {
                     if ('serviceWorker' in navigator) {
                       window.addEventListener('load', function() {
-                        navigator.serviceWorker.register('../dist/sw.js').then(function(registration) {
+                        navigator.serviceWorker.register('sw.js').then(function(registration) {
                           // Registration was successful
                           console.log('ServiceWorker registration successful with scope: ', registration.scope);
                         }).catch(function(err) {
