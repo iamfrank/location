@@ -275,7 +275,7 @@
                     var pre_coord = geo_route.coords[geo_route.coords.length - 1];
                     var dist;
                     if (pre_coord) {
-                        geo_map.distance( [e.latitude, e.longitude], [pre_coord.latitude, pre_coord.longitude] );
+                        dist = geo_map.distance( [e.latitude, e.longitude], [pre_coord.latitude, pre_coord.longitude] );
                         console.log('distance');
                         console.log(geo_map.distance( [e.latitude, e.longitude], [pre_coord.latitude, pre_coord.longitude] ));
                     } else {
@@ -378,8 +378,6 @@
                     location.hash = '';
                     geo_route = geo_routes[route_id];
                     redrawLog(geo_route);
-                    console.log('route info');
-                    console.log(geo_route.coords);
                     redrawLocationInfo(geo_route, geo_route.coords[geo_route.coords.length - 1]);
                     redrawMap(geo_route);
                 }
