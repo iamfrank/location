@@ -198,14 +198,18 @@
                     geo_routes = [],
                     geo_route = {
                         name: 'Undefined',
-                        coords: []
+                        coords: [],
+                        distance: 0
                     },
                     geo_watch,
                     geo_options = {
                         enableHighAccuracy: true, 
                         maximumAge: 30000, 
                         timeout: 27000
-                    };
+                    },
+                    geo_map_marker,
+                    geo_map_circle,
+                    geo_map_polyline;
                 
                 locdisplay = document.getElementById("location");
                 logdisplay = document.getElementById("loglist");
@@ -215,54 +219,6 @@
                 geo.stopTracking = stopTracking;
                 geo.loadRoute = loadRoute;
                 geo.deleteRoute = deleteRoute;
-                
-                /*
-                var testroute = [
-                    {
-                        latitude: 55.11,
-                        longitude: 12.00,
-                        accuracy: 9000,
-                        altitude: null,
-                        altitudeAccuracy: null,
-                        timestamp: null,
-                        heading: 0,
-                        speed: null
-                    },
-                    {
-                        latitude: 55.12,
-                        longitude: 12.01,
-                        accuracy: 9000,
-                        altitude: null,
-                        altitudeAccuracy: null,
-                        timestamp: null,
-                        heading: 0,
-                        speed: null
-                    },
-                    {
-                        latitude: 55.13,
-                        longitude: 12.02,
-                        accuracy: 9000,
-                        altitude: null,
-                        altitudeAccuracy: null,
-                        timestamp: null,
-                        heading: 0,
-                        speed: null
-                    },
-                    {
-                        latitude: 55.14,
-                        longitude: 12.00,
-                        accuracy: 9000,
-                        altitude: null,
-                        altitudeAccuracy: null,
-                        timestamp: null,
-                        heading: 0,
-                        speed: null
-                    }
-                ];
-                geo_routes.push(testroute);
-                */
-                
-                
                 
                 function init() {
                     if ("geolocation" in navigator) {
@@ -285,15 +241,45 @@
                     } else {
                         locdisplay.innerHTML = "Geolocation is not supported by this browser.";
                     }
+                    
+                    /*
+                    var testroute = {
+                        name: 'Testroute',
+                        coords: [
+                            {
+                                latitude: 55.11,
+                                longitude: 12.00,
+                                distance: 0,
+                                accuracy: 80
+                            },
+                            {
+                                latitude: 55.12,
+                                longitude: 12.01,
+                                distance: 4,
+                                accuracy: 80
+                            },
+                            {
+                                latitude: 55.13,
+                                longitude: 12.02,
+                                distance: 3,
+                                accuracy: 80
+                            },
+                            {
+                                latitude: 55.14,
+                                longitude: 12.00,
+                                distance: 10,
+                                accuracy: 80
+                            }
+                        ],
+                        distance: 17
+                    };
+                    geo_routes.push(testroute);
+                    */
+                    
                 }
                 
                 function onLocationFound(e) {
-                    var radius = e.accuracy / 2;
-                    L.marker(e.latlng).addTo(geo_map).bindPopup("You are within " + radius + " meters from this point");
-                    L.circle(e.latlng, radius).addTo(geo_map);
                     // Get prior coord to compare
-                    console.log('dist calc');
-                    console.log(geo_route.coords.length);
                     var pre_coord = geo_route.coords[geo_route.coords.length - 1];
                     var dist;
                     if (pre_coord) {
@@ -305,7 +291,8 @@
                     geo_route.coords.push({
                         latitude: e.latitude,
                         longitude: e.longitude,
-                        distance: dist
+                        distance: dist,
+                        accuracy: e.accuracy
                     });
                     redrawMap(geo_route);
                     redrawLog(geo_route);
@@ -317,30 +304,43 @@
                 }
                 
                 function redrawMap(route) {
-                    // Clear map
-                    //geo_map.remove();
-                    //geo_map = L.map('maplayer');
                     // Get positions for new map markers
                     var latlngs = [];
                     for (var c in route.coords) {
                         latlngs.push([ route.coords[c].latitude, route.coords[c].longitude ]);
                     }
                     // Draw the route
-                    var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(geo_map);
+                    geo_map_polyline = L.polyline(latlngs, {color: 'blue'}).addTo(geo_map);
                     // zoom the map to the polyline
-                    geo_map.fitBounds(polyline.getBounds());
+                    geo_map.fitBounds(geo_map_polyline.getBounds());
+                    // Clean up map
+                    if (geo_map_marker !== undefined) {
+                        geo_map_marker.remove();    
+                    }
+                    if (geo_map_circle !== undefined) {
+                        geo_map_circle.remove();
+                    }
+                    if (geo_map_polyline !== undefined) {
+                        geo_map_polyline.remove();    
+                    }
+                    // Redraw the current position
+                    var radius = route.coords[route.coords.length - 1].accuracy / 2;
+                    var latlng = [ route.coords[route.coords.length - 1].latitude, route.coords[route.coords.length - 1].longitude ];
+                    geo_map_marker = L.marker(latlng).addTo(geo_map).bindPopup("You are within " + radius + " meters from this point");
+                    geo_map_circle = L.circle(latlng, radius).addTo(geo_map);
                 }
                 
                 function redrawLog(route) {
                     logdisplay.innerHTML = "<strong>" + route.name + "</strong>";
                     for (var r in route.coords) {
-                        logdisplay.innerHTML += "<p>latlong: " + route.coords[r].latitude + "," + route.coords[r].longitude + "</p>";    
+                        logdisplay.innerHTML += "<p>latlong: " + route.coords[r].latitude + "," + route.coords[r].longitude + "; distance: " + route.coords[r].distance + "</p>";    
                     }
                 }
                 
                 function redrawLocationInfo(route) {
                     // Display geolocation data on screen
                     var coord = route.coords[route.coords.length - 1];
+                    console.log(calcTotalDistance(route));
                     route.distance = calcTotalDistance(route);
                     locdisplay.innerHTML = "<dl>"
                                 + "<dt>Route</dt><dd>" + route.name + "</dd>"
