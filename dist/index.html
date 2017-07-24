@@ -308,7 +308,8 @@
                     if (geo_map_polyline !== undefined) {
                         geo_map_polyline.remove();    
                     }
-                    // Get positions for new map markers
+                    // Get positions for new map markers and calculate running distance
+                    route.distance = 0;
                     var latlngs = [];
                     for (var c in route.coords) {
                         latlngs.push([ route.coords[c].latitude, route.coords[c].longitude ]);
@@ -335,19 +336,21 @@
                 
                 function redrawLocationInfo(route) {
                     // Display geolocation data on screen
+                    console.log(route);
                     var coord = route.coords[route.coords.length - 1];
                     locdisplay.innerHTML = "<dl>"
                                 + "<dt>Route</dt><dd>" + route.name + "</dd>"
-                                + "<dt>Latitude</dt><dd>" + coord.latitude + "</dd>"
-                                + "<dt>Longitude</dt><dd>" + coord.longitude + "</dd>"
-                                + "<dt>Distance</dt><dd>" + route.distance + "m</dd>"
+                                + "<dt>Latitude</dt><dd>" + coord.latitude.toFixed(4) + "</dd>"
+                                + "<dt>Longitude</dt><dd>" + coord.longitude.toFixed(4) + "</dd>"
+                                + "<dt>Distance</dt><dd>" + route.distance.toFixed(0) + "m</dd>"
                                 + "</dl>";
                 }
                 
                 function startTracking() {
                     geo_route = {
                         name: 'New route ' + geo_routes.length,
-                        coords: []
+                        coords: [],
+                        distance: 0
                     };
                     geo_map.locate({
                         setView: true,
