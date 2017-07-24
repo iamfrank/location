@@ -200,20 +200,14 @@
                         name: 'Undefined',
                         coords: [],
                         distance: 0
-                    },
-                    geo_watch,
-                    geo_options = {
-                        enableHighAccuracy: true, 
-                        maximumAge: 30000, 
-                        timeout: 27000
-                    },
+                    },                    
                     geo_map_marker,
                     geo_map_circle,
-                    geo_map_polyline;
+                    geo_map_polyline,
+                    locdisplay = document.getElementById("location"),
+                    logdisplay = document.getElementById("loglist"),
+                    routedisplay = document.getElementById("routeslist");
                 
-                locdisplay = document.getElementById("location");
-                logdisplay = document.getElementById("loglist");
-                routedisplay = document.getElementById("routeslist");
                 geo.init = init;
                 geo.startTracking = startTracking;
                 geo.stopTracking = stopTracking;
@@ -221,26 +215,24 @@
                 geo.deleteRoute = deleteRoute;
                 
                 function init() {
-                    if ("geolocation" in navigator) {
-                        // Fetch already saved routes
-                        if (typeof(Storage) !== "undefined" && localStorage.geolocatorSavedRoutes) {
-                            geo_routes = JSON.parse(localStorage.geolocatorSavedRoutes);
-                        } else {
-                            // No support for web storage
-                        }
-                        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 18
-                        }).addTo(geo_map);
-                        geo_map.locate({
-                            setView: true,
-                            enableHighAccuracy: true
-                        });
-                        geo_map.on('locationfound', onLocationFound);
-                        geo_map.on('locationerror', onLocationError);
-                        listRoutes(geo_routes);
+                    // Fetch already saved routes
+                    if (typeof(Storage) !== "undefined" && localStorage.geolocatorSavedRoutes) {
+                        geo_routes = JSON.parse(localStorage.geolocatorSavedRoutes);
                     } else {
-                        locdisplay.innerHTML = "Geolocation is not supported by this browser.";
+                        // No support for web storage
                     }
+                    // Initialize map and location listeners
+                    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 18
+                    }).addTo(geo_map);
+                    geo_map.locate({
+                        setView: true,
+                        enableHighAccuracy: true
+                    });
+                    geo_map.on('locationfound', onLocationFound);
+                    geo_map.on('locationerror', onLocationError);
+                    // List routes
+                    listRoutes(geo_routes);
                     
                     /*
                     var testroute = {
@@ -284,10 +276,12 @@
                     var dist;
                     if (pre_coord) {
                         geo_map.distance( [e.latitude, e.longitude], [pre_coord.latitude, pre_coord.longitude] );
+                        console.log('distance');
+                        console.log(geo_map.distance( [e.latitude, e.longitude], [pre_coord.latitude, pre_coord.longitude] ));
                     } else {
                         dist = 0;
                     }
-                    // Push current position to route
+                    // Push position to current route
                     geo_route.coords.push({
                         latitude: e.latitude,
                         longitude: e.longitude,
@@ -304,15 +298,6 @@
                 }
                 
                 function redrawMap(route) {
-                    // Get positions for new map markers
-                    var latlngs = [];
-                    for (var c in route.coords) {
-                        latlngs.push([ route.coords[c].latitude, route.coords[c].longitude ]);
-                    }
-                    // Draw the route
-                    geo_map_polyline = L.polyline(latlngs, {color: 'blue'}).addTo(geo_map);
-                    // zoom the map to the polyline
-                    geo_map.fitBounds(geo_map_polyline.getBounds());
                     // Clean up map
                     if (geo_map_marker !== undefined) {
                         geo_map_marker.remove();    
@@ -323,6 +308,17 @@
                     if (geo_map_polyline !== undefined) {
                         geo_map_polyline.remove();    
                     }
+                    // Get positions for new map markers
+                    var latlngs = [];
+                    for (var c in route.coords) {
+                        latlngs.push([ route.coords[c].latitude, route.coords[c].longitude ]);
+                        // Now we're at it, add the distances together
+                        route.distance += route.coords[c].distance;
+                    }
+                    // Draw the route
+                    geo_map_polyline = L.polyline(latlngs, {color: 'blue'}).addTo(geo_map);
+                    // zoom the map to the polyline
+                    geo_map.fitBounds(geo_map_polyline.getBounds());
                     // Redraw the current position
                     var radius = route.coords[route.coords.length - 1].accuracy / 2;
                     var latlng = [ route.coords[route.coords.length - 1].latitude, route.coords[route.coords.length - 1].longitude ];
@@ -340,8 +336,6 @@
                 function redrawLocationInfo(route) {
                     // Display geolocation data on screen
                     var coord = route.coords[route.coords.length - 1];
-                    console.log(calcTotalDistance(route));
-                    route.distance = calcTotalDistance(route);
                     locdisplay.innerHTML = "<dl>"
                                 + "<dt>Route</dt><dd>" + route.name + "</dd>"
                                 + "<dt>Latitude</dt><dd>" + coord.latitude + "</dd>"
@@ -372,34 +366,6 @@
                 function saveRoutes(routes) {
                     localStorage.setItem("geolocatorSavedRoutes", JSON.stringify(routes));
                 }
-                
-                function calcTotalDistance(route) {
-                    var total_dist = 0;
-                    for (var c in route.coords) {
-                        total_dist = total_dist + route.coords[c].distance;
-                    }
-                    return total_dist;
-                }
-                
-                /*
-                function calculate_distance(lat1,lon1,lat2,lon2) {
-                    var R = 6371; // Radius of the earth in km
-                    var dLat = deg_to_rad(lat2-lat1);  // deg2rad below
-                    var dLon = deg_to_rad(lon2-lon1); 
-                    var a = 
-                      Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(deg_to_rad(lat1)) * Math.cos(deg_to_rad(lat2)) * 
-                      Math.sin(dLon/2) * Math.sin(dLon/2)
-                      ; 
-                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-                    var d = R * c; // Distance in km
-                    return d;
-                }
-                  
-                function deg_to_rad(deg) {
-                    return deg * (Math.PI/180);
-                }
-                */
                 
                 function listRoutes(routes) {
                     routedisplay.innerHTML = '';
