@@ -25,20 +25,37 @@
 
         <main>
 
-            <section>
-                <div id="positionInfo"></div>
-                <button id="refreshPosInfo" onclick="geolocator.getLocation()">Refresh</button>
-            </section>
+            <nav>
+                <a href="#positionView">Position</a>
+                <a href="#routeListView">Routes</a>
+            </nav>
 
-            <section>
-                <div id="maplayer"></div>
-            </section>
-
-            <div id="loadingOverlay">
+            <section id="positionView">
+                <h2>Position</h2>
+                <p class="alert track-visible">Tracking</p>
                 <div>
-                    <div class="spinner"></div>
+                    <div id="positionInfo"></div>
+                    <!-- <button onclick="geolocator.startLocating()">Refresh</button> -->
+                    <div class="track-visible">
+                        <button onclick="geolocator.setWaypoint()">Set waypoint</button>
+                        <button onclick="geolocator.stopTracking()">Stop tracking</button>
+                    </div>
                 </div>
-            </div>
+                <div>
+                    <div id="maplayer"></div>
+                </div>
+                <div id="loadingOverlay">
+                    <div>
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="routeListView">
+                <h2>Routes</h2>
+                <button onclick="geolocator.startTracking()">Track a new route</button>
+                <ul id="routeList"></ul>
+            </section>
             
         </main>
         

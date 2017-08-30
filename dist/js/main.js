@@ -5,20 +5,34 @@
 var geolocator = (function() {
 
     var geo = {},
+        geo_watcher,
+        geo_current_position,
         geo_map = L.map('maplayer').fitWorld(),
         geo_map_marker,
+        geo_routes = [],
+        geo_route_new = {
+            name: 'Undefined',
+            coords: [],
+            distance: 0
+        },
         ui_pos = document.getElementById("positionInfo"),
-        ui_spinner = document.getElementById("loadingOverlay");
+        ui_spinner = document.getElementById("loadingOverlay"),
+        ui_tracking_elements = document.getElementsByClassName('track-visible');
         
     geo.init = init;
-    geo.getLocation = getLocation;
+    geo.startLocating = startLocating;
+    geo.startTracking = startTracking;
+    geo.stopTracking = stopTracking;
+    geo.setWaypoint = setWaypoint;
 
 
     function init() {
         
         startSpinner();
+        //Navigate to position view
+        location.hash = 'positionView';
         // Get current location
-        getLocation();
+        startLocating();
         // Initialize map
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18
@@ -40,10 +54,19 @@ var geolocator = (function() {
         */
     }
 
-    function getLocation() {
+    function startLocating() {
         startSpinner()
         if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(showPosSuccess, showPosError);
+            navigator.geolocation.clearWatch(geo_watcher);
+            geo_watcher = navigator.geolocation.watchPosition(
+                showPosSuccess, 
+                showPosError, 
+                {
+                    enableHighAccuracy: true, 
+                    maximumAge        : 30000, 
+                    timeout           : 27000
+                }
+            );
         } else {
             stopSpinner();
             ui_pos.innerHTML = "Geolocation is not supported by this browser.";
@@ -51,6 +74,7 @@ var geolocator = (function() {
     }
 
     function showPosSuccess(position) {
+        geo_current_position = position;
         ui_pos.innerHTML = `
             <dl>
                 <dt>Latitude</dt>  
@@ -62,7 +86,7 @@ var geolocator = (function() {
             </dl>
         `; 
         stopSpinner();
-        pinMarker(position.coords.latitude, position.coords.longitude);
+        pinMarker([position.coords.latitude, position.coords.longitude]);
     }
 
     function showPosError(error) {
@@ -91,10 +115,48 @@ var geolocator = (function() {
         ui_spinner.style.display = 'none';
     }
 
-    function pinMarker(lat, lon) {
-        var latlon = [lat,lon];
+    function pinMarker(latlon) {
         geo_map_marker = L.marker(latlon).addTo(geo_map);
         geo_map.flyTo(latlon, 10);
+    }
+
+    function startTracking() {
+        // Navigate back to position page and display tracking options
+        location.hash = 'positionView';
+        for (var el of ui_tracking_elements) {
+            el.style.display = 'block';
+        }
+    }
+
+    function stopTracking() {
+        geo_route_new.name = prompt('Name your route:');
+        geo_routes.push(geo_route_new);
+        // Clean up tracking route
+        geo_route_new = {
+            name: 'Undefined',
+            coords: [],
+            distance: 0
+        };
+        // Hide tracking UI
+        for (var el of ui_tracking_elements) {
+            el.style.display = 'none';
+        }
+        listRoutes();
+    }
+
+    function setWaypoint() {
+        var latlon = [geo_current_position.coords.latitude, geo_current_position.coords.longitude];
+        geo_route_new.coords.push(latlon);
+        pinMarker(latlon);
+    }
+
+    function listRoutes() {
+        var ui_routelist = document.getElementById('routeList');
+        var route_list = '';
+        for (var r in geo_routes) {
+            route_list += '<li><button>' + geo_routes[r].name + '</button></li>';
+        }
+        ui_routelist.innerHTML = route_list;
     }
 
     return geo;
@@ -118,15 +180,15 @@ var service_worker = (function() {
     
     function init() {
         if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('sw.js').then(function(registration) {
-            // Registration was successful
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }).catch(function(err) {
-            // registration failed :(
-            console.log('ServiceWorker registration failed: ', err);
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js').then(function(registration) {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }).catch(function(err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+                });
             });
-        });
         }
     }
     

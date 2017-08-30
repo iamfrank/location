@@ -22,6 +22,18 @@ dd {
     padding: 0;
 }
 
+a,
+a:link,
+a:visited {
+    text-decoration: none;
+    color: #fd0;
+}
+
+a:hover,
+a:active {
+    color: #da0;
+}
+
 a.btn,
 a.btn:link,
 a.btn:visited,
@@ -41,13 +53,30 @@ button:active {
     background-color: #da0;
 }
 
+section {
+    display: none;
+    background: radial-gradient( #004, #002 );
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+section:target {
+    display: block;
+}
+
 #positionInfo {
     padding: 1rem;
 }
 
 #maplayer {
-    height: 50vh;
+    height: 33vh;
     width: 100%;
+    background-color: #004;
+    border: solid 1px #468;
+    border-width: 1px 0;
 }
 
 #loadingOverlay {
@@ -56,7 +85,7 @@ button:active {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,.75);
+    background: radial-gradient( #004, #002 );
     z-index: 1000;
 }
 
@@ -84,6 +113,17 @@ button:active {
     50% { transform: rotate(90deg); }
     75% { transform: rotate(180deg); }
     100% { transform: rotate(180deg); }
+}
+
+.track-visible {
+    display: none;
+}
+
+.alert {
+    background: red;
+    color: black;
+    padding: 0.5rem;
+    text-align: center;
 }
 
 /*
