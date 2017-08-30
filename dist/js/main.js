@@ -43,7 +43,7 @@ var geolocator = (function() {
     function getLocation() {
         startSpinner()
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosSuccess, showPosError);
+            navigator.geolocation.watchPosition(showPosSuccess, showPosError);
         } else {
             stopSpinner();
             ui_pos.innerHTML = "Geolocation is not supported by this browser.";
