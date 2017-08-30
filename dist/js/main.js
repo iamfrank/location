@@ -8,7 +8,7 @@ var geolocator = (function() {
         geo_map = L.map('maplayer').fitWorld(),
         geo_map_marker,
         ui_pos = document.getElementById("positionInfo"),
-        ui_spinner = document.getElementById("spinner");
+        ui_spinner = document.getElementById("loadingOverlay");
         
     geo.init = init;
     geo.getLocation = getLocation;
@@ -62,6 +62,7 @@ var geolocator = (function() {
             </dl>
         `; 
         stopSpinner();
+        pinMarker(position.coords.latitude, position.coords.longitude);
     }
 
     function showPosError(error) {
@@ -88,6 +89,12 @@ var geolocator = (function() {
 
     function stopSpinner() {
         ui_spinner.style.display = 'none';
+    }
+
+    function pinMarker(lat, lon) {
+        var latlon = [lat,lon];
+        geo_map_marker = L.marker(latlon).addTo(geo_map);
+        geo_map.flyTo(latlon, 10);
     }
 
     return geo;
