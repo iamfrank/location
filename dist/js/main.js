@@ -75,7 +75,15 @@ var geolocator = (function() {
     }
 
     function showPosSuccess(position) {
-        logData('Got watchposition: ' + position.coords.latitude.toFixed(4) + ',' + position.coords.longitude.toFixed(4) + '; acc: ' + position.coords.accuracy + 'm');
+        logData([
+            'Got watchposition: ',
+            position.coords.latitude.toFixed(4),
+            ',',
+            position.coords.longitude.toFixed(4),
+            '; acc: ',
+            position.coords.accuracy.toFixed(0),
+            'm'
+        ].join(''));
         geo_current_position = position;
         ui_pos.innerHTML = `
             <dl>
@@ -84,7 +92,7 @@ var geolocator = (function() {
                 <dt>Longitude</dt>  
                 <dd>${position.coords.longitude.toFixed(4)}</dd>
                 <dt>Position accuracy</dt>  
-                <dd>${position.coords.accuracy}m</dd>
+                <dd>${position.coords.accuracy.toFixed(0)}m</dd>
             </dl>
         `; 
         stopSpinner();
