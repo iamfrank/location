@@ -95,16 +95,16 @@ var geolocator = (function() {
         stopSpinner();
         switch(error.code) {
             case error.PERMISSION_DENIED:
-                x.innerHTML = "User denied the request for Geolocation."
+                ui_log.innerHTML += "<li>User denied the request for Geolocation.</li>"
                 break;
             case error.POSITION_UNAVAILABLE:
-                x.innerHTML = "Location information is unavailable."
+                ui_log.innerHTML += "<li>Location information is unavailable.</li>"
                 break;
             case error.TIMEOUT:
-                x.innerHTML = "The request to get user location timed out."
+                ui_log.innerHTML += "<li>The request to get user location timed out.</li>"
                 break;
             case error.UNKNOWN_ERROR:
-                x.innerHTML = "An unknown error occurred."
+                ui_log.innerHTML += "<li>An unknown error occurred.</li>"
                 break;
         }
     }
