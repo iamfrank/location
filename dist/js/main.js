@@ -57,7 +57,7 @@ var geolocator = (function() {
 
     function startLocating() {
         startSpinner()
-        if (navigator.geolocation) {
+        if ('geolocation' in navigator) {
             navigator.geolocation.clearWatch(geo_watcher);
             geo_watcher = navigator.geolocation.watchPosition(
                 showPosSuccess, 
@@ -167,7 +167,7 @@ var geolocator = (function() {
 
     function getSingleLocation() {
         startSpinner()
-        if (navigator.geolocation) {
+        if ('geolocation' in navigator) {
             var single_pos = navigator.geolocation.getCurrentPosition(
                 function (position) {
                     logData('Got current position: ' + position.coords.latitude.toFixed(4) + ',' + position.coords.longitude.toFixed(4) + '; acc: ' + position.coords.accuracy + 'm');
@@ -189,7 +189,7 @@ var geolocator = (function() {
                 {
                     enableHighAccuracy: true, 
                     maximumAge        : 30000, 
-                    timeout           : 27000
+                    timeout           : 10000
                 }
             );
         } else {
