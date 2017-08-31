@@ -17,13 +17,16 @@ var geolocator = (function() {
         },
         ui_pos = document.getElementById("positionInfo"),
         ui_spinner = document.getElementById("loadingOverlay"),
-        ui_tracking_elements = document.getElementsByClassName('track-visible');
+        ui_tracking_elements = document.getElementsByClassName('track-visible'),
+        ui_log = document.getElementById("log");
+        
         
     geo.init = init;
     geo.startLocating = startLocating;
     geo.startTracking = startTracking;
     geo.stopTracking = stopTracking;
     geo.setWaypoint = setWaypoint;
+    geo.getSingleLocation = getSingleLocation;
 
 
     function init() {
@@ -38,7 +41,7 @@ var geolocator = (function() {
             maxZoom: 18
         }).addTo(geo_map);
 
-/*
+        /*
         // Fetch already saved routes
         if (typeof(Storage) !== "undefined" && localStorage.geolocatorSavedRoutes) {
             geo_routes = JSON.parse(localStorage.geolocatorSavedRoutes);
@@ -47,10 +50,8 @@ var geolocator = (function() {
             console.log('No support for web storage');
         }
         
-        
         // List routes
         listRoutes(geo_routes); 
-
         */
     }
 
@@ -74,13 +75,14 @@ var geolocator = (function() {
     }
 
     function showPosSuccess(position) {
+        logData('Got watchposition: ' + position.coords.latitude.toFixed(4) + ',' + position.coords.longitude.toFixed(4) + '; acc: ' + position.coords.accuracy + 'm');
         geo_current_position = position;
         ui_pos.innerHTML = `
             <dl>
                 <dt>Latitude</dt>  
-                <dd>${position.coords.latitude}</dd>
+                <dd>${position.coords.latitude.toFixed(4)}</dd>
                 <dt>Longitude</dt>  
-                <dd>${position.coords.longitude}</dd>
+                <dd>${position.coords.longitude.toFixed(4)}</dd>
                 <dt>Position accuracy</dt>  
                 <dd>${position.coords.accuracy}m</dd>
             </dl>
@@ -157,6 +159,43 @@ var geolocator = (function() {
             route_list += '<li><button>' + geo_routes[r].name + '</button></li>';
         }
         ui_routelist.innerHTML = route_list;
+    }
+
+    function logData(data) {
+        ui_log.innerHTML += '<li style="font-size: smaller">' + data + '</li>';
+    }
+
+    function getSingleLocation() {
+        startSpinner()
+        if (navigator.geolocation) {
+            var single_pos = navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    logData('Got current position: ' + position.coords.latitude.toFixed(4) + ',' + position.coords.longitude.toFixed(4) + '; acc: ' + position.coords.accuracy + 'm');
+                    geo_current_position = position;
+                    ui_pos.innerHTML = `
+                        <dl>
+                            <dt>Latitude</dt>  
+                            <dd>${position.coords.latitude.toFixed(4)}</dd>
+                            <dt>Longitude</dt>  
+                            <dd>${position.coords.longitude.toFixed(4)}</dd>
+                            <dt>Position accuracy</dt>  
+                            <dd>${position.coords.accuracy}m</dd>
+                        </dl>
+                    `; 
+                    stopSpinner();
+                    pinMarker([position.coords.latitude, position.coords.longitude]);
+                }, 
+                showPosError, 
+                {
+                    enableHighAccuracy: true, 
+                    maximumAge        : 30000, 
+                    timeout           : 27000
+                }
+            );
+        } else {
+            stopSpinner();
+            ui_pos.innerHTML = "Geolocation is not supported by this browser.";
+        }
     }
 
     return geo;

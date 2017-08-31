@@ -72,11 +72,15 @@ section:target {
 }
 
 #maplayer {
-    height: 33vh;
+    height: 10rem;
     width: 100%;
     background-color: #004;
     border: solid 1px #468;
     border-width: 1px 0;
+}
+
+#log {
+    padding: 1rem;
 }
 
 #loadingOverlay {
@@ -113,10 +117,6 @@ section:target {
     50% { transform: rotate(90deg); }
     75% { transform: rotate(180deg); }
     100% { transform: rotate(180deg); }
-}
-
-.track-visible {
-    display: none;
 }
 
 .alert {

@@ -22,7 +22,6 @@
     </head>
     <body>
 
-
         <main>
 
             <nav>
@@ -32,23 +31,15 @@
 
             <section id="positionView">
                 <h2>Position</h2>
-                <p class="alert track-visible">Tracking</p>
-                <div>
-                    <div id="positionInfo"></div>
-                    <!-- <button onclick="geolocator.startLocating()">Refresh</button> -->
-                    <div class="track-visible">
-                        <button onclick="geolocator.setWaypoint()">Set waypoint</button>
-                        <button onclick="geolocator.stopTracking()">Stop tracking</button>
-                    </div>
+                <p class="alert track-visible" style="display: none;">Tracking</p>
+                <div id="positionInfo"></div>
+                <button onclick="geolocator.getSingleLocation()">Refresh</button>
+                <div class="track-visible" style="display: none;">
+                    <button onclick="geolocator.setWaypoint()">Set waypoint</button>
+                    <button onclick="geolocator.stopTracking()">Stop tracking</button>
                 </div>
-                <div>
-                    <div id="maplayer"></div>
-                </div>
-                <div id="loadingOverlay">
-                    <div>
-                        <div class="spinner"></div>
-                    </div>
-                </div>
+                <div id="maplayer"></div>
+                <div id="log"></div>
             </section>
 
             <section id="routeListView">
@@ -56,6 +47,12 @@
                 <button onclick="geolocator.startTracking()">Track a new route</button>
                 <ul id="routeList"></ul>
             </section>
+
+            <div id="loadingOverlay">
+                <div>
+                    <div class="spinner"></div>
+                </div>
+            </div>
             
         </main>
         
