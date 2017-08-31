@@ -26,6 +26,7 @@ var geolocator = (function() {
     geo.startTracking = startTracking;
     geo.stopTracking = stopTracking;
     geo.setWaypoint = setWaypoint;
+    
     geo.getSingleLocation = getSingleLocation;
 
 
@@ -63,9 +64,8 @@ var geolocator = (function() {
                 showPosSuccess, 
                 showPosError, 
                 {
-                    enableHighAccuracy: true, 
-                    maximumAge        : 30000, 
-                    timeout           : 27000
+                    enableHighAccuracy: false,
+                    timeout: 10000
                 }
             );
         } else {
@@ -187,9 +187,8 @@ var geolocator = (function() {
                 }, 
                 showPosError, 
                 {
-                    enableHighAccuracy: true, 
-                    maximumAge        : 30000, 
-                    timeout           : 10000
+                    enableHighAccuracy: false,
+                    timeout: 10000
                 }
             );
         } else {
