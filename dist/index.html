@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en" manifest="cache.manifest">
+<html class="no-js" lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -24,33 +24,38 @@
 
         <main>
 
-            <nav>
-                <a href="#positionView">Position</a>
-                <a href="#routeListView">Routes</a>
-            </nav>
-
-            <section id="positionView">
-                <h2>Position</h2>
-                <p class="alert track-visible" style="display: none;">Tracking</p>
-                <div id="positionInfo"></div>
-                <button onclick="geolocator.getSingleLocation()">Refresh</button>
-                <div class="track-visible" style="display: none;">
-                    <button onclick="geolocator.setWaypoint()">Set waypoint</button>
-                    <button onclick="geolocator.stopTracking()">Stop tracking</button>
-                </div>
+            <section id="position">
                 <div id="maplayer"></div>
-                <div id="log"></div>
+                <div id="positionInfo"></div>
+                <!-- <button onclick="geolocator.getSingleLocation()">Refresh</button> -->
+                <button class="set_wp_btn">Set waypoint</button>
             </section>
 
+            <section id="log">
+                <button class="log-toggle">Log</button>
+                <div class="log-wrapper">
+                    <h2>Log</h2>
+                    <ul class="log-list"></ul>
+                </div>
+            </section>
+
+            <!--
             <section id="routeListView">
                 <h2>Routes</h2>
                 <button onclick="geolocator.startTracking()">Track a new route</button>
                 <ul id="routeList"></ul>
             </section>
 
+            <nav>
+                <a href="#position">Position</a>
+                <a href="#routeListView">Routes</a>
+            </nav>
+            -->
+
             <div id="loadingOverlay">
                 <div>
                     <div class="spinner"></div>
+                    <p>Getting current location &hellip;</p>
                 </div>
             </div>
             
@@ -71,6 +76,8 @@
                     'css/normalize.min.css',
                     'css/main.css',
                     'css/leaflet.css',
+                    'css/images/marker-icon.png',
+                    'css/images/marker-icon-2x.png',
                     'js/leaflet.js', 
                     'js/main.js',
                     'js/upup.min.js'

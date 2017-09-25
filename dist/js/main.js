@@ -7,7 +7,7 @@ var geolocator = (function() {
     var geo = {},
         geo_watcher,
         geo_current_position,
-        geo_map = L.map('maplayer').fitWorld(),
+        geo_map = L.map('maplayer'),
         geo_map_marker,
         geo_routes = [],
         geo_route_new = {
@@ -18,13 +18,15 @@ var geolocator = (function() {
         ui_pos = document.getElementById("positionInfo"),
         ui_spinner = document.getElementById("loadingOverlay"),
         ui_tracking_elements = document.getElementsByClassName('track-visible'),
-        ui_log = document.getElementById("log");
+        ui_log_container = document.getElementById("log"),
+        ui_log_button = document.querySelector(".log-toggle"),
+        ui_log_wrapper = document.querySelector(".log-wrapper"),
+        ui_log_list = document.querySelector(".log-list"),
+        ui_set_wp_button = document.querySelector(".set_wp_btn");
         
         
     geo.init = init;
     geo.startLocating = startLocating;
-    geo.startTracking = startTracking;
-    geo.stopTracking = stopTracking;
     geo.setWaypoint = setWaypoint;
     
     geo.getSingleLocation = getSingleLocation;
@@ -32,15 +34,16 @@ var geolocator = (function() {
 
     function init() {
         
-        startSpinner();
-        //Navigate to position view
-        location.hash = 'positionView';
         // Get current location
         startLocating();
-        // Initialize map
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18
-        }).addTo(geo_map);
+
+        // Add event listener
+        ui_log_button.addEventListener('click', function() {
+            ui_log_container.classList.toggle("open");
+        });
+        ui_set_wp_button.addEventListener('click', function() {
+            setWaypoint();
+        });
 
         /*
         // Fetch already saved routes
@@ -88,9 +91,9 @@ var geolocator = (function() {
         ui_pos.innerHTML = `
             <dl>
                 <dt>Latitude</dt>  
-                <dd>${position.coords.latitude.toFixed(4)}</dd>
+                <dd>${position.coords.latitude.toFixed(6)}</dd>
                 <dt>Longitude</dt>  
-                <dd>${position.coords.longitude.toFixed(4)}</dd>
+                <dd>${position.coords.longitude.toFixed(6)}</dd>
                 <dt>Position accuracy</dt>  
                 <dd>${position.coords.accuracy.toFixed(0)}m</dd>
             </dl>
@@ -103,16 +106,16 @@ var geolocator = (function() {
         stopSpinner();
         switch(error.code) {
             case error.PERMISSION_DENIED:
-                ui_log.innerHTML += "<li>User denied the request for Geolocation.</li>"
+                ui_log_list.innerHTML += "<li>User denied the request for Geolocation.</li>"
                 break;
             case error.POSITION_UNAVAILABLE:
-                ui_log.innerHTML += "<li>Location information is unavailable.</li>"
+                ui_log_list.innerHTML += "<li>Location information is unavailable.</li>"
                 break;
             case error.TIMEOUT:
-                ui_log.innerHTML += "<li>The request to get user location timed out.</li>"
+                ui_log_list.innerHTML += "<li>The request to get user location timed out.</li>"
                 break;
             case error.UNKNOWN_ERROR:
-                ui_log.innerHTML += "<li>An unknown error occurred.</li>"
+                ui_log_list.innerHTML += "<li>An unknown error occurred.</li>"
                 break;
         }
     }
@@ -127,36 +130,12 @@ var geolocator = (function() {
 
     function pinMarker(latlon) {
         geo_map_marker = L.marker(latlon).addTo(geo_map);
-        geo_map.flyTo(latlon, 10);
-    }
-
-    function startTracking() {
-        // Navigate back to position page and display tracking options
-        location.hash = 'positionView';
-        for (var el of ui_tracking_elements) {
-            el.style.display = 'block';
-        }
-    }
-
-    function stopTracking() {
-        geo_route_new.name = prompt('Name your route:');
-        geo_routes.push(geo_route_new);
-        // Clean up tracking route
-        geo_route_new = {
-            name: 'Undefined',
-            coords: [],
-            distance: 0
-        };
-        // Hide tracking UI
-        for (var el of ui_tracking_elements) {
-            el.style.display = 'none';
-        }
-        listRoutes();
     }
 
     function setWaypoint() {
         var latlon = [geo_current_position.coords.latitude, geo_current_position.coords.longitude];
         geo_route_new.coords.push(latlon);
+        ui_log_list.innerHTML += '<li style="font-size: smaller">Waypoint set at ' + latlon + '</li>';
         pinMarker(latlon);
     }
 
@@ -170,7 +149,7 @@ var geolocator = (function() {
     }
 
     function logData(data) {
-        ui_log.innerHTML += '<li style="font-size: smaller">' + data + '</li>';
+        ui_log_list.innerHTML += '<li style="font-size: smaller">' + data + '</li>';
     }
 
     function getSingleLocation() {

@@ -3,7 +3,7 @@
 }
 
 body {
-    background: radial-gradient( #004, #002 );
+    background-color: #444;
     color: #fff;
     font: 125%/1.3 Roboto, sans-serif;
 }
@@ -49,7 +49,6 @@ button {
     padding: .5rem 1rem;
     background-color: #fd0;
     border: none;
-    box-shadow: 0 .25rem .5rem .25rem rgba(0,0,0,.2);
 }
 
 a.btn:hover,
@@ -59,34 +58,54 @@ button:active {
     background-color: #da0;
 }
 
-section {
-    display: none;
-    background: radial-gradient( #004, #002 );
-    position: absolute;
-    top: 2rem;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
-
-section:target {
-    display: block;
-}
-
 #positionInfo {
     padding: 1rem;
 }
 
 #maplayer {
-    height: 10rem;
+    height: 62vh;
     width: 100%;
-    background-color: #004;
-    border: solid 1px #468;
+    background-color: #444;
     border-width: 1px 0;
 }
 
 #log {
     padding: 1rem;
+    display: block;
+}
+
+.log-toggle {
+    background-color: rgba(0,0,0,.5);
+    color: #fff;
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    right: 0;
+    font-size: smaller;
+}
+
+.log-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    right: -90vw;
+    width: 90vw;
+    background-color: rgba(0,0,0,.8);
+    padding: 1rem;
+    z-index: 1000;
+}
+
+#log.open .log-wrapper {
+    right: 0;
+}
+
+.log-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-weight: lighter;
 }
 
 #loadingOverlay {
@@ -95,8 +114,8 @@ section:target {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient( #004, #002 );
-    z-index: 1000;
+    background-color: #444;
+    z-index: 1002;
 }
 
 #loadingOverlay > div {
@@ -131,80 +150,3 @@ section:target {
     padding: 0.5rem;
     text-align: center;
 }
-
-/*
-
-
-nav {
-    padding: .5rem;
-}
-
-nav * {
-    display: inline-block;
-}
-
-#log,
-#routes {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    overflow: auto;
-    background-color: black;
-    z-index: 1001;
-    padding-bottom: 4rem;
-}
-
-#log:target,
-#routes:target {
-    display: block;
-}
-
-#location {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 25vw;
-    height: 100vh;
-    color: #000;
-    z-index: 500;
-    text-align: right;
-    padding: .5rem;
-    overflow: hidden;
-}
-
-#nav {
-    position: absolute;
-    z-index: 1002;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-}
-
-#routeslist {
-    list-style: none;
-    padding: 0;
-}
-
-#routeslist > li {
-    display: flex;
-    width: 100%;
-}
-
-#routeslist button:first-child {
-    flex-grow: 1;
-}
-
-
-
-#trackcontrols {
-    position: absolute;
-    bottom: 4rem;
-    left: .5rem;
-    z-index: 501;
-}
-
-
-*/
