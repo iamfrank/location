@@ -5,7 +5,7 @@
 body {
     background-color: #444;
     color: #fff;
-    font: 125%/1.3 Roboto, sans-serif;
+    font: 100%/1.3 Roboto, sans-serif;
 }
 
 main {
@@ -73,8 +73,21 @@ button:active {
 #maplayer {
     height: 62vh;
     width: 100%;
-    background-color: #000;
+    background-color: #ccc;
     border-width: 1px 0;
+}
+
+.location-info {
+    margin: 0;
+    columns: 8rem 2;
+}
+
+.location-info dt {
+
+}
+
+.location-info dd {
+
 }
 
 #log {
@@ -136,8 +149,12 @@ button:active {
 }
 
 #actionbar {
-    height: 3rem;
+    position: fixed;
+    z-index: 999;
+    bottom: 0;
     text-align: center;
+    left: 0;
+    right: 0;   
 }
 
 .spinner {
