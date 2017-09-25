@@ -9,6 +9,18 @@ var geolocator = (function() {
         geo_current_position,
         geo_map = L.map('maplayer'),
         geo_map_marker,
+        geo_map_icon_a = L.icon({
+            iconUrl: '/img/icon-a.svg',
+            iconSize: [64, 64],
+            iconAnchor: [32, 64],
+            popupAnchor: [32, 16]
+        }),
+        geo_map_icon_b = L.icon({
+            iconUrl: '/img/icon-b.svg',
+            iconSize: [64, 64],
+            iconAnchor: [32, 64],
+            popupAnchor: [32, 16]
+        }),
         geo_routes = [],
         geo_route_new = {
             name: 'Undefined',
@@ -99,7 +111,7 @@ var geolocator = (function() {
             </dl>
         `; 
         stopSpinner();
-        pinMarker([position.coords.latitude, position.coords.longitude]);
+        pinMarker([position.coords.latitude, position.coords.longitude], geo_map_icon_b);
     }
 
     function showPosError(error) {
@@ -128,15 +140,15 @@ var geolocator = (function() {
         ui_spinner.style.display = 'none';
     }
 
-    function pinMarker(latlon) {
-        geo_map_marker = L.marker(latlon).addTo(geo_map);
+    function pinMarker(latlon, icon) {
+        geo_map_marker = L.marker(latlon, {icon: icon}).addTo(geo_map);
     }
 
     function setWaypoint() {
         var latlon = [geo_current_position.coords.latitude, geo_current_position.coords.longitude];
         geo_route_new.coords.push(latlon);
         ui_log_list.innerHTML += '<li style="font-size: smaller">Waypoint set at ' + latlon + '</li>';
-        pinMarker(latlon);
+        pinMarker(latlon, geo_map_icon_a);
     }
 
     function listRoutes() {
@@ -170,7 +182,7 @@ var geolocator = (function() {
                         </dl>
                     `; 
                     stopSpinner();
-                    pinMarker([position.coords.latitude, position.coords.longitude]);
+                    pinMarker([position.coords.latitude, position.coords.longitude], geo_map_icon_b);
                 }, 
                 showPosError, 
                 {
