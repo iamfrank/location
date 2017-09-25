@@ -8,7 +8,9 @@ var geolocator = (function() {
         geo_watcher,
         geo_current_position,
         geo_map = L.map('maplayer', {
-            dragging: false
+            dragging: false,
+            attributionControl: false,
+            zoomControl: false
         }),
         geo_map_marker,
         geo_map_polyline,
