@@ -8,12 +8,15 @@ var geolocator = (function() {
         geo_watcher,
         geo_current_position,
         geo_map = L.map('maplayer', {
+            center: [55, 15],
             zoom: 10,
             dragging: false,
             attributionControl: false,
             zoomControl: false
         }),
-        geo_map_marker,
+        geo_map_tiles = false,
+        geo_map_pos_marker,
+        geo_map_track_marker,
         geo_map_polyline,
         geo_map_icon_a = L.icon({
             iconUrl: 'img/icon-a.svg',
@@ -55,6 +58,10 @@ var geolocator = (function() {
         
         // Get current location
         startLocating();
+
+        if (geo_online && !geo_map_tiles) {
+            L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png').addTo(geo_map);
+        }
 
         // Add event listeners
         ui_log_button.addEventListener('click', function() {
@@ -145,31 +152,26 @@ var geolocator = (function() {
     }
 
     function updateMarker(latlon) {        
-        geo_map_marker = L.marker(latlon, {icon: geo_map_icon_a}).addTo(geo_map);
-        geo_map.setView(latlon);
-        if (geo_online) {
-            L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png').addTo(geo_map);
+        if (geo_map_pos_marker !== undefined ) {
+            geo_map.removeLayer(geo_map_pos_marker);
         }
+        geo_map_pos_marker = L.marker(latlon, {icon: geo_map_icon_a}).addTo(geo_map);
+        geo_map.setView(latlon);
     }
 
     function setWaypoint() {
         var latlon = [geo_current_position.coords.latitude, geo_current_position.coords.longitude];
-        console.log('setting waypoint');
-        console.log(latlon);
-        console.log('goes into ...');
-        console.log(geo_route.track.coords);
         geo_route.track.coords.push(latlon);
-        console.log(geo_route.track.coords);
         ui_log_list.innerHTML += '<li style="font-size: smaller">Waypoint set at ' + latlon + '</li>';
-        geo_map_marker = L.marker(latlon, {icon:  geo_map_icon_b}).addTo(geo_map);
+        geo_map_track_marker = L.marker(latlon, {icon:  geo_map_icon_b}).addTo(geo_map);
         geo_route.redraw(); 
     }
 
     function redrawMap() {
-        //geo_map.removeLayer(geo_map_polyline);
+        if (geo_map_polyline !== undefined ) {
+            geo_map.removeLayer(geo_map_polyline);
+        }
         geo_map_polyline = L.polyline(geo_route.track.coords, {color: '#aabbff'}).addTo(geo_map);
-        console.log('geo_map_polyline');
-        console.log(geo_map_polyline);
         geo_map.fitBounds(geo_map_polyline.getBounds());
     }
 
