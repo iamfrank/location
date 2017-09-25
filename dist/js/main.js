@@ -155,7 +155,7 @@ var geolocator = (function() {
 
     function redrawMap() {
         geo_map.removeLayer(geo_map_polyline);
-        geo_map_polyline = L.polyline(geo_route.track.coords, {color: '#ffffaa'}).addTo(geo_map);
+        geo_map_polyline = L.polyline(geo_route.track.coords, {color: '#aabbff'}).addTo(geo_map);
         map.fitBounds(geo_map_polyline.getBounds());
     }
 
