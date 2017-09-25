@@ -15,13 +15,13 @@ var geolocator = (function() {
         geo_map_marker,
         geo_map_polyline,
         geo_map_icon_a = L.icon({
-            iconUrl: '../img/icon-a.svg',
+            iconUrl: 'img/icon-a.svg',
             iconSize: [64, 64],
             iconAnchor: [32, 64],
             popupAnchor: [32, 16]
         }),
         geo_map_icon_b = L.icon({
-            iconUrl: '../img/icon-b.svg',
+            iconUrl: 'img/icon-b.svg',
             iconSize: [64, 64],
             iconAnchor: [32, 64],
             popupAnchor: [32, 16]
