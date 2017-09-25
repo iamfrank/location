@@ -60,7 +60,7 @@ var geolocator = (function() {
         startLocating();
 
         if (geo_online && !geo_map_tiles) {
-            L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png').addTo(geo_map);
+            L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png').addTo(geo_map);
         }
 
         // Add event listeners
