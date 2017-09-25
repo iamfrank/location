@@ -7,25 +7,32 @@ var geolocator = (function() {
     var geo = {},
         geo_watcher,
         geo_current_position,
-        geo_map = L.map('maplayer'),
+        geo_map = L.map('maplayer', {
+            dragging: 'false'
+        }),
         geo_map_marker,
+        geo_map_polyline,
         geo_map_icon_a = L.icon({
-            iconUrl: '/img/icon-a.svg',
+            iconUrl: '../img/icon-a.svg',
             iconSize: [64, 64],
             iconAnchor: [32, 64],
             popupAnchor: [32, 16]
         }),
         geo_map_icon_b = L.icon({
-            iconUrl: '/img/icon-b.svg',
+            iconUrl: '../img/icon-b.svg',
             iconSize: [64, 64],
             iconAnchor: [32, 64],
             popupAnchor: [32, 16]
         }),
         geo_routes = [],
-        geo_route_new = {
-            name: 'Undefined',
-            coords: [],
-            distance: 0
+        geo_route = {
+            track: {
+                name: 'Undefined',
+                coords: [],
+                distance: 0
+            },
+            setMarker: setWaypoint,
+            redraw: redrawMap
         },
         ui_pos = document.getElementById("positionInfo"),
         ui_spinner = document.getElementById("loadingOverlay"),
@@ -38,10 +45,6 @@ var geolocator = (function() {
         
         
     geo.init = init;
-    geo.startLocating = startLocating;
-    geo.setWaypoint = setWaypoint;
-    
-    geo.getSingleLocation = getSingleLocation;
 
 
     function init() {
@@ -49,7 +52,7 @@ var geolocator = (function() {
         // Get current location
         startLocating();
 
-        // Add event listener
+        // Add event listeners
         ui_log_button.addEventListener('click', function() {
             ui_log_container.classList.toggle("open");
         });
@@ -65,9 +68,6 @@ var geolocator = (function() {
             // No support for web storage
             console.log('No support for web storage');
         }
-        
-        // List routes
-        listRoutes(geo_routes); 
         */
     }
 
@@ -111,7 +111,7 @@ var geolocator = (function() {
             </dl>
         `; 
         stopSpinner();
-        pinMarker([position.coords.latitude, position.coords.longitude], geo_map_icon_b);
+        updateMarker([position.coords.latitude, position.coords.longitude]);
     }
 
     function showPosError(error) {
@@ -140,15 +140,23 @@ var geolocator = (function() {
         ui_spinner.style.display = 'none';
     }
 
-    function pinMarker(latlon, icon) {
-        geo_map_marker = L.marker(latlon, {icon: icon}).addTo(geo_map);
+    function updateMarker(latlon) {
+        geo_map_marker = L.marker(latlon, {icon: geo_map_icon_a}).addTo(geo_map);
+        geo_map.setView(latlon);
     }
 
     function setWaypoint() {
         var latlon = [geo_current_position.coords.latitude, geo_current_position.coords.longitude];
-        geo_route_new.coords.push(latlon);
+        geo_route.track.coords.push(latlon);
         ui_log_list.innerHTML += '<li style="font-size: smaller">Waypoint set at ' + latlon + '</li>';
-        pinMarker(latlon, geo_map_icon_a);
+        geo_map_marker = L.marker(latlon, {icon:  geo_map_icon_b}).addTo(geo_map);
+        geo_route.redraw; 
+    }
+
+    function redrawMap() {
+        geo_map.removeLayer(geo_map_polyline);
+        geo_map_polyline = L.polyline(geo_route.track.coords, {color: '#ffffaa'}).addTo(geo_map);
+        map.fitBounds(geo_map_polyline.getBounds());
     }
 
     function listRoutes() {
