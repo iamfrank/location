@@ -10,7 +10,6 @@ var geolocator = (function() {
         geo_map = L.map('maplayer', {
             center: [55, 15],
             zoom: 10,
-            dragging: false,
             attributionControl: false,
             zoomControl: false
         }),
