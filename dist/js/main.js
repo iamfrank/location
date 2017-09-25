@@ -211,42 +211,6 @@ var geolocator = (function() {
 
 
 geolocator.init();
-  
-
-/*
-* Register service worker
-* (Does nothing at present. Is needed to display Chrome install web app banner.)
-*/
-
-/*
-var service_worker = (function() {
-    var sw = {};
-    sw.init = init;
-    function init() {
-        
-        if ('serviceWorker' in navigator) {
-            console.log('CLIENT: service worker registration in progress.');
-            
-            navigator.serviceWorker.register('sw.js')
-                .then(function(registration) {
-                    // Registration was successful
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                })
-                .catch(function(err) {
-                    // registration failed :(
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-        
-        } else {
-            console.log('CLIENT: service worker is not supported.');
-        }
-
-    }
-    return sw;
-}());
-
-service_worker.init();
-*/
 
 
 /*
