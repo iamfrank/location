@@ -8,6 +8,7 @@ var geolocator = (function() {
         geo_watcher,
         geo_current_position,
         geo_map = L.map('maplayer', {
+            zoom: 10,
             dragging: false,
             attributionControl: false,
             zoomControl: false
@@ -26,6 +27,7 @@ var geolocator = (function() {
             iconAnchor: [32, 64],
             popupAnchor: [32, 16]
         }),
+        geo_online = navigator.onLine,
         geo_routes = [],
         geo_route = {
             track: {
@@ -142,9 +144,15 @@ var geolocator = (function() {
         ui_spinner.style.display = 'none';
     }
 
-    function updateMarker(latlon) {
+    function updateMarker(latlon) {        
         geo_map_marker = L.marker(latlon, {icon: geo_map_icon_a}).addTo(geo_map);
         geo_map.setView(latlon);
+        if (geo_online) {
+            console.log('stuff');
+            // http://b.tile.stamen.com/terrain/8/48/96.png
+            // http://tile.stamen.com/terrain/zoom/x/y.jpg
+            L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png').addTo(geo_map);
+        }
     }
 
     function setWaypoint() {
