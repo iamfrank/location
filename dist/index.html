@@ -56,8 +56,24 @@
             
         </main>
         
+        <script src="upup.min.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/main.js"></script>
+
+        <!-- Enable offline access to site resources-->
+        <script>
+            UpUp.start({
+                'content-url': 'index.html',
+                'assets': [
+                    'manifest.json',
+                    'css/normalize.min.css',
+                    'css/main.css',
+                    'css/leaflet.css',
+                    'js/leaflet.js', 
+                    'js/main.js'
+                ]
+            });
+        </script>
 
     </body>
 </html>

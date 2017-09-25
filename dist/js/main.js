@@ -211,13 +211,14 @@ var geolocator = (function() {
 
 
 geolocator.init();
-
+  
 
 /*
 * Register service worker
 * (Does nothing at present. Is needed to display Chrome install web app banner.)
 */
 
+/*
 var service_worker = (function() {
     var sw = {};
     sw.init = init;
@@ -245,6 +246,7 @@ var service_worker = (function() {
 }());
 
 service_worker.init();
+*/
 
 
 /*

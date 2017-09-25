@@ -1,15 +1,15 @@
 {
-  "short_name": "Location",
-  "name": "Geolocation App",
-  "display": "standalone",
-  "orientation": "portrait",
-  "start_url": "index.html",
-  "icons": [
-    {
-      "src": "apple-touch-icon.png",
-      "type": "image/png",
-      "sizes": "144x144"
-    }
-  ],
-  "background_color": "#993333"
+    "short_name": "geotrack",
+    "name": "GeoTrack",
+    "display": "standalone",
+    "orientation": "portrait",
+    "start_url": "index.html",
+    "icons": [
+        {
+          "src": "apple-touch-icon.png",
+          "type": "image/png",
+          "sizes": "144x144"
+        }
+    ],
+    "background_color": "#993333"
 }
