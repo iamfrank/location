@@ -31,11 +31,14 @@ var geolocator = (function() {
         geo_online = navigator.onLine,
         geo_routes = [],
         geo_route = {
-            track: {
-                name: 'Undefined',
-                coords: [],
-                distance: 0
-            },
+            name: 'Undefined',
+            positions: [],
+            distance: 0,
+            time: '-',
+            speed: 0,
+            calcDistance: calcTotalDistance,
+            calcTime: calcTotalTime,
+            calcSpeed: calcAvgSpeed,
             setMarker: setWaypoint,
             redraw: redrawMap
         },
@@ -149,11 +152,13 @@ var geolocator = (function() {
     }
 
     function setWaypoint() {
+        geo_current_position.timestamp = new Date();
         var latlon = [geo_current_position.coords.latitude, geo_current_position.coords.longitude];
-        geo_route.track.coords.push(latlon);
+        geo_route.positions.push(geo_current_position);
         ui_log_list.innerHTML += '<li style="font-size: smaller">Waypoint set at ' + latlon + '</li>';
         geo_map_track_marker = L.marker(latlon, {icon:  geo_map_icon_b}).addTo(geo_map);
-        calcDistance(geo_route.track.coords);
+        geo_route.calcDistance();
+        geo_route.calcTime();
         redrawPosInfo(geo_current_position);
         geo_route.redraw();
     }
@@ -162,7 +167,12 @@ var geolocator = (function() {
         if (geo_map_polyline !== undefined ) {
             geo_map.removeLayer(geo_map_polyline);
         }
-        geo_map_polyline = L.polyline(geo_route.track.coords, {color: '#401B00'}).addTo(geo_map);
+        var latlngs = [];
+        for (var p in geo_route.positions) {
+            var c = geo_route.positions[p].coords;
+            latlngs.push([c.latitude, c.longitude]);
+        }
+        geo_map_polyline = L.polyline(latlngs, {color: '#401B00'}).addTo(geo_map);
         geo_map.fitBounds(geo_map_polyline.getBounds());
     }
 
@@ -184,63 +194,49 @@ var geolocator = (function() {
                 <dt>Speed</dt>
                 <dd>${position.coords.speed ? position.coords.speed.toFixed(0) + 'm/s' : '-'}</dd>
                 <dt>Latest position time</dt>
-                <dd>${new Date().toLocaleTimeString()}</dd>
+                <dd>${position.timestamp ? new Date(position.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}</dd>
                 <dt>Distance travelled</dt>
-                <dd>${(geo_route.track.distance / 1000).toFixed(0) + 'km'}</dd>
+                <dd>${(geo_route.distance / 1000).toFixed(1) + 'km'}</dd>
+                <dt>Time travelled</dt>
+                <dd>${(geo_route.calcTime() / 1000).toFixed(0).toString().padStart(2, "0") + 'sec'}</dd>
+                <dt>Avg. speed</dt>
+                <dd>${((geo_route.calcSpeed())*3.6).toFixed(0) + 'km/h'}</dd>
             </dl>
         `;
-    }
-
-    function listRoutes() {
-        var ui_routelist = document.getElementById('routeList');
-        var route_list = '';
-        for (var r in geo_routes) {
-            route_list += '<li><button>' + geo_routes[r].name + '</button></li>';
-        }
-        ui_routelist.innerHTML = route_list;
     }
 
     function logData(data) {
         ui_log_list.innerHTML += '<li style="font-size: smaller">' + data + '</li>';
     }
 
-    function calcDistance(latlngs) {
-        if (latlngs.length > 1) {
-            for (var l = 1; l < latlngs.length; l++) {
-                geo_route.track.distance += geo_map.distance(latlngs[l], latlngs[l-1]);
+    function calcTotalDistance() {
+        if (geo_route.positions.length > 1) {
+            for (var p = 1; p < geo_route.positions.length; p++) {
+                var c1 = geo_route.positions[p].coords;
+                var c2 = geo_route.positions[p-1].coords;
+                geo_route.distance += geo_map.distance([c1.latitude, c1.longitude],[c2.latitude, c2.longitude]);
             }
+            return geo_route.distance;
+        } else {
+            return 0;
         }
     }
 
-    function getSingleLocation() {
-        startSpinner()
-        if ('geolocation' in navigator) {
-            var single_pos = navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    logData('Got current position: ' + position.coords.latitude.toFixed(4) + ',' + position.coords.longitude.toFixed(4) + '; acc: ' + position.coords.accuracy + 'm');
-                    geo_current_position = position;
-                    ui_pos.innerHTML = `
-                        <dl class="location-info">
-                            <dt>Latitude</dt>  
-                            <dd>${position.coords.latitude.toFixed(4)}</dd>
-                            <dt>Longitude</dt>  
-                            <dd>${position.coords.longitude.toFixed(4)}</dd>
-                            <dt>Position accuracy</dt>  
-                            <dd>${position.coords.accuracy}m</dd>
-                        </dl>
-                    `; 
-                    stopSpinner();
-                    pinMarker([position.coords.latitude, position.coords.longitude], geo_map_icon_b);
-                }, 
-                showPosError, 
-                {
-                    enableHighAccuracy: false,
-                    timeout: 10000
-                }
-            );
+    function calcTotalTime() {
+        if (geo_route.positions.length > 1) {
+            var t1 = geo_route.positions[0].timestamp,
+                t2 = geo_route.positions[geo_route.positions.length -1].timestamp;
+            return geo_route.time = t2 - t1;
         } else {
-            stopSpinner();
-            ui_pos.innerHTML = "Geolocation is not supported by this browser.";
+            return 0;
+        }
+    }
+
+    function calcAvgSpeed() {
+        if (geo_route.positions.length > 1) {
+            return geo_route.speed = geo_route.distance / geo_route.time;
+        } else {
+            return 0;
         }
     }
 
