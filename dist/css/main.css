@@ -58,20 +58,8 @@ button:active {
     background-color: #da0;
 }
 
-#position {
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100vh;
-}
-
-#positionInfo {
-    padding: 1rem;
-    overflow: auto;
-    flex: 0 1 auto;
-}
-
 #maplayer {
-    height: 62vh;
+    height: 100vh;
     width: 100%;
     background-color: #ccc;
     border-width: 1px 0;
