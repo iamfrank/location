@@ -28,7 +28,9 @@
                 <div id="maplayer"></div>
                 <div id="positionInfo"></div>
                 <!-- <button onclick="geolocator.getSingleLocation()">Refresh</button> -->
-                <button class="set_wp_btn">Set waypoint</button>
+                <div id="actionbar">
+                    <button class="set_wp_btn">Set waypoint</button>
+                </div>
             </section>
 
             <section id="log">
@@ -68,7 +70,7 @@
         <!-- Enable offline access to site resources-->
         <script>
             UpUp.start({
-                'cache-version': 'v2',
+                'cache-version': 'v13',
                 'content-url': 'index.html',
                 'assets': [
                     'manifest.json',

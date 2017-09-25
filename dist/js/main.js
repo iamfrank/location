@@ -148,25 +148,29 @@ var geolocator = (function() {
         geo_map_marker = L.marker(latlon, {icon: geo_map_icon_a}).addTo(geo_map);
         geo_map.setView(latlon);
         if (geo_online) {
-            console.log('stuff');
-            // http://b.tile.stamen.com/terrain/8/48/96.png
-            // http://tile.stamen.com/terrain/zoom/x/y.jpg
             L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png').addTo(geo_map);
         }
     }
 
     function setWaypoint() {
         var latlon = [geo_current_position.coords.latitude, geo_current_position.coords.longitude];
+        console.log('setting waypoint');
+        console.log(latlon);
+        console.log('goes into ...');
+        console.log(geo_route.track.coords);
         geo_route.track.coords.push(latlon);
+        console.log(geo_route.track.coords);
         ui_log_list.innerHTML += '<li style="font-size: smaller">Waypoint set at ' + latlon + '</li>';
         geo_map_marker = L.marker(latlon, {icon:  geo_map_icon_b}).addTo(geo_map);
-        geo_route.redraw; 
+        geo_route.redraw(); 
     }
 
     function redrawMap() {
-        geo_map.removeLayer(geo_map_polyline);
+        //geo_map.removeLayer(geo_map_polyline);
         geo_map_polyline = L.polyline(geo_route.track.coords, {color: '#aabbff'}).addTo(geo_map);
-        map.fitBounds(geo_map_polyline.getBounds());
+        console.log('geo_map_polyline');
+        console.log(geo_map_polyline);
+        geo_map.fitBounds(geo_map_polyline.getBounds());
     }
 
     function listRoutes() {

@@ -58,14 +58,22 @@ button:active {
     background-color: #da0;
 }
 
+#position {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100vh;
+}
+
 #positionInfo {
     padding: 1rem;
+    overflow: auto;
+    flex: 0 1 auto;
 }
 
 #maplayer {
     height: 62vh;
     width: 100%;
-    background-color: #444;
+    background-color: #000;
     border-width: 1px 0;
 }
 
@@ -125,6 +133,11 @@ button:active {
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
+}
+
+#actionbar {
+    height: 3rem;
+    text-align: center;
 }
 
 .spinner {
