@@ -92,7 +92,7 @@ var geolocator = (function() {
                 {
                     enableHighAccuracy: false,
                     timeout: 10000,
-                    maximumAge: 10000
+                    maximumAge: 0
                 }
             );
         } else {
