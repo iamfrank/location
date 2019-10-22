@@ -7,19 +7,22 @@
         <meta name="description" content="A web application to track and display geolocations">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <link rel="stylesheet" href="leaflet/leaflet.css">
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
 
         <main>
             
-            <h1>Your coordinates</h1>
-            <div id="position-info">No position info present</div>
-
-            <button onclick="openMap()">Show on map</button>
+            <h1>My location</h1>
+            
+            <p id="position-info">No position info present</p>
+            
+            <div id="map"></div>
             
         </main>
         
+        <script src="leaflet/leaflet.js"></script>
         <script src="js/main.js"></script>
 
     </body>

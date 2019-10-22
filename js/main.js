@@ -3,21 +3,29 @@
  */
 
 var ui_info = document.getElementById('position-info'),
-    current_pos = null
+    current_pos = null,
+    ui_map = null
+
+// For testing
+var positions = [
+    { 
+        latitude: 55.536780,
+        longitude: 11.971517  
+    },
+    { 
+        latitude: 55.534440,
+        longitude: 11.974178  
+    },
+    {
+        latitude: 55.534005,
+        longitude: 11.973146
+    }
+]
 
 
 /*
  * Methods
  */
-
-function success(position) {
-    current_pos = position
-    ui_info.innerHTML = displayLatLng(current_pos.coords)
-}
-
-function error() {
-    ui_info.textContent = 'Unable to retrieve your location'
-}
 
 function displayLatLng(coords) {
     var str = ''
@@ -38,8 +46,40 @@ function displayLatLng(coords) {
     return str
 }
 
-function openMap() {
+function renderMarkers() {
+    for (var p in positions) {
+        var pos_num = parseInt(p) + 1
+        L.marker([positions[p].latitude, positions[p].longitude]).addTo(ui_map)
+        .bindPopup('<strong>Position ' + pos_num + '</strong><br>' + displayLatLng({latitude: positions[p].latitude, longitude: positions[p].longitude}))
+    }
+}
 
+function locationSuccess(position) {
+    console.log('location data', position)
+    var latlng = {latitude: position.latitude, longitude: position.longitude},
+        ui_latlng = displayLatLng(latlng)
+    ui_info.innerHTML = ui_latlng
+    positions.push(latlng)
+    renderMarkers()
+}
+
+function locationError(err) {
+    console.log(err)
+    ui_info.textContent = 'Unable to retrieve your location'
+}
+
+function initMap() {
+    ui_map = L.map('map').setView([positions[0].latitude, positions[0].longitude], 13)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(ui_map)
+    ui_map.on('locationfound', function(position) {
+        locationSuccess(position)
+    })
+    ui_map.on('locationerror', function(err) {
+        locationError(err)
+    })
+    ui_map.locate()
 }
 
 
@@ -47,9 +87,4 @@ function openMap() {
  * Initialization
  */
 
-if (!navigator.geolocation) {
-    ui_info.textContent = 'Geolocation is not supported by your browser'
-} else {
-    ui_info.textContent = 'Locating…'
-    navigator.geolocation.getCurrentPosition(success, error);
-}
+initMap()
