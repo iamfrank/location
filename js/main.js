@@ -3,11 +3,13 @@
  */
 
 var ui_info = document.getElementById('position-info'),
+    positions = [],
     current_pos = null,
     ui_map = null
 
 // For testing
-var positions = [
+/*
+positions = [
     { 
         latitude: 55.536780,
         longitude: 11.971517  
@@ -21,6 +23,7 @@ var positions = [
         longitude: 11.973146
     }
 ]
+*/
 
 
 /*
