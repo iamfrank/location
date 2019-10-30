@@ -76,10 +76,10 @@ function initMap() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(ui_map)
-    ui_map.on('locationfound', function(position) {
+    ui_map.addEventListener('locationfound', function(position) {
         locationSuccess(position)
     })
-    ui_map.on('locationerror', function(err) {
+    ui_map.addEventListener('locationerror', function(err) {
         locationError(err)
     })
     ui_map.locate()
