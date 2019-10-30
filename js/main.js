@@ -82,7 +82,7 @@ function initMap() {
     ui_map.addEventListener('locationerror', function(err) {
         locationError(err)
     })
-    ui_map.locate()
+    ui_map.locate({setView: true, maxZoom: 16})
 }
 
 
