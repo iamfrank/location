@@ -1,11 +1,14 @@
+import LeafletMap from './components/map/map.mjs'
+
+LeafletMap.init()
+
 /*
  * Properties
  */
 
 var ui_info = document.getElementById('position-info'),
     positions = [],
-    current_pos = null,
-    ui_map = null
+    current_pos = null
 
 // For testing
 /*
@@ -70,24 +73,3 @@ function locationError(err) {
     console.log(err)
     ui_info.textContent = 'Unable to retrieve your location'
 }
-
-function initMap() {
-    ui_map = L.map('map').setView([positions[0].latitude, positions[0].longitude], 13)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(ui_map)
-    ui_map.on('locationfound', function(position) {
-        locationSuccess(position)
-    })
-    ui_map.on('locationerror', function(err) {
-        locationError(err)
-    })
-    ui_map.locate()
-}
-
-
-/*
- * Initialization
- */
-
-initMap()

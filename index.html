@@ -7,23 +7,22 @@
         <meta name="description" content="A web application to track and display geolocations">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="leaflet/leaflet.css">
-        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="./components/leaflet/leaflet.css">
+        <link rel="stylesheet" href="./main.css">        
+        
+        <script src="./components/leaflet/leaflet.js"></script>
+        <script type="module" src="./main.mjs"></script>
+        
     </head>
     <body>
 
         <main>
             
-            <h1>My location</h1>
-            
             <p id="position-info">No position info present</p>
-            
-            <div id="map"></div>
+
+            <leaflet-map></leaflet-map>
             
         </main>
-        
-        <script src="leaflet/leaflet.js"></script>
-        <script src="js/main.js"></script>
 
     </body>
 </html>
