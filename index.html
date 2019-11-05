@@ -51,6 +51,7 @@
                 right: 2rem;
                 text-align: center;
                 width: 3rem;
+                z-index: 2;
             }
 
             #info-panel {
@@ -61,12 +62,24 @@
                 position: absolute;
                 right: 0;
                 top: 0;
+                z-index: 3;
             }
 
             .info-accuracy {
                 color: #999;
                 margin: 0;
                 padding: 0;
+            }
+
+            #map {
+                width: 100vw;
+                height: 100vh;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                z-index: 1;
             }
 
         </style>
@@ -97,6 +110,7 @@
                         longitude: 11
                     }
                 },
+                zoom_lvl = 5,
                 pos_watcher = null,
                 geo_options = {
                     enableHighAccuracy: true, 
@@ -128,9 +142,17 @@
                 info_panel.innerHTML = str
             }
 
+            function updateMap(position) {
+                const lat = position.coords.latitude,
+                      lng = position.coords.longitude
+                L.marker([lat, lng]).addTo(ui_map);
+                ui_map.setView([lat, lng], 8)
+            }
+
             function geo_success(position) {
                 position_now = position
                 renderPosition(position)
+                updateMap(position)
             }
 
             function geo_error() {
@@ -149,7 +171,7 @@
                 pos_btn.addEventListener('click', function() {
                     getGeoPos()
                 })
-                ui_map = L.map('map').setView([position_now.coords.latitude, position_now.coords.longitude], 13)
+                ui_map = L.map('map').setView([position_now.coords.latitude, position_now.coords.longitude], 6)
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(ui_map)
