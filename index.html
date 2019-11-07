@@ -99,18 +99,24 @@
 
         <script>
 
-            // Elements
+            /*
+             * Elements
+             */
+
             let pos_btn = document.getElementById('get-position'),
                 info_panel = document.getElementById('info-panel')
 
-            // Properties
+
+            /*
+             * Properties
+             */
+
             let position_now = {
                     coords: {
                         latitude: 55,
                         longitude: 11
                     }
                 },
-                zoom_lvl = 5,
                 pos_watcher = null,
                 geo_options = {
                     enableHighAccuracy: true, 
@@ -119,7 +125,28 @@
                 },
                 ui_map = null
 
-            // Methods
+
+            /*
+             * Methods
+             */
+
+            function accuracyDigester(accuracy) {
+                let acc_obj = {
+                    display: '',
+                    zoom: 1
+                }
+                if (accuracy < 1) {
+                    acc_display = `< 1m`
+                } else if (accuracy < 1000) {
+                    acc_obj.zoom = 2
+                    acc_display = `~ ${ accuracy.toFixed(0) }m`
+                } else {
+                    acc_obj.zoom = 10
+                    acc_display = `~ ${ (accuracy / 1000).toFixed(1) }km`
+                }
+                return acc_obj
+            }
+
             function renderPosition(position) {
                 const lat = position.coords.latitude,
                       lng = position.coords.longitude
@@ -138,7 +165,7 @@
                 } else {
                     str += '0&#176;'
                 }
-                str += '<p class="info-accuracy">Accuracy: ' + position.coords.accuracy + '</p>'
+                str += '<p class="info-accuracy">Accuracy: ' + accuracyDigester(position.coords.accuracy).display + '</p>'
                 info_panel.innerHTML = str
             }
 
@@ -146,7 +173,7 @@
                 const lat = position.coords.latitude,
                       lng = position.coords.longitude
                 L.marker([lat, lng]).addTo(ui_map);
-                ui_map.setView([lat, lng], 8)
+                ui_map.setView([lat, lng], accuracyDigester(position.coords.accuracy).zoom)
             }
 
             function geo_success(position) {
@@ -156,7 +183,7 @@
             }
 
             function geo_error() {
-                info_panel.innerHTML = "No location available"
+                info_panel.innerHTML = "No location available :-("
             }
 
             function getGeoPos() {
@@ -177,7 +204,11 @@
                 }).addTo(ui_map)
             }
 
-            // Initialization
+
+            /*
+             * Initialization
+             */
+
             initLocator()
         
         </script>
