@@ -136,13 +136,13 @@
                     zoom: 1
                 }
                 if (accuracy < 1) {
-                    acc_display = `< 1m`
+                    acc_obj.display = `< 1m`
                 } else if (accuracy < 1000) {
                     acc_obj.zoom = 2
-                    acc_display = `~ ${ accuracy.toFixed(0) }m`
+                    acc_obj.display = `~ ${ accuracy.toFixed(0) }m`
                 } else {
                     acc_obj.zoom = 10
-                    acc_display = `~ ${ (accuracy / 1000).toFixed(1) }km`
+                    acc_obj.display = `~ ${ (accuracy / 1000).toFixed(1) }km`
                 }
                 return acc_obj
             }
