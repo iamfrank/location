@@ -123,7 +123,8 @@
                     maximumAge: 30000, 
                     timeout: 27000
                 },
-                ui_map = null
+                ui_map = null,
+                ui_map_marker = null
 
 
             /*
@@ -192,14 +193,14 @@
                 } else {
                     str += '0&#176;'
                 }
-                str += '<p class="info-accuracy">Accuracy: ' + accuracyDigester(position.coords.accuracy).display + '(zoom ' + accuracyDigester(position.coords.accuracy).zoom + ')</p>'
+                str += '<p class="info-accuracy">Accuracy: ' + accuracyDigester(position.coords.accuracy).display + '</p>'
                 info_panel.innerHTML = str
             }
 
             function updateMap(position) {
                 const lat = position.coords.latitude,
                       lng = position.coords.longitude
-                L.marker([lat, lng]).addTo(ui_map);
+                ui_map_marker.setLatLng([lat, lng])
                 ui_map.setView([lat, lng], accuracyDigester(position.coords.accuracy).zoom)
             }
 
@@ -226,6 +227,7 @@
                     getGeoPos()
                 })
                 ui_map = L.map('map').setView([position_now.coords.latitude, position_now.coords.longitude], 6)
+                ui_map_marker = L.marker([position_now.coords.latitude, position_now.coords.longitude]).addTo(ui_map)
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(ui_map)
