@@ -36,9 +36,8 @@
                 top: 0;
             }
             
-            #get-position {
+            button {
                 background-color: #000;
-                bottom: 2rem;
                 border: none;
                 border-radius: 50%;
                 box-shadow: 0 .25rem .5rem hsla(0,0%,50%,.5);
@@ -48,10 +47,21 @@
                 line-height: 1;
                 padding: .25rem .25rem;
                 position: absolute;
-                right: 2rem;
                 text-align: center;
                 width: 3rem;
                 z-index: 3;
+                text-transform: uppercase;
+            }
+
+            #get-position {
+                bottom: 2rem;
+                right: 2rem;
+            }
+
+            #set-position {
+                bottom: 6rem;
+                right: 2rem;
+                font-size: .9rem;
             }
 
             #info-panel {
@@ -95,6 +105,8 @@
 
             <button id="get-position" title="Get current location">&#8982;</button>
             
+            <button id="set-position" title="Save current location">Set</button>
+            
         </main>
 
         <script>
@@ -104,6 +116,7 @@
              */
 
             let pos_btn = document.getElementById('get-position'),
+                set_btn = document.getElementById('set-position'),
                 info_panel = document.getElementById('info-panel')
 
 
@@ -220,6 +233,11 @@
                 info_panel.innerHTML = "No location available :-("
             }
 
+            function setGeoPos() {
+                navigator.geolocation.clearWatch(pos_watcher)
+                alert('tracking stopped')
+            }
+
             function getGeoPos() {
                 flag_user_has_zoomed = false
                 if ("geolocation" in navigator) {
@@ -232,6 +250,9 @@
             function initLocator() {
                 pos_btn.addEventListener('click', function() {
                     getGeoPos()
+                })
+                set_btn.addEventListener('click', function() {
+                    setGeoPos()
                 })
                 ui_map = L.map('map').setView([position_now.coords.latitude, position_now.coords.longitude], 6)
                 ui_map_marker = L.marker([0, 0]).addTo(ui_map)
