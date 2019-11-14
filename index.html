@@ -124,7 +124,8 @@
                     timeout: 27000
                 },
                 ui_map = null,
-                ui_map_marker = null
+                ui_map_marker = null,
+                flag_user_has_zoomed = false
 
 
             /*
@@ -178,7 +179,7 @@
             function renderPosition(position) {
                 const lat = position.coords.latitude,
                       lng = position.coords.longitude
-                let str = 'Current location<br>'
+                let str = 'Tracking current location<br>'
                 if (lat > 0) {
                     str += 'N ' + lat.toFixed(4) + '&#176;<br>'
                 } else if (lat < 0) {
@@ -200,8 +201,13 @@
             function updateMap(position) {
                 const lat = position.coords.latitude,
                       lng = position.coords.longitude
+
+                let zoom = ui_map.getZoom()
+                if (!flag_user_has_zoomed) {
+                    zoom = accuracyDigester(position.coords.accuracy).zoom
+                }
                 ui_map_marker.setLatLng([lat, lng])
-                ui_map.setView([lat, lng], accuracyDigester(position.coords.accuracy).zoom)
+                ui_map.setView([lat, lng], zoom)
             }
 
             function geo_success(position) {
@@ -215,6 +221,7 @@
             }
 
             function getGeoPos() {
+                flag_user_has_zoomed = false
                 if ("geolocation" in navigator) {
                     pos_watcher = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options)
                 } else {
@@ -231,6 +238,9 @@
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(ui_map)
+                ui_map.addEventListener('zoomstart', function() {
+                    flag_user_has_zoomed = true
+                })
             }
 
 
