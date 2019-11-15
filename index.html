@@ -236,7 +236,7 @@
 
             function renderMarkers(positions) {
                 for (var pos in positions) {
-                    L.marker([positions.pos.lat, positions.pos.lng]).addTo(ui_map)
+                    L.marker([positions[pos].lat, positions[pos].lng]).addTo(ui_map)
                 }
             }
 
