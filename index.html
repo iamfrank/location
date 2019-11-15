@@ -42,7 +42,7 @@
                 border-radius: 50%;
                 box-shadow: 0 .25rem .5rem hsla(0,0%,50%,.5);
                 color: #fff;
-                font-size: 2rem;
+                font-size: .9rem;
                 height: 3rem;
                 line-height: 1;
                 padding: .25rem .25rem;
@@ -61,7 +61,6 @@
             #set-position {
                 bottom: 6rem;
                 right: 2rem;
-                font-size: .9rem;
             }
 
             #info-panel {
@@ -103,16 +102,16 @@
             
             <div id="info-panel"></div>
 
-            <button id="get-position" title="Get current location">&#8982;</button>
+            <button id="get-position" title="Get location">Get</button>
             
-            <button id="set-position" title="Save current location">Set</button>
+            <button id="set-position" title="Save location">Set</button>
             
         </main>
 
         <script>
 
             /*
-             * Elements
+             * HTML elements
              */
 
             let pos_btn = document.getElementById('get-position'),
@@ -124,21 +123,23 @@
              * Properties
              */
 
-            let position_now = {
-                    coords: {
-                        latitude: 55,
-                        longitude: 11
-                    }
-                },
-                pos_watcher = null,
+            let flag_user_has_zoomed = false,
+                flag_is_tracking = false,
                 geo_options = {
                     enableHighAccuracy: true, 
                     maximumAge: 30000, 
                     timeout: 27000
                 },
+                pos_watcher = null,
+                position_now = {
+                    coords: {
+                        latitude: 55,
+                        longitude: 11
+                    }
+                },
+                positions = [],
                 ui_map = null,
-                ui_map_marker = null,
-                flag_user_has_zoomed = false
+                ui_map_marker = null
 
 
             /*
@@ -233,13 +234,28 @@
                 info_panel.innerHTML = "No location available :-("
             }
 
+            function renderMarkers(positions) {
+                for (var pos in positions) {
+                    L.marker([positions.pos.lat, positions.pos.lng]).addTo(ui_map)
+                }
+            }
+
             function setGeoPos() {
+                flag_is_tracking = false
                 navigator.geolocation.clearWatch(pos_watcher)
-                alert('tracking stopped')
+
+                positions.push({
+                    lat: position_now.coords.latitude,
+                    lng: position_now.coords.longitude,
+                    acc: position_now.coords.accuracy
+                })
+                renderMarkers(positions)
+                localStorage.setItem('locator-positions-7718522f6d83', JSON.stringify(positions))
             }
 
             function getGeoPos() {
                 flag_user_has_zoomed = false
+                flag_is_tracking = true
                 if ("geolocation" in navigator) {
                     pos_watcher = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options)
                 } else {
@@ -247,21 +263,31 @@
                 }
             }
 
-            function initLocator() {
+            function loadSavedPositions() {
+                positions = JSON.parse( localStorage.getItem('locator-positions-7718522f6d83') )
+                renderMarkers(positions)
+            }
+
+            function initListeners() {
                 pos_btn.addEventListener('click', function() {
                     getGeoPos()
                 })
                 set_btn.addEventListener('click', function() {
                     setGeoPos()
                 })
+            }
+
+            function initMap() {
                 ui_map = L.map('map').setView([position_now.coords.latitude, position_now.coords.longitude], 6)
                 ui_map_marker = L.marker([0, 0]).addTo(ui_map)
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(ui_map)
                 ui_map.addEventListener('zoomstart', function() {
                     flag_user_has_zoomed = true
                 })
+                if (navigator.onLine) { // Only load map tiles if online
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(ui_map)
+                }
             }
 
 
@@ -269,7 +295,9 @@
              * Initialization
              */
 
-            initLocator()
+            initListeners()
+            initMap()
+            loadSavedPositions()
         
         </script>
 
