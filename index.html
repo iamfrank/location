@@ -140,6 +140,13 @@
                 ui_map = null,
                 ui_map_marker = null
 
+            const icon = L.icon({
+                iconUrl: '/img/logo_v3_small.svg',
+                iconSize: [30, 45],
+                iconAnchor: [15, 45],
+                popupAnchor: [-3, -76],
+            })
+
 
             /*
              * Methods
@@ -233,9 +240,20 @@
                 info_panel.innerHTML = "No location available :-("
             }
 
-            function renderMarkers(positions) {
+            function deletePosition(position_time_id) {
+                var idx = positions.findIndex(function(p) {
+                    return p.time = position_time_id
+                })
+                positions.splice(idx, 1)
+                renderMarkers()
+                localStorage.setItem('locator-positions-7718522f6d83', JSON.stringify(positions))
+            }
+
+            function renderMarkers() {
                 for (var pos in positions) {
-                    L.marker([positions[pos].lat, positions[pos].lng]).addTo(ui_map)
+                    L.marker([positions[pos].lat, positions[pos].lng], {icon: icon})
+                    .bindPopup('A lovely popup. <button onclick="deletePosition(' + positions[pos].time + ')">Remove</button>')
+                    .addTo(ui_map)
                 }
             }
 
@@ -246,9 +264,10 @@
                 positions.push({
                     lat: position_now.coords.latitude,
                     lng: position_now.coords.longitude,
-                    acc: position_now.coords.accuracy
+                    acc: position_now.coords.accuracy,
+                    time: new Date().toUTCString
                 })
-                renderMarkers(positions)
+                renderMarkers()
                 localStorage.setItem('locator-positions-7718522f6d83', JSON.stringify(positions))
                 info_panel.innerHTML = 'Location set'
             }
@@ -279,7 +298,7 @@
 
             function initMap() {
                 ui_map = L.map('map').setView([position_now.coords.latitude, position_now.coords.longitude], 6)
-                ui_map_marker = L.marker([0, 0]).addTo(ui_map)
+                ui_map_marker = L.marker([0, 0], {icon: icon}).addTo(ui_map)
                 ui_map.addEventListener('zoomstart', function() {
                     flag_user_has_zoomed = true
                 })
