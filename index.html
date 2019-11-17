@@ -66,7 +66,7 @@
             #info-panel {
                 background-color: #eee;
                 left: 0;
-                padding: .5rem 2rem;
+                padding: 0 2rem;
                 position: absolute;
                 right: 0;
                 bottom: 0;
@@ -271,6 +271,7 @@
 
             function setGeoPos() {
                 flag_is_tracking = false
+                ui_map_marker.remove()
                 navigator.geolocation.clearWatch(pos_watcher)
                 let new_pos = {
                     lat: position_now.coords.latitude,
@@ -284,10 +285,17 @@
                 info_panel.innerHTML = 'Location set'
             }
 
+            function renderMarker() {
+                ui_map_marker = L.marker([0, 0], {icon: icon})
+                .bindPopup('<button onclick="setGeoPos()">Set</button>')
+                .addTo(ui_map)
+            }
+
             function getGeoPos() {
                 flag_user_has_zoomed = false
                 flag_is_tracking = true
                 if ("geolocation" in navigator) {
+                    renderMarker()
                     pos_watcher = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options)
                 } else {
                     info_panel.textContent = "Can't locate on this device."
@@ -310,7 +318,6 @@
 
             function initMap() {
                 ui_map = L.map('map').setView([position_now.coords.latitude, position_now.coords.longitude], 6)
-                ui_map_marker = L.marker([0, 0], {icon: icon}).addTo(ui_map)
                 ui_map.addEventListener('zoomstart', function() {
                     flag_user_has_zoomed = true
                 })
