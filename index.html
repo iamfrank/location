@@ -121,7 +121,7 @@
             /*
              * Properties
              */
-
+            
             let flag_user_has_zoomed = false,
                 flag_is_tracking = false,
                 geo_options = {
@@ -242,33 +242,45 @@
 
             function deletePosition(position_time_id) {
                 var idx = positions.findIndex(function(p) {
-                    return p.time = position_time_id
+                    return p.time === position_time_id
                 })
+                positions[idx].marker.remove()
                 positions.splice(idx, 1)
-                renderMarkers()
-                localStorage.setItem('locator-positions-7718522f6d83', JSON.stringify(positions))
+                savePositions(positions)
             }
 
-            function renderMarkers() {
+            function renderMarkers(positions) {
                 for (var pos in positions) {
-                    L.marker([positions[pos].lat, positions[pos].lng], {icon: icon})
+                    let new_marker = L.marker([positions[pos].lat, positions[pos].lng], {icon: icon})
                     .bindPopup('A lovely popup. <button onclick="deletePosition(' + positions[pos].time + ')">Remove</button>')
                     .addTo(ui_map)
+                    positions[pos].marker = new_marker
                 }
+            }
+
+            function savePositions(arr) {
+                let save_arr = Array.from(arr.map(pos => {
+                    return Object.assign({}, pos)
+                }))
+                
+                save_arr.map(function(pos) {
+                    pos.marker = null
+                })
+                localStorage.setItem('locator-positions-7718522f6d83', JSON.stringify(save_arr))
             }
 
             function setGeoPos() {
                 flag_is_tracking = false
                 navigator.geolocation.clearWatch(pos_watcher)
-
-                positions.push({
+                let new_pos = {
                     lat: position_now.coords.latitude,
                     lng: position_now.coords.longitude,
                     acc: position_now.coords.accuracy,
-                    time: new Date().toUTCString
-                })
-                renderMarkers()
-                localStorage.setItem('locator-positions-7718522f6d83', JSON.stringify(positions))
+                    time: new Date().getTime()
+                }
+                positions.push(new_pos)
+                renderMarkers([new_pos])
+                savePositions(positions)
                 info_panel.innerHTML = 'Location set'
             }
 
@@ -283,7 +295,7 @@
             }
 
             function loadSavedPositions() {
-                positions = JSON.parse( localStorage.getItem('locator-positions-7718522f6d83') )
+                positions = JSON.parse( localStorage.getItem('locator-positions-7718522f6d83') ) || []
                 renderMarkers(positions)
             }
 
@@ -317,7 +329,7 @@
             initListeners()
             initMap()
             loadSavedPositions()
-        
+
         </script>
 
     </body>
