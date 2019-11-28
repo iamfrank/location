@@ -37,7 +37,8 @@
             }
             
             #get-position,
-            #set-position {
+            #set-position,
+            #end-direction-btn {
                 background-color: #000;
                 border: none;
                 border-radius: 50%;
@@ -62,6 +63,10 @@
             #set-position {
                 bottom: 6rem;
                 right: 2rem;
+            }
+
+            #end-direction-btn {
+                position: static;
             }
 
             #info-panel {
@@ -91,6 +96,20 @@
                 z-index: 1;
             }
 
+            #direction-view {
+                display: none;
+                width: 100vw;
+                height: 100vh;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                z-index: 4;
+                background-color: #eee;
+                padding: 1rem;
+            }
+
         </style>
         
     </head>
@@ -98,13 +117,22 @@
 
         <main id="locator">
 
-            <div id="map"></div>
-            
-            <div id="info-panel"></div>
+            <section id="map-view">
+                <div id="map"></div>        
+                <div id="info-panel"></div>
+                <button id="get-position" title="Get location">Get</button>                
+                <button id="set-position" title="Save location">Set</button>
+            </section>
 
-            <button id="get-position" title="Get location">Get</button>
-            
-            <button id="set-position" title="Save location">Set</button>
+            <section id="direction-view">
+                <h2>Pointing towards <span id="direction-to"></span></h2>
+
+                <p>Direction: <span id="point-direction"></span></p>
+                <p>Distance: <span id="point-distance"></span></p>
+
+                <p>Presently at: <span id="direction-from"></span></p>
+                <button id="end-direction-btn">End</button>
+            </section>
             
         </main>
 
@@ -116,7 +144,11 @@
 
             let pos_btn = document.getElementById('get-position'),
                 set_btn = document.getElementById('set-position'),
-                info_panel = document.getElementById('info-panel')
+                info_panel = document.getElementById('info-panel'),
+                direction_panel = document.getElementById('direction-view'),
+                end_dir_btn = document.getElementById('end-direction-btn'),
+                info_dir_to = document.getElementById('direction-to'),
+                info_dir_from = document.getElementById('direction-from')
 
 
             /*
@@ -250,6 +282,14 @@
                 savePositions(positions)
             }
 
+            function endPointMeTo() {
+                direction_panel.style.display = 'none'
+            }
+
+            function pointMeTo(pos_idx) {
+                direction_panel.style.display = 'block'
+            }
+
             function renderMarkers(positions) {
                 for (var pos in positions) {
                     let new_marker = L.marker([positions[pos].lat, positions[pos].lng], {icon: icon})
@@ -314,6 +354,9 @@
                 })
                 set_btn.addEventListener('click', function() {
                     setGeoPos()
+                })
+                end_dir_btn.addEventListener('click', function() {
+                    endPointMeTo()
                 })
             }
 
