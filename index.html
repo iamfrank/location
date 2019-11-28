@@ -36,7 +36,8 @@
                 top: 0;
             }
             
-            button {
+            #get-position,
+            #set-position {
                 background-color: #000;
                 border: none;
                 border-radius: 50%;
@@ -252,7 +253,7 @@
             function renderMarkers(positions) {
                 for (var pos in positions) {
                     let new_marker = L.marker([positions[pos].lat, positions[pos].lng], {icon: icon})
-                    .bindPopup('A lovely popup. <button onclick="deletePosition(' + positions[pos].time + ')">Remove</button>')
+                    .bindPopup('<p>' + positions[pos].lat + '<br>' + positions[pos].lng + '</p>' + '<button onclick="pointMeTo(' + pos + ')">Take me here</button> <button onclick="deletePosition(' + positions[pos].time + ')">Remove</button>')
                     .addTo(ui_map)
                     positions[pos].marker = new_marker
                 }
