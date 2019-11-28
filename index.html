@@ -259,9 +259,9 @@
             }
 
             function savePositions(arr) {
-                let save_arr = Array.from(arr.map(pos => {
+                let save_arr = arr.map(pos => {
                     return Object.assign({}, pos)
-                }))
+                })
                 
                 save_arr.map(function(pos) {
                     pos.marker = null
