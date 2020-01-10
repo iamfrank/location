@@ -148,8 +148,9 @@
                 direction_panel = document.getElementById('direction-view'),
                 end_dir_btn = document.getElementById('end-direction-btn'),
                 info_dir_to = document.getElementById('direction-to'),
-                info_dir_from = document.getElementById('direction-from')
-                info_dist = document.getElementById('point-distance')
+                info_dir_from = document.getElementById('direction-from'),
+                info_dist = document.getElementById('point-distance'),
+                info_bearing = document.getElementById('point-direction')
 
 
             /*
@@ -186,7 +187,23 @@
              * Methods
              */
 
-            function distanceDigester(dist_num) {
+            function toDegrees(num) { 
+                return num * 180 / Math.PI
+            }
+
+            function calcBearing(pos1,pos2)  {
+                var R = 6371e3, // metres
+                    φ1 = pos1[0],
+                    φ2 = pos2[0],
+                    λ1 = pos1[1],
+                    λ2 = pos2[1],
+                    y = Math.sin(λ2-λ1) * Math.cos(φ2),
+                    x = Math.cos(φ1)*Math.sin(φ2) - Math.sin(φ1)*Math.cos(φ2)*Math.cos(λ2-λ1)
+                console.log(toDegrees(Math.atan2(y, x)))
+                return Math.round( toDegrees(Math.atan2(y, x)) ) + '°'
+            }
+
+            function calcDistance(dist_num) {
                 var dist_pretty = ''
                 if (dist_num < 1000) {
                     dist_pretty = Math.round( dist_num ) + 'm'
@@ -196,8 +213,15 @@
                 return dist_pretty
             }
 
+            function updateBearing(pos_idx) {
+                info_bearing.innerText = calcBearing(
+                    [position_now.coords.latitude, position_now.coords.longitude],
+                    [positions[pos_idx].lat, positions[pos_idx].lng]
+                )
+            }
+
             function updateDistance(pos_idx) {
-                info_dist.innerText = distanceDigester(ui_map.distance(
+                info_dist.innerText = calcDistance(ui_map.distance(
                     [position_now.coords.latitude, position_now.coords.longitude], 
                     [positions[pos_idx].lat, positions[pos_idx].lng]
                 ))
@@ -317,6 +341,7 @@
                 updateNavFrom()
                 updateNavTo(pos_idx)
                 updateDistance(pos_idx)
+                updateBearing(pos_idx)
             }
 
             function renderMarkers(positions) {
