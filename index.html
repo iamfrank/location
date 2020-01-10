@@ -149,6 +149,7 @@
                 end_dir_btn = document.getElementById('end-direction-btn'),
                 info_dir_to = document.getElementById('direction-to'),
                 info_dir_from = document.getElementById('direction-from')
+                info_dist = document.getElementById('point-distance')
 
 
             /*
@@ -184,6 +185,31 @@
             /*
              * Methods
              */
+
+            function distanceDigester(dist_num) {
+                var dist_pretty = ''
+                if (dist_num < 1000) {
+                    dist_pretty = Math.round( dist_num ) + 'm'
+                } else {
+                    dist_pretty = Math.round( dist_num / 1000 ) + 'km'
+                }
+                return dist_pretty
+            }
+
+            function updateDistance(pos_idx) {
+                info_dist.innerText = distanceDigester(ui_map.distance(
+                    [position_now.coords.latitude, position_now.coords.longitude], 
+                    [positions[pos_idx].lat, positions[pos_idx].lng]
+                ))
+            }
+
+            function updateNavTo(pos_idx) {
+                info_dir_to.innerText = positions[pos_idx].lat + ' ' + positions[pos_idx].lng
+            }
+
+            function updateNavFrom() {
+                info_dir_from.innerText = position_now.coords.latitude + ' ' + position_now.coords.longitude
+            }
 
             function accuracyDigester(accuracy) {
                 let acc_obj = {
@@ -288,6 +314,9 @@
 
             function pointMeTo(pos_idx) {
                 direction_panel.style.display = 'block'
+                updateNavFrom()
+                updateNavTo(pos_idx)
+                updateDistance(pos_idx)
             }
 
             function renderMarkers(positions) {
