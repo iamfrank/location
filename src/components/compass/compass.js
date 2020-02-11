@@ -17,7 +17,7 @@ function init() {
 }
 
 function updateHeading(ev) {
-    if (state.heading !== ev.alpha) {
+    if (ev.absolute && state.heading !== ev.alpha) {
         state.heading = ev.alpha
         display(state.heading)
     }
