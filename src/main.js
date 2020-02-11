@@ -1,7 +1,10 @@
-
+import state from './state.js'
 import Compass from './components/compass/compass.js'
+import Hud from './components/hud/hud.js'
+import { accuracyDigester } from './filters/filters.js'
 
 Compass.init()
+Hud.init()
 
 /*
 * HTML elements
@@ -100,72 +103,6 @@ function updateNavFrom() {
     info_dir_from.innerText = position_now.coords.latitude + ' ' + position_now.coords.longitude
 }
 
-function accuracyDigester(accuracy) {
-    let acc_obj = {
-        display: '',
-        zoom: 1
-    }
-    if (accuracy < 1) {
-        acc_obj.display = `< 1m`
-    } else if (accuracy < 1000) {
-        acc_obj.display = `~ ${ accuracy.toFixed(0) }m`
-    } else {
-        acc_obj.display = `~ ${ (accuracy / 1000).toFixed(1) }km`   
-    }
-    if (accuracy < 50) {
-        acc_obj.zoom = 19
-    } else if (accuracy < 150) {
-        acc_obj.zoom = 18
-    } else if (accuracy < 250) {
-        acc_obj.zoom = 17
-    } else if (accuracy < 500) {
-        acc_obj.zoom = 16
-    } else if (accuracy < 1000) {
-        acc_obj.zoom = 15
-    } else if (accuracy < 2500) {
-        acc_obj.zoom = 14
-    } else if (accuracy < 5000) {
-        acc_obj.zoom = 13
-    } else if (accuracy < 10000) {
-        acc_obj.zoom = 12
-    } else if (accuracy < 15000) {
-        acc_obj.zoom = 11
-    } else if (accuracy < 25000) {
-        acc_obj.zoom = 10
-    } else if (accuracy < 50000) {
-        acc_obj.zoom = 9
-    } else if (accuracy < 150000) {
-        acc_obj.zoom = 8
-    } else if (accuracy < 250000) {
-        acc_obj.zoom = 7
-    } else {
-        acc_obj.zoom = 6
-    }
-    return acc_obj
-}
-
-function renderPosition(position) {
-    const lat = position.coords.latitude,
-            lng = position.coords.longitude
-    let str = 'Tracking current location<br>'
-    if (lat > 0) {
-        str += 'N ' + lat.toFixed(4) + '&#176;<br>'
-    } else if (lat < 0) {
-        str += 'S ' + lat.toFixed(4) + '&#176;<br>'
-    } else {
-        str = '0&#176;<br>'
-    }
-    if (lng > 0) {
-        str += 'E ' + lng.toFixed(4) + '&#176;'
-    } else if (lng < 0) {
-        str += 'W ' + lng.toFixed(4) + '&#176;'
-    } else {
-        str += '0&#176;'
-    }
-    str += '<p class="info-accuracy">Accuracy: ' + accuracyDigester(position.coords.accuracy).display + '</p>'
-    info_panel.innerHTML = str
-}
-
 function updateMap(position) {
     const lat = position.coords.latitude,
             lng = position.coords.longitude
@@ -179,8 +116,10 @@ function updateMap(position) {
 }
 
 function geo_success(position) {
+    state.update('lat', position.coords.latitude)
+    state.update('lng', position.coords.longitude)
+    state.update('accuracy', position.coords.accuracy)
     position_now = position
-    renderPosition(position)
     updateMap(position)
 }
 
