@@ -1,12 +1,12 @@
 // Apply external Leaflet CSS to the DOM
 const linkElem = document.createElement('link')
 linkElem.setAttribute('rel', 'stylesheet')
-linkElem.setAttribute('href', './leaflet.css')
+linkElem.setAttribute('href', './components/leaflet-map/leaflet.css')
 document.head.appendChild(linkElem)
 
 // Apply external Leaflet JS to the DOM
 const scriptElem = document.createElement('script')
-scriptElem.setAttribute('src', './leaflet.js')
+scriptElem.setAttribute('src', './components/leaflet-map/leaflet.js')
 document.head.appendChild(scriptElem)
 
 // Define LeafletMap component

@@ -26,7 +26,6 @@ const locationState = function() {
         document.dispatchEvent(locations_change_event)
     }
     const normalizeGeolocation = function(geolocation) {
-        console.log(geolocation)
         return {
             accuracy: geolocation.coords.accuracy,
             latitude: geolocation.coords.latitude,
@@ -40,6 +39,7 @@ const locationState = function() {
         document.dispatchEvent(position_event)
     }
     const geo_error = function() {
+        document.dispatchEvent(position_event)
         console.log("No location available :-(")
         return false
     }
@@ -56,6 +56,7 @@ const locationState = function() {
     if ("geolocation" in navigator) {
         navigator.geolocation.watchPosition(geo_success, geo_error, geo_options)
     } else {
+        document.dispatchEvent(position_event)
         console.log("No geolocation on this device")
     }
 
