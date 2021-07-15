@@ -24,13 +24,13 @@ class LeafletMap extends HTMLElement {
 
         this.ui_map = null
         this.icon_a = L.icon({
-            iconUrl: '../../img/logo_v3_small.svg',
+            iconUrl: './img/logo_v3_small.svg',
             iconSize: [30, 45],
             iconAnchor: [15, 45],
             popupAnchor: [0, -30],
         })
         this.icon_b = L.icon({
-            iconUrl: '../../img/logo_v2.svg',
+            iconUrl: './img/logo_v2.svg',
             iconSize: [30, 45],
             iconAnchor: [15, 45],
             popupAnchor: [0, -30],
