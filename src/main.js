@@ -1,9 +1,7 @@
 import state from './state.js'
-import Compass from './components/compass/compass.js'
 import Hud from './components/hud/hud.js'
 import { accuracyDigester } from './filters/filters.js'
 
-Compass.init()
 Hud.init()
 
 /*

@@ -1,0 +1,24 @@
+{
+  "name": "location",
+  "version": "1.0.0",
+  "description": "Web application for mobile that tracks and displays a user's geolocations",
+  "main": "index.html",
+  "scripts": {
+    "serve": "npm install && echo 'Dependencies installed. Server running at localhost:7777' && python3 -m http.server 7777",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamfrank/location.git"
+  },
+  "keywords": [],
+  "author": "Frank Thomsen",
+  "license": "GPL-3",
+  "bugs": {
+    "url": "https://github.com/iamfrank/location/issues"
+  },
+  "homepage": "https://iamfrank.github.io/location",
+  "dependencies": {
+    "leaflet": "^1.7.1"
+  }
+}

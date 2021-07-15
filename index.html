@@ -2,143 +2,63 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Locator</title>
+        <title>Location</title>
         <meta name="description" content="A web application to track and display geolocations">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <link rel="stylesheet" href="./modules/leaflet/leaflet.css">
-        <link rel="stylesheet" href="./src/main.css">
-        
-        <script src="./modules/leaflet/leaflet.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
         <style>
-
-            * {
-                box-sizing: border-box;
-            }
-
-            html,
-            body {
+            html, body {
                 height: 100%;
-                width: 100%;
+                width: 100vw;
             }
-
             body {
-                margin: 0;
                 padding: 0;
+                margin: 0;
             }
-
-            main {
-                bottom: 0;
-                font: 1em/1.2 sans-serif;
-                left: 0;
+            #svbtn {
                 position: fixed;
-                right: 0;
-                top: 0;
-            }
-            
-            #get-position,
-            #set-position,
-            #end-direction-btn {
-                background-color: #000;
-                border: none;
-                border-radius: 50%;
-                box-shadow: 0 .25rem .5rem hsla(0,0%,50%,.5);
-                color: #fff;
-                font-size: .9rem;
-                height: 3rem;
-                line-height: 1;
-                padding: .25rem .25rem;
-                position: absolute;
-                text-align: center;
-                width: 3rem;
-                z-index: 3;
-                text-transform: uppercase;
-            }
-
-            #get-position {
-                bottom: 2rem;
-                right: 2rem;
-            }
-
-            #set-position {
-                bottom: 6rem;
-                right: 2rem;
-            }
-
-            #end-direction-btn {
-                position: static;
-            }
-
-            #info-panel {
-                background-color: #eee;
-                left: 0;
-                padding: 0 2rem;
-                position: absolute;
-                right: 0;
                 bottom: 0;
+                margin: 1rem auto;
                 z-index: 2;
             }
-
-            .info-accuracy {
-                color: #999;
-                margin: 0;
-                padding: 0;
-            }
-
-            #map {
-                width: 100vw;
-                height: 100vh;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                z-index: 1;
-            }
-
-            #direction-view {
-                display: none;
-                width: 100vw;
-                height: 100vh;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                z-index: 4;
-                background-color: #eee;
-                padding: 1rem;
-            }
-
         </style>
-        
     </head>
     <body>
 
-        <main id="locator">
-
-            <section id="map-view">
-                <div id="map"></div>        
-                <div id="info-panel"></div>
-                <button id="get-position" title="Get location">Get</button>                
-                <button id="set-position" title="Save location">Set</button>
-            </section>
-
-            <section id="direction-view">
-                <h2>Pointing towards <span id="direction-to"></span></h2>
-
-                <p>Direction: <span id="point-direction"></span></p>
-                <p>Distance: <span id="point-distance"></span></p>
-
-                <p>Presently at: <span id="direction-from"></span></p>
-                <button id="end-direction-btn">End</button>
-            </section>
-            
+        <main>
+            <leaflet-map id="lflt"></leaflet-map>
+            <button id="svbtn">Save</button>
         </main>
 
-        <script src="./src/main.js" type="module"></script>
+        <script src="./components/leaflet-map/leaflet-map.js"></script>
+        <script src="./components/location-state/location-state.js"></script>
+
+        <script>
+            // Bind events and attribute data
+
+            // Init state and elements
+            const state = locationState()
+            const map_el = document.getElementById('lflt')
+
+            // On new location event, update map
+            document.addEventListener('position', function(ev) {
+                map_el.setAttribute('data-position', JSON.stringify(ev.detail.position()))
+            })
+
+            // On new locations saved, update map
+            document.addEventListener('changelocations', function(ev) {
+                map_el.setAttribute('data-saved-positions', JSON.stringify(state.getSavedLocations()))
+            })
+
+            // Handle clicks and touches
+            document.addEventListener('click', function(ev) {
+
+                // On clicking the save button, update list of saved locations
+                if (ev.target.id === 'svbtn') {
+                    state.saveCurrentLocation()
+                }
+            })
+        </script>
 
     </body>
 </html>
