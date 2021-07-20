@@ -24,16 +24,16 @@ class LeafletMap extends HTMLElement {
 
         this.ui_map = null
         this.icon_a = L.icon({
-            iconUrl: './components/leaflet-map/icon.svg',
+            iconUrl: './components/leaflet-map/icon_current.svg',
             iconSize: [30, 45],
             iconAnchor: [15, 45],
-            popupAnchor: [0, -30],
+            popupAnchor: [0, -30]
         })
         this.icon_b = L.icon({
             iconUrl: './components/leaflet-map/icon.svg',
             iconSize: [30, 45],
             iconAnchor: [15, 45],
-            popupAnchor: [0, -30],
+            popupAnchor: [0, -30]
         })
         this.current_marker = null
 
