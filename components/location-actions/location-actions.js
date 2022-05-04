@@ -10,6 +10,9 @@ class LocationActions extends HTMLElement {
     constructor() {    
         super()
 
+        this.location = JSON.parse(this.dataset.location)
+        console.log(this.location)
+
         // Create some CSS to apply to the DOM
         const style = document.createElement('style')
         style.textContent = `
@@ -18,9 +21,9 @@ class LocationActions extends HTMLElement {
         document.head.appendChild(style)
 
         // Create markup and attach to the DOM
-        this.btn = document.createElement('button')
-        this.btn.innerText = 'Stuff'
-        this.appendChild(this.btn)
+        this.p = document.createElement('p')
+        this.p.innerHTML = `${this.location.latitude.toFixed(4)}, ${this.location.longitude.toFixed(4)}`
+        this.appendChild(this.p)
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
