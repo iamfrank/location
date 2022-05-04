@@ -3,7 +3,8 @@ class LocationActions extends HTMLElement {
 
     static get observedAttributes() { 
         return [
-            'data-location'
+            'data-location',
+            'data-is-current'
         ]
     }
 
@@ -23,7 +24,31 @@ class LocationActions extends HTMLElement {
         // Create markup and attach to the DOM
         this.p = document.createElement('p')
         this.p.innerHTML = `${this.location.latitude.toFixed(4)}, ${this.location.longitude.toFixed(4)}`
+        if (Boolean(this.dataset.isCurrent)) {
+            this.savebtn = document.createElement('button')
+            this.savebtn.className = 'btn-save-location'
+            this.savebtn.innerText = 'Save location'
+            this.savebtn.addEventListener('click', this.saveLocation)
+            this.p.appendChild(this.savebtn)
+        } else {
+            this.delbtn = document.createElement('button')
+            this.delbtn.className = 'btn-delete-location'
+            this.delbtn.innerText = 'Delete'
+            this.delbtn.addEventListener('click', this.deleteLocation)
+            this.p.appendChild(this.delbtn)
+        }
         this.appendChild(this.p)
+    }
+
+    saveLocation() {
+        let savename = prompt('Save location as:')
+        console.log('saving location')
+    }
+
+    deleteLocation() {
+        if (confirm('Are you sure you want to delete saved location?')) {
+            console.log('deleting location')
+        }
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
