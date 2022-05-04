@@ -23,7 +23,7 @@
                 padding: 0;
                 margin: 0;
                 font: 1em/1.3 sans-serif;
-                background-color: #000;
+                background-color: var(--color-lightgreen);
             }
         </style>
     </head>
@@ -31,11 +31,10 @@
 
         <main>
             <leaflet-map id="lflt"></leaflet-map>
-            <location-action id="locact"></location-action>
         </main>
 
+        <script src="./components/location-actions/location-actions.js"></script>
         <script src="./components/leaflet-map/leaflet-map.js"></script>
-        <script src="./components/location-action/location-action.js"></script>
         <script src="./components/location-state/location-state.js"></script>
 
         <script>
@@ -44,13 +43,11 @@
             // Init state and elements
             const state = locationState()
             const map_el = document.getElementById('lflt')
-            const action_el = document.getElementById('locact')
 
             // On new location event, update map and action panel
             document.addEventListener('position', function(ev) {
                 let pos_data = JSON.stringify(ev.detail.position())
                 map_el.setAttribute('data-position', pos_data)
-                action_el.setAttribute('data-has-location', pos_data)
             })
 
             // On new locations saved, update map

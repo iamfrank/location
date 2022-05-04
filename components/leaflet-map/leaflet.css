@@ -250,7 +250,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* visual tweaks */
 
 .leaflet-container {
-	background: var(--color-10);
+	background: var(--color-lightgreen);
 	outline: 0;
 	}
 .leaflet-container a {
