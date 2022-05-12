@@ -78,13 +78,13 @@ class LeafletMap extends HTMLElement {
                 this.current_marker.remove()
             }
             this.current_marker = L.marker([position.latitude, position.longitude], {icon: this.icon_a}).addTo(this.ui_map)
-            this.current_marker.bindPopup(`<h3>My location</h3><location-actions data-location='${ newValue }' data-is-current="true"></location-actions>`)
+            this.current_marker.bindPopup(`<location-actions data-location='${ newValue }' data-is-current="true"></location-actions>`)
         }
         if (name === 'data-saved-positions' && newValue !== oldValue) {
             let positions = JSON.parse(newValue)
             for (let p in positions) {
                 const marker = L.marker([positions[p].latitude, positions[p].longitude], {icon: this.icon_b}).addTo(this.ui_map)
-                marker.bindPopup(`<h3>Saved position</h3><location-actions data-location='${ JSON.stringify(positions[p]) }'></location-actions>`)
+                marker.bindPopup(`<location-actions data-location='${ JSON.stringify(positions[p]) }'></location-actions>`)
             }
         }
     }

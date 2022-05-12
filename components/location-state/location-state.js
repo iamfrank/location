@@ -21,7 +21,21 @@ export default function() {
         return locations
     }
     const saveCurrentLocation = function() {
-        locations.push(location_now)
+        let location = new Object(location_now)
+        location.title = prompt('Save location as:', `Location #${ locations.length }`) 
+        locations.push(location)
+        saveLocations()
+    }
+    const deleteLocation = function(location_title) {
+        if (confirm('Are you sure you want to delete saved location?')) {
+            const loc_idx = locations.findIndex(function(l){
+                return l.title === location_title
+            })
+            locations.splice(loc_idx, 1)
+            saveLocations()
+        }   
+    }
+    const saveLocations = function() {
         localStorage.setItem(localstorage_key, JSON.stringify(locations))
         document.dispatchEvent(locations_change_event)
     }
@@ -62,6 +76,7 @@ export default function() {
 
     return {
         getSavedLocations,
-        saveCurrentLocation
+        saveCurrentLocation,
+        deleteLocation
     }
 }

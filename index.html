@@ -37,10 +37,9 @@
         <script src="./components/leaflet-map/leaflet-map.js"></script>
 
         <script type="module">
+
             // Import modules
             import locationState from "./components/location-state/location-state.js"
-
-            // Bind events and attribute data
 
             // Init state and elements
             const state = locationState()
@@ -61,10 +60,13 @@
             document.addEventListener('click', function(ev) {
 
                 // On clicking the save button, update list of saved locations
-                if (ev.target.id === 'svbtn') {
+                if (ev.target.className === 'btn-save-location') {
                     state.saveCurrentLocation()
+                } else if (ev.target.className === 'btn-delete-location') {
+                    state.deleteLocation(ev.target.dataset.locationTitle)
                 }
             })
+
         </script>
 
     </body>
