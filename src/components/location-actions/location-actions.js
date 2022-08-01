@@ -34,13 +34,12 @@ export class LocationActions extends HTMLElement {
     // setter
     setLocation(data) {
         this.location = data
-        this.renderDOM()
+        this.renderDOM(this.location)
     }
 
     constructor() {
         super()
         this.createShadowDOM()
-        console.log('state is ', this.state)
     }
 
     // Methods
@@ -59,32 +58,30 @@ export class LocationActions extends HTMLElement {
             if (event.target.className === 'btn-close') {
                 this.dom_el.style.display = 'none'
             } else if (event.target.className === 'btn-save-location') {
+                this.location.title = prompt('Save location as:')
                 this.state.saveLocation(this.location)
                 this.dom_el.style.display = 'none'
-            } else if (event.target.className === 'btn-delete-location' && prompt('Do you want to delete this waypoint?')) {
+            } else if (event.target.className === 'btn-delete-location' && confirm('Do you want to delete this waypoint?')) {
                 this.state.deleteLocation(this.location)
                 this.dom_el.style.display = 'none'
             }
         })
     }
 
-    renderDOM() {
+    renderDOM(location_data) {
 
         const p_el = this.dom_el.querySelector('p')
 
-        if (this.location.title) {
-            this.shadowRoot.querySelector('h3').innerText = this.location.title
-        }
+        this.shadowRoot.querySelector('h3').innerText = location_data.title ? location_data.title : ''
 
-        p_el.innerHTML = `${this.location.latitude.toFixed(4)}, ${this.location.longitude.toFixed(4)}`
+        p_el.innerHTML = `${location_data.latitude.toFixed(4)}, ${location_data.longitude.toFixed(4)}`
 
-        if (Boolean(this.location.is_current)) {
+        if (Boolean(location_data.is_current)) {
             this.dom_el.querySelector('.btn-save-location').style.display = 'block'
             this.dom_el.querySelector('.btn-delete-location').style.display = 'none'
         } else {
             this.dom_el.querySelector('.btn-save-location').style.display = 'none'
             this.dom_el.querySelector('.btn-delete-location').style.display = 'block'
-            this.dom_el.querySelector('.btn-delete-location').dataset.locationTitle = this.location.title
         }
 
         this.dom_el.style.display = 'block'

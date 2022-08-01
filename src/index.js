@@ -17,6 +17,12 @@ locationState()
 const map_el = document.getElementById('lflt')
 const actions_el = document.querySelector('location-actions')
 
+
+// Show saved locations in map on page load
+window.addEventListener('load', function () {
+  map_el.setAttribute('data-saved-positions', JSON.stringify(appState.fetchLocations()))
+})
+
 // On new location event, update map and action panel
 document.addEventListener('position', function (ev) {
   let pos_data = JSON.stringify(ev.detail.position())
@@ -25,7 +31,7 @@ document.addEventListener('position', function (ev) {
 
 // When locations are changed, update map
 document.addEventListener('changelocations', function (ev) {
-  map_el.setAttribute('data-saved-positions', JSON.stringify(appstate.fetchLocations()))
+  map_el.setAttribute('data-saved-positions', JSON.stringify(appState.fetchLocations()))
 })
 
 // Handle clicks and touches
@@ -34,5 +40,4 @@ document.addEventListener('click', function (ev) {
   if (ev.target.classList.contains('leaflet-marker-icon')) {
     actions_el.setLocation(ev.target.location_data)
   }
-  
 })

@@ -1,25 +1,34 @@
+let locations
+const localstorage_key = 'iamfrank-locator'
+const locations_change_event = new CustomEvent('changelocations')
+
+function fetchLocations() {
+  const ls = JSON.parse(localStorage.getItem(localstorage_key))
+  locations = ls ? ls : []
+  return locations 
+}
+
+function saveLocation(location_data) {
+  console.log('saving', locations, location_data)
+  locations.push(location_data)
+  commitLocations(locations)
+}
+
+function deleteLocation(location_data) {
+  let loc_idx = locations.findIndex(function (loc) {
+    return loc.title === location_data.title
+  })
+  locations.splice(loc_idx, 1)
+  commitLocations(locations)
+}
+
+function commitLocations(locations_array) {
+  localStorage.setItem(localstorage_key, JSON.stringify(locations_array))
+  document.dispatchEvent(locations_change_event)
+}
+
 export default {
-  locations: [],
-  localstorage_key: 'iamfrank-locator',
-  fetchLocations() {
-    return JSON.parse(localStorage.getItem(this.localstorage_key))
-  },
-  saveLocation(location_data) {
-    console.log('saving', this.locations, this.location_data)
-    this.locations.push(location_data)
-    console.log('postsave', this.locations)
-    this.commitLocations(this.locations)
-  },
-  deleteLocation(location_data) {
-    console.log('delete', location_data, this.locations)
-    loc_idx = this.locations.findIndex(function(loc) {
-      return loc.title === location_data.title
-    })
-    this.locations.splice(loc_idx,1)
-    this.commitLocations(this.locations)
-  },
-  commitLocations(locations) {
-    console.log('committing', locations, JSON.stringify(locations))
-    localStorage.setItem(this.localstorage_key, JSON.stringify(locations))
-  } 
+  fetchLocations,
+  saveLocation,
+  deleteLocation
 }
