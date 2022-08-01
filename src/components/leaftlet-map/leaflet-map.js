@@ -5,10 +5,6 @@ import icon_svg_b from './icon_current.svg'
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
 
-  // Hacky fix to enable esbuild to handle SVG-file placed in this directory
-  iconA = icon_svg_a.replace('.', 'dist')
-  iconB = icon_svg_b.replace('.', 'dist')
-
   static get observedAttributes() {
     return [
       'data-position',
@@ -21,13 +17,13 @@ export class LeafletMap extends HTMLElement {
 
     this.ui_map = null
     this.icon_a = L.icon({
-      iconUrl: this.iconA,
+      iconUrl: icon_svg_a.replace('.', 'dist'),
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]
     })
     this.icon_b = L.icon({
-      iconUrl: this.iconB,
+      iconUrl: icon_svg_b.replace('.', 'dist'),
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]
@@ -66,27 +62,35 @@ export class LeafletMap extends HTMLElement {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(this.ui_map)
     }
-
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'data-position' && newValue !== oldValue) {
+    
       let position = JSON.parse(newValue)
       if (this.current_marker) {
         this.current_marker.remove()
       }
       this.current_marker = L.marker([position.latitude, position.longitude], { icon: this.icon_a }).addTo(this.ui_map)
-      this.current_marker.bindPopup(`<location-actions data-location='${newValue}' data-is-current="true"></location-actions>`)
+      this.current_marker._icon.location_data = {
+        latitude: position.latitude,
+        longitude: position.longitude,
+        is_current: true
+      }
     }
-    if (name === 'data-saved-positions' && newValue !== oldValue) {
 
+    if (name === 'data-saved-positions' && newValue !== oldValue) {
 
       let positions = JSON.parse(newValue)
       for (let p in positions) {
         const marker = L.marker([positions[p].latitude, positions[p].longitude], { icon: this.icon_b }).addTo(this.ui_map)
-        marker.bindPopup(`<location-actions data-location='${JSON.stringify(positions[p])}'></location-actions>`)
+        marker._icon.location_data = {
+          latitude: positions[p].latitude,
+          longitude: positions[p].longitude,
+          is_current: false,
+          title: positions[p].title
+        }
       }
     }
-    console.log(this.ui_map)
   }
 }

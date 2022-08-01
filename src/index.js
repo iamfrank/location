@@ -2,6 +2,7 @@
 import { LeafletMap } from "./components/leaftlet-map/leaflet-map.js"
 import { LocationActions } from "./components/location-actions/location-actions.js"
 import locationState from "./components/location-state/location-state.js"
+import appState from './components/app-state/app-state.js'
 
 // Import CSS
 import "./style/index.css"
@@ -12,8 +13,9 @@ customElements.define('location-actions', LocationActions)
 customElements.define('leaflet-map', LeafletMap)
 
 // Init state and elements
-const state = locationState()
+locationState()
 const map_el = document.getElementById('lflt')
+const actions_el = document.querySelector('location-actions')
 
 // On new location event, update map and action panel
 document.addEventListener('position', function (ev) {
@@ -23,16 +25,14 @@ document.addEventListener('position', function (ev) {
 
 // When locations are changed, update map
 document.addEventListener('changelocations', function (ev) {
-  map_el.setAttribute('data-saved-positions', JSON.stringify(state.getSavedLocations()))
+  map_el.setAttribute('data-saved-positions', JSON.stringify(appstate.fetchLocations()))
 })
 
 // Handle clicks and touches
 document.addEventListener('click', function (ev) {
-
-  // On clicking the save button, update list of saved locations
-  if (ev.target.className === 'btn-save-location') {
-    state.saveCurrentLocation()
-  } else if (ev.target.className === 'btn-delete-location') {
-    state.deleteLocation(ev.target.dataset.locationTitle)
+  
+  if (ev.target.classList.contains('leaflet-marker-icon')) {
+    actions_el.setLocation(ev.target.location_data)
   }
+  
 })

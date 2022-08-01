@@ -3,6 +3,7 @@ export default function() {
     // Properties
     let location_now = null
     let locations = []
+    let shouldHandle = true
     const geo_options = {
         enableHighAccuracy: true, 
         maximumAge: 30000, 
@@ -15,15 +16,15 @@ export default function() {
     const locations_change_event = new CustomEvent('changelocations', { detail: {
         locations: () => locations
     }})
+    const timeout = 3000
 
     // Methods
     const getSavedLocations = function() {
         return locations
     }
-    const saveCurrentLocation = function() {
-        let location = new Object(location_now)
-        location.title = prompt('Save location as:', `Location #${ locations.length }`) 
-        locations.push(location)
+    const saveCurrentLocation = function(location_data) {
+        location_data.title = prompt('Save location as:', `Location #${ locations.length }`) 
+        locations.push(location_data)
         saveLocations()
     }
     const deleteLocation = function(location_title) {
@@ -47,15 +48,28 @@ export default function() {
             timestamp: geolocation.timestamp
         }
     }
+    const throttleHandler = function(callback, delay) {
+        if (shouldHandle) {
+            shouldHandle = false
+            callback()
+            setTimeout(function() {
+                shouldHandle = true
+            }, delay)
+        }
+    }
     const geo_success = function(position) {
         // Emit new position
-        location_now = normalizeGeolocation(position)
-        document.dispatchEvent(position_event)
+        throttleHandler(function() {
+            location_now = normalizeGeolocation(position)
+            document.dispatchEvent(position_event)
+        }, timeout)
     }
     const geo_error = function() {
-        document.dispatchEvent(position_event)
-        console.error("No location available :-(")
-        return false
+        throttleHandler(function () {
+            document.dispatchEvent(position_event)
+            console.error("No location available :-(")
+            return false
+        }, timeout)
     }
 
     // Initialize
