@@ -36,6 +36,7 @@ class LeafletMap extends HTMLElement {
             popupAnchor: [0, -30]
         })
         this.current_marker = null
+        this.saved_markers = []
 
         // Create some CSS to apply to the DOM
         const style = document.createElement('style')
@@ -81,12 +82,15 @@ class LeafletMap extends HTMLElement {
             this.current_marker.bindPopup(`<location-actions data-location='${ newValue }' data-is-current="true"></location-actions>`)
         }
         if (name === 'data-saved-positions' && newValue !== oldValue) {
+            
+
             let positions = JSON.parse(newValue)
             for (let p in positions) {
                 const marker = L.marker([positions[p].latitude, positions[p].longitude], {icon: this.icon_b}).addTo(this.ui_map)
                 marker.bindPopup(`<location-actions data-location='${ JSON.stringify(positions[p]) }'></location-actions>`)
             }
         }
+        console.log(this.ui_map)
     }
 }
 

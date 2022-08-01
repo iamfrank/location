@@ -51,7 +51,7 @@
                 map_el.setAttribute('data-position', pos_data)
             })
 
-            // On new locations saved, update map
+            // When locations are changed, update map
             document.addEventListener('changelocations', function(ev) {
                 map_el.setAttribute('data-saved-positions', JSON.stringify(state.getSavedLocations()))
             })
