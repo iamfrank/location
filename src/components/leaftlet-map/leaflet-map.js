@@ -1,14 +1,13 @@
 import L from 'leaflet'
+import icon_svg_a from './icon.svg'
+import icon_svg_b from './icon_current.svg'
 
-// Apply external Leaflet CSS to the DOM
-/*
-const linkElem = document.createElement('link')
-linkElem.setAttribute('rel', 'stylesheet')
-linkElem.setAttribute('href', './components/leaflet-map/leaflet.css')
-document.head.appendChild(linkElem)
-*/
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
+
+  // Hacky fix to enable esbuild to handle SVG-file placed in this directory
+  iconA = icon_svg_a.replace('.', 'dist')
+  iconB = icon_svg_b.replace('.', 'dist')
 
   static get observedAttributes() {
     return [
@@ -22,13 +21,13 @@ export class LeafletMap extends HTMLElement {
 
     this.ui_map = null
     this.icon_a = L.icon({
-      iconUrl: './components/leaflet-map/icon_current.svg',
+      iconUrl: this.iconA,
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]
     })
     this.icon_b = L.icon({
-      iconUrl: './components/leaflet-map/icon.svg',
+      iconUrl: this.iconB,
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]
@@ -39,20 +38,20 @@ export class LeafletMap extends HTMLElement {
     // Create some CSS to apply to the DOM
     const style = document.createElement('style')
     style.textContent = `
-            leaflet-map {
-                position: fixed;
-                top: 0;
-                left: 0;
-                display: block;
-                height: 100%;
-                width: 100vw;
-                z-index: 1;
-            }
-            #lftmap {
-                height: 100%;
-                width: 100vw;
-            }
-        `
+      leaflet-map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: block;
+        height: 100%;
+        width: 100vw;
+        z-index: 1;
+      }
+      #lftmap {
+        height: 100%;
+        width: 100vw;
+      }
+    `
     document.head.appendChild(style)
 
     // Create markup and attach to the DOM

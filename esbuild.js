@@ -2,6 +2,10 @@
 const entry_points = {
   location: 'src/index.js'
 }
+const loader = {
+  '.png': 'file',
+  '.svg': 'file'
+}
 
 if (process.env.NODE_ENV === 'development') {
   // Development mode watches for file changes and rebuilds
@@ -12,9 +16,7 @@ if (process.env.NODE_ENV === 'development') {
     entryPoints: entry_points,
     outdir: 'dist',
     bundle: true,
-    loader: {
-      '.png': 'file'
-    }
+    loader: loader
   }).then(server => {
     console.log(server)
     // Call "stop" on the web server to stop serving
@@ -29,9 +31,7 @@ if (process.env.NODE_ENV === 'development') {
     bundle: true,
     minify: true,
     sourcemap: true,
-    loader: {
-      '.png': 'file'
-    }
+    loader: loader
   })
   .then((response) => {
     console.log('build finished')
