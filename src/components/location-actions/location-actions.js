@@ -1,5 +1,5 @@
 // Define component
-class LocationActions extends HTMLElement {
+export class LocationActions extends HTMLElement {
 
     static get observedAttributes() { 
         return [
@@ -46,5 +46,3 @@ class LocationActions extends HTMLElement {
         this.appendChild(this.div)
     }
 }
-
-customElements.define('location-actions', LocationActions)

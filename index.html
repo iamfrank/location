@@ -6,26 +6,8 @@
         <meta name="description" content="A web application to track and display geolocations">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        <style>
-            :root {
-                --color-1: #000;
-                --color-blue: #aad3df;
-                --color-darkgreen: #235a0c;
-                --color-mediumgreen: #add19e;
-                --color-lightgreen: #cdebb0;
-                --color-lightgrey: #f2efe9;
-            }
-            html, body {
-                height: 100%;
-                width: 100vw;
-            }
-            body {
-                padding: 0;
-                margin: 0;
-                font: 1em/1.3 sans-serif;
-                background-color: var(--color-lightgreen);
-            }
-        </style>
+        <link rel="stylesheet" href="dist/location.css">
+        
     </head>
     <body>
 
@@ -33,41 +15,7 @@
             <leaflet-map id="lflt"></leaflet-map>
         </main>
 
-        <script src="./components/location-actions/location-actions.js"></script>
-        <script src="./components/leaflet-map/leaflet-map.js"></script>
-
-        <script type="module">
-
-            // Import modules
-            import locationState from "./components/location-state/location-state.js"
-
-            // Init state and elements
-            const state = locationState()
-            const map_el = document.getElementById('lflt')
-
-            // On new location event, update map and action panel
-            document.addEventListener('position', function(ev) {
-                let pos_data = JSON.stringify(ev.detail.position())
-                map_el.setAttribute('data-position', pos_data)
-            })
-
-            // When locations are changed, update map
-            document.addEventListener('changelocations', function(ev) {
-                map_el.setAttribute('data-saved-positions', JSON.stringify(state.getSavedLocations()))
-            })
-
-            // Handle clicks and touches
-            document.addEventListener('click', function(ev) {
-
-                // On clicking the save button, update list of saved locations
-                if (ev.target.className === 'btn-save-location') {
-                    state.saveCurrentLocation()
-                } else if (ev.target.className === 'btn-delete-location') {
-                    state.deleteLocation(ev.target.dataset.locationTitle)
-                }
-            })
-
-        </script>
+        <script type="module" src="dist/location.js"></script>
 
     </body>
 </html>
