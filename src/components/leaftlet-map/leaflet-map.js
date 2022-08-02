@@ -1,6 +1,6 @@
 import L from 'leaflet'
-import icon_svg_a from './icon.svg'
-import icon_svg_b from './icon_current.svg'
+import icon_svg_b from './icon.svg'
+import icon_svg_a from './icon_current.svg'
 
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
