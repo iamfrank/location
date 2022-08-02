@@ -1,15 +1,17 @@
 let locations
-const localstorage_key = 'iamfrank-locator'
+const localstorage_key = 'locator-iegh383hd8'
 const locations_change_event = new CustomEvent('changelocations')
 
 function fetchLocations() {
   const ls = JSON.parse(localStorage.getItem(localstorage_key))
   locations = ls ? ls : []
-  return locations 
+  return locations
 }
 
 function saveLocation(location_data) {
-  console.log('saving', locations, location_data)
+  // simulate different coords
+  // location_data.latitude = location_data.latitude + Math.random() * 0.1
+  // location_data.longitude = location_data.longitude + Math.random() * 0.1
   locations.push(location_data)
   commitLocations(locations)
 }

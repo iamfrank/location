@@ -69,7 +69,7 @@ export class LocationActions extends HTMLElement {
     }
 
     renderDOM(location_data) {
-
+        
         const p_el = this.dom_el.querySelector('p')
 
         this.shadowRoot.querySelector('h3').innerText = location_data.title ? location_data.title : ''

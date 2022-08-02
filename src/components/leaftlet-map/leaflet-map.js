@@ -15,22 +15,6 @@ export class LeafletMap extends HTMLElement {
   constructor() {
     super()
 
-    this.ui_map = null
-    this.icon_a = L.icon({
-      iconUrl: icon_svg_a.replace('.', 'dist'),
-      iconSize: [30, 45],
-      iconAnchor: [15, 45],
-      popupAnchor: [0, -30]
-    })
-    this.icon_b = L.icon({
-      iconUrl: icon_svg_b.replace('.', 'dist'),
-      iconSize: [30, 45],
-      iconAnchor: [15, 45],
-      popupAnchor: [0, -30]
-    })
-    this.current_marker = null
-    this.saved_markers = []
-
     // Create some CSS to apply to the DOM
     const style = document.createElement('style')
     style.textContent = `
@@ -55,8 +39,23 @@ export class LeafletMap extends HTMLElement {
     this.map.setAttribute('id', 'lftmap')
     this.appendChild(this.map)
 
-    // Initialize Leaflet
     this.ui_map = L.map('lftmap').setView([55, 11.5], 6)
+    this.icon_a = L.icon({
+      iconUrl: icon_svg_a.replace('.', 'dist'),
+      iconSize: [30, 45],
+      iconAnchor: [15, 45],
+      popupAnchor: [0, -30]
+    })
+    this.icon_b = L.icon({
+      iconUrl: icon_svg_b.replace('.', 'dist'),
+      iconSize: [30, 45],
+      iconAnchor: [15, 45],
+      popupAnchor: [0, -30]
+    })
+    this.current_marker = null
+    this.saved_markers = L.layerGroup().addTo(this.ui_map)
+
+    // Initialize Leaflet
     if (navigator.onLine) { // Only load map tiles if online
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -65,8 +64,8 @@ export class LeafletMap extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'data-position' && newValue !== oldValue) {
-    
+
+    if (name === 'data-position' && newValue !== oldValue) { 
       let position = JSON.parse(newValue)
       if (this.current_marker) {
         this.current_marker.remove()
@@ -75,15 +74,17 @@ export class LeafletMap extends HTMLElement {
       this.current_marker._icon.location_data = {
         latitude: position.latitude,
         longitude: position.longitude,
-        is_current: true
+        is_current: true,
+        title: ''
       }
     }
 
     if (name === 'data-saved-positions' && newValue !== oldValue) {
-
       let positions = JSON.parse(newValue)
+      this.saved_markers.clearLayers()
       for (let p in positions) {
-        const marker = L.marker([positions[p].latitude, positions[p].longitude], { icon: this.icon_b }).addTo(this.ui_map)
+        const marker = L.marker([positions[p].latitude, positions[p].longitude], { icon: this.icon_b })
+        this.saved_markers.addLayer(marker)
         marker._icon.location_data = {
           latitude: positions[p].latitude,
           longitude: positions[p].longitude,

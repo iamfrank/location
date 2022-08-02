@@ -1,20 +1,20 @@
-export default function() {
+export class LocationState {
     
     // Properties
-    let location_now = null
-    let shouldHandle = true
-    const geo_options = {
+    location_now = null
+    shouldHandle = true
+    geo_options = {
         enableHighAccuracy: true, 
         maximumAge: 30000, 
         timeout: 27000
     }
-    const position_event = new CustomEvent('position', { detail: {
-        position: () => location_now
+    position_event = new CustomEvent('position', { detail: {
+        position: () => this.location_now
     }})
-    const timeout = 3000
+    timeout = 3000
 
     // Methods
-    const normalizeGeolocation = function(geolocation) {
+    normalizeGeolocation(geolocation) {
         return {
             accuracy: geolocation.coords.accuracy,
             latitude: geolocation.coords.latitude,
@@ -22,37 +22,39 @@ export default function() {
             timestamp: geolocation.timestamp
         }
     }
-    const throttleHandler = function(callback, delay) {
-        if (shouldHandle) {
-            shouldHandle = false
+    throttleHandler(callback, delay) {
+        if (this.shouldHandle) {
+            this.shouldHandle = false
             callback()
             setTimeout(function() {
-                shouldHandle = true
+                this.shouldHandle = true
             }, delay)
         }
     }
-    const geo_success = function(position) {
-        // Emit new position
-        throttleHandler(function() {
-            location_now = normalizeGeolocation(position)
-            document.dispatchEvent(position_event)
-        }, timeout)
-    }
-    const geo_error = function() {
-        throttleHandler(function () {
-            document.dispatchEvent(position_event)
-            console.error("No location available :-(")
-            return false
-        }, timeout)
-    }
 
-    // Initialize
-
-    // Watch geolocation
-    if ("geolocation" in navigator) {
-        navigator.geolocation.watchPosition(geo_success, geo_error, geo_options)
-    } else {
-        document.dispatchEvent(position_event)
-        console.error("No geolocation on this device")
+    // Constructor
+    constructor() {
+        if ("geolocation" in navigator) {
+            // Watch geolocation
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    this.throttleHandler(() => {
+                        this.location_now = this.normalizeGeolocation(position)
+                        document.dispatchEvent(this.position_event)
+                    }, this.timeout)
+                },
+                (error) => {
+                    this.throttleHandler(() => {
+                        console.error("No location available :-( ", error)
+                        document.dispatchEvent(this.position_event)
+                        return false
+                    }, this.timeout)
+                },
+                this.geo_options
+            )
+        } else {
+            document.dispatchEvent(this.position_event)
+            console.error("No geolocation on this device")
+        }
     }
 }
