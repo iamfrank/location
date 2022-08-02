@@ -17,6 +17,20 @@ const location = new LocationState()
 const map_el = document.getElementById('lflt')
 const actions_el = document.querySelector('location-actions')
 
+// Register service worker for offline use
+const swURL = 'service-worker.js'
+if ('serviceWorker' in navigator) {
+  // Wait for the 'load' event to not block other work
+  window.addEventListener('load', async () => {
+    // Try to register the service worker.
+    try {
+      const reg = await navigator.serviceWorker.register(swURL);
+      console.log('Service worker registered! 😎', reg);
+    } catch (err) {
+      console.error('😥 Service worker registration failed: ', err);
+    }
+  });
+}
 
 // Show saved locations in map on page load
 window.addEventListener('load', function () {
