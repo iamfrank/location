@@ -14,16 +14,24 @@ export class LocationActions extends HTMLElement {
             left: 0;
             background-color: #fff;
             z-index: 99999;
+            padding: 1rem;
+            box-sizing: border-box;
         }
-        .location-close-button {
-
+        .btn-close {
+            float: right;
+            padding: 1rem;
         }
     `
     template = `
         <style>${this.style}</style>
         <button class="btn-close">x</button>
         <h3></h3>
-        <p></p>
+        <p class="coordinates"></p>
+        <p>
+            <small class="timestamp"></small><br>    
+            <small class="accuracy"></small><br>
+            <small class="altitude"></small>
+        </p>
         <button class="btn-save-location">Save location</button>
         <button class="btn-delete-location">Delete</button>
     `
@@ -69,12 +77,13 @@ export class LocationActions extends HTMLElement {
     }
 
     renderDOM(location_data) {
-        
-        const p_el = this.dom_el.querySelector('p')
+        console.log(location_data)
+        this.dom_el.querySelector('.coordinates').innerHTML = `${location_data.latitude.toFixed(4)}, ${location_data.longitude.toFixed(4)}`
+        this.dom_el.querySelector('.accuracy').innerHTML = location_data.accuracy
+        this.dom_el.querySelector('.timestamp').innerHTML = new Date(location_data.timestamp).toLocaleString()
+        this.dom_el.querySelector('.altitude').innerHTML = location_data.altitude
 
-        this.shadowRoot.querySelector('h3').innerText = location_data.title ? location_data.title : ''
-
-        p_el.innerHTML = `${location_data.latitude.toFixed(4)}, ${location_data.longitude.toFixed(4)}`
+        this.shadowRoot.querySelector('h3').innerText = location_data.title
 
         if (Boolean(location_data.is_current)) {
             this.dom_el.querySelector('.btn-save-location').style.display = 'block'

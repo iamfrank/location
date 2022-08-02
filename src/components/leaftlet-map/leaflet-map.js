@@ -67,30 +67,24 @@ export class LeafletMap extends HTMLElement {
 
     if (name === 'data-position' && newValue !== oldValue) { 
       let position = JSON.parse(newValue)
+      position.is_current = true
+      position.title = null
       if (this.current_marker) {
         this.current_marker.remove()
       }
       this.current_marker = L.marker([position.latitude, position.longitude], { icon: this.icon_a }).addTo(this.ui_map)
-      this.current_marker._icon.location_data = {
-        latitude: position.latitude,
-        longitude: position.longitude,
-        is_current: true,
-        title: ''
-      }
+      this.current_marker._icon.location_data = position
     }
 
     if (name === 'data-saved-positions' && newValue !== oldValue) {
       let positions = JSON.parse(newValue)
       this.saved_markers.clearLayers()
       for (let p in positions) {
-        const marker = L.marker([positions[p].latitude, positions[p].longitude], { icon: this.icon_b })
+        let pos = positions[p]
+        pos.is_current = false
+        const marker = L.marker([pos.latitude, pos.longitude], { icon: this.icon_b })
         this.saved_markers.addLayer(marker)
-        marker._icon.location_data = {
-          latitude: positions[p].latitude,
-          longitude: positions[p].longitude,
-          is_current: false,
-          title: positions[p].title
-        }
+        marker._icon.location_data = pos
       }
     }
   }

@@ -19,7 +19,11 @@ export class LocationState {
             accuracy: geolocation.coords.accuracy,
             latitude: geolocation.coords.latitude,
             longitude: geolocation.coords.longitude,
-            timestamp: geolocation.timestamp
+            timestamp: geolocation.timestamp,
+            altitude: geolocation.coords.altitude,
+            altitudeAccuracy: geolocation.coords.altitudeAccuracy,
+            heading: geolocation.coords.heading,
+            speed: geolocation.coords.speed
         }
     }
     throttleHandler(callback, delay) {
