@@ -23,6 +23,6 @@
     "leaflet": "^1.8.0"
   },
   "devDependencies": {
-    "esbuild": "^0.14.51"
+    "esbuild": "^0.25.0"
   }
 }
