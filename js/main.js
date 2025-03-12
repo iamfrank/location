@@ -4,10 +4,6 @@ import { LocationActions } from "./components/location-actions/location-actions.
 import { LocationState } from "./components/location-state/location-state.js"
 import appState from './components/app-state/app-state.js'
 
-// Import CSS
-import "./style/index.css"
-import "leaflet/dist/leaflet.css"
-
 // Init web components
 customElements.define('location-actions', LocationActions)
 customElements.define('leaflet-map', LeafletMap)

@@ -2,10 +2,10 @@
   "name": "location",
   "version": "1.0.0",
   "description": "Web application for mobile that tracks and displays a user's geolocations",
+  "type": "module",
   "main": "index.html",
   "scripts": {
-    "dev": "export NODE_ENV=development && node esbuild.js",
-    "build": "export NODE_ENV=production && node esbuild.js",
+    "start": "node bin/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/iamfrank/location.git"
   },
   "keywords": [],
-  "author": "Frank Thomsen",
+  "author": "Frank Thomsen Renard",
   "license": "GPL-3",
   "bugs": {
     "url": "https://github.com/iamfrank/location/issues"
@@ -23,6 +23,6 @@
     "leaflet": "^1.8.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "express": "^4.21.2"
   }
 }
