@@ -1,4 +1,4 @@
-import * as L from '../../leaflet/leaflet-src.esm.js'
+import * as L from './leaflet/leaflet-src.esm.js'
 
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
@@ -39,13 +39,13 @@ export class LeafletMap extends HTMLElement {
 
     this.ui_map = L.map('lftmap').setView([55, 11.5], 6)
     this.icon_a = L.icon({
-      iconUrl: './icon.svg',
+      iconUrl: '/img/icon.svg',
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]
     })
     this.icon_b = L.icon({
-      iconUrl: './icon_current.svg',
+      iconUrl: '/img/icon_current.svg',
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]

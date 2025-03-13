@@ -1,8 +1,8 @@
 // Import modules
-import { LeafletMap } from "./components/leaftlet-map/leaflet-map.js"
-import { LocationActions } from "./components/location-actions/location-actions.js"
-import { LocationState } from "./components/location-state/location-state.js"
-import appState from './components/app-state/app-state.js'
+import { LeafletMap } from "./map.js"
+import { LocationActions } from "./location-actions.js"
+import { LocationState } from "./location-state.js"
+import appState from './app-state.js'
 
 // Init web components
 customElements.define('location-actions', LocationActions)

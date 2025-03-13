@@ -1,4 +1,4 @@
-@import "../js/leaflet/leaflet.css";
+@import "./leaflet.css";
 
 :root {
   --color-1: #000;
