@@ -8,6 +8,12 @@ function getLocations() {
   return locations
 }
 
+function getLocation(title) {
+  const ls = JSON.parse(localStorage.getItem(localstorage_key))
+  locations = ls ? ls : []
+  return locations.find((l) => l.title === title)
+}
+
 function saveLocation(location_data) {
   // simulate different coords
   // location_data.latitude = location_data.latitude + Math.random() * 0.1
@@ -31,6 +37,7 @@ function commitLocations(locations_array) {
 
 export default {
   getLocations,
+  getLocation,
   saveLocation,
   deleteLocation
 }

@@ -41,6 +41,7 @@ export class LocationInfo extends HTMLElement {
 
   // setter
   setLocation(data) {
+    
     this.location = data
     this.renderDOM(this.location)
   }

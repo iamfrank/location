@@ -13,25 +13,6 @@ export class LeafletMap extends HTMLElement {
   constructor() {
     super()
 
-    // Create some CSS to apply to the DOM
-    const style = document.createElement('style')
-    style.textContent = `
-      leaflet-map {
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: block;
-        height: 100%;
-        width: 100vw;
-        z-index: 1;
-      }
-      #lftmap {
-        height: 100%;
-        width: 100vw;
-      }
-    `
-    document.head.appendChild(style)
-
     // Create markup and attach to the DOM
     this.map = document.createElement('div')
     this.map.setAttribute('id', 'lftmap')
