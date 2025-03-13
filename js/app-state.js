@@ -1,8 +1,8 @@
-let locations
+let locations = []
 const localstorage_key = 'locator-iegh383hd8'
-const locations_change_event = new CustomEvent('changelocations')
+const locations_change_event = new CustomEvent('updatelocations')
 
-function fetchLocations() {
+function getLocations() {
   const ls = JSON.parse(localStorage.getItem(localstorage_key))
   locations = ls ? ls : []
   return locations
@@ -30,7 +30,7 @@ function commitLocations(locations_array) {
 }
 
 export default {
-  fetchLocations,
+  getLocations,
   saveLocation,
   deleteLocation
 }

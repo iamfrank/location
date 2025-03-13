@@ -1,18 +1,21 @@
 // Import modules
-import { LeafletMap } from "./map.js"
-import { LocationActions } from "./location-actions.js"
-import { LocationState } from "./location-state.js"
+import { LeafletMap } from './map.js'
+import { LocationInfo } from './location-info.js'
+import { LocationState } from './location-state.js'
+import { LocationList } from './location-list.js'
 import appState from './app-state.js'
 
 // Init web components
-customElements.define('location-actions', LocationActions)
+customElements.define('location-info', LocationInfo)
 customElements.define('leaflet-map', LeafletMap)
+customElements.define('location-list', LocationList)
 
 // Init state and elements
 const location = new LocationState()
 const map_el = document.getElementById('lflt')
-const actions_el = document.querySelector('location-actions')
+const actions_el = document.querySelector('location-info')
 
+/*
 // Register service worker for offline use
 const swURL = 'service-worker.js'
 if ('serviceWorker' in navigator) {
@@ -20,17 +23,18 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     // Try to register the service worker.
     try {
-      const reg = await navigator.serviceWorker.register(swURL);
-      console.log('Service worker registered! 😎', reg);
+      const reg = await navigator.serviceWorker.register(swURL)
+      console.log('Service worker registered! 😎', reg)
     } catch (err) {
-      console.error('😥 Service worker registration failed: ', err);
+      console.error('😥 Service worker registration failed: ', err)
     }
-  });
+  })
 }
+*/
 
 // Show saved locations in map on page load
 window.addEventListener('load', function () {
-  map_el.setAttribute('data-saved-positions', JSON.stringify(appState.fetchLocations()))
+  map_el.setAttribute('data-saved-positions', JSON.stringify(appState.getLocations()))
 })
 
 // On new location event, update map and action panel
@@ -40,8 +44,8 @@ document.addEventListener('position', function (ev) {
 })
 
 // When locations are changed, update map
-document.addEventListener('changelocations', function (ev) {
-  map_el.setAttribute('data-saved-positions', JSON.stringify(appState.fetchLocations()))
+document.addEventListener('updatelocations', function (ev) {
+  map_el.setAttribute('data-saved-positions', JSON.stringify(appState.getLocations()))
 })
 
 // Handle clicks and touches
