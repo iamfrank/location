@@ -20,13 +20,13 @@ export class LeafletMap extends HTMLElement {
 
     this.ui_map = L.map('lftmap').setView([55, 11.5], 6)
     this.icon_a = L.icon({
-      iconUrl: '/img/marker-red.svg',
+      iconUrl: './img/marker-red.svg',
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]
     })
     this.icon_b = L.icon({
-      iconUrl: '/img/marker-black.svg',
+      iconUrl: './img/marker-black.svg',
       iconSize: [30, 45],
       iconAnchor: [15, 45],
       popupAnchor: [0, -30]
