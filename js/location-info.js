@@ -3,20 +3,7 @@ import {saveLocation, deleteLocation} from "./state.js"
 // Define component
 export class LocationInfo extends HTMLElement {
 
-  template = `
-    <button class="btn-close">x</button>
-    <h3></h3>
-    <p class="coordinates"></p>
-    <p>
-      <small class="timestamp"></small><br>    
-      <small class="accuracy"></small><br>
-      <small class="altitude"></small>
-    </p>
-    <button class="btn-save-location">Save location</button>
-    <button class="btn-delete-location">Delete</button>
-  `
   location
-  dom_el
 
   // setter
   setLocation(data) {
@@ -33,14 +20,14 @@ export class LocationInfo extends HTMLElement {
       <button class="btn-close">x</button>
       ${ location_data.title ? `<h3>${ location_data.title }</h3>`: ''}
       <p class="coordinates">
-        ${location_data.latitude.toFixed(4)}, ${location_data.longitude.toFixed(4)}
+        ${location_data.latitude.toFixed(4)} N, ${location_data.longitude.toFixed(4)} E
       </p>
       <p>
         <small class="timestamp">${ new Date(location_data.timestamp).toLocaleString() }</small><br>    
-        <small class="accuracy">${ location_data.accuracy }</small><br>
-        <small class="altitude">${ location_data.altitude }</small>
+        <small class="accuracy">Accuracy ${ Math.round(location_data.accuracy) } m</small><br>
+        <small class="altitude">Altitude ${ Math.round(location_data.altitude) } m</small>
       </p>
-      ${ location_data.is_current ? '<button class="btn-save-location">Save location</button>':'<button class="btn-delete-location">Delete</button>' }
+      ${ !location_data.is_current ? '<button class="btn-delete-location">Delete</button>':'<button class="btn-save-location">Save location</button>' }
     `
 
     this.addEventListener('click', (event) => {
@@ -59,4 +46,5 @@ export class LocationInfo extends HTMLElement {
       }
     })
   }
+
 }
