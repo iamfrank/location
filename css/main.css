@@ -1,4 +1,5 @@
 @import "./leaflet.css";
+@import "./location-info.css";
 
 :root {
   --color-1: #000;

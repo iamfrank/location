@@ -1,4 +1,4 @@
-import state from "./app-state.js"
+import { getLocations, getLocation }from "./state.js"
 
 export class LocationList extends HTMLElement {
 
@@ -7,7 +7,7 @@ export class LocationList extends HTMLElement {
 
   constructor() {
     super()
-    this.locations = state.getLocations()
+    this.locations = getLocations()
   }
 
   connectedCallback() {
@@ -29,13 +29,18 @@ export class LocationList extends HTMLElement {
     } else {
       this.innerHTML = `
         <ul>
-          ${ this.locations.map((l) => {
-            return `<li><button class="location-list-item-btn" title="${l.title}">${ l.title }</button></li>`
-          }) }
+          ${ this.renderListItems(this.locations) }
         </ul>
-        <button>Close</button>
       `
     }
+  }
+
+  renderListItems(items) {
+    let html = ''
+    items.forEach(item => {
+      html += `<li><button class="location-list-item-btn" title="${item.title}">${ item.title }</button></li>`
+    })
+    return html
   }
 
   listClickHandler(event) {
@@ -43,7 +48,7 @@ export class LocationList extends HTMLElement {
     if (event.target.classList.contains('location-list-item-btn')) {
       console.log(event.target.title)
       const locationInfoElement = document.createElement('location-info')
-      locationInfoElement.setLocation(state.getLocation(event.target.title))
+      locationInfoElement.setLocation(getLocation(event.target.title))
       document.body.append(locationInfoElement)
       this.expanded = false
       this.render()
