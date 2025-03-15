@@ -54,3 +54,8 @@ document.addEventListener('click', function (ev) {
     document.body.append(locationInfoElement)
   }
 })
+
+document.querySelector('.location-list-toggle').addEventListener('click', () => {
+  const locationListElement = document.createElement('location-list')
+  document.body.append(locationListElement)
+})

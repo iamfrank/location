@@ -1,16 +1,19 @@
 location-info {
   display: block;
-  width: 100vw;
-  height: 100vh;
+  width: calc(100vw - 2rem);
+  height: calc(100vh -2rem);
   position: fixed;
-  top: 0;
-  left: 0;
-  background-color: #fff;
+  top: 1rem;
+  left: 1rem;
+  background-color: var(--color);
+  color: var(--bg);
   z-index: 99999;
   padding: 1rem;
   box-sizing: border-box;
 }
 location-info .btn-close {
-  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
   padding: 1rem;
 }

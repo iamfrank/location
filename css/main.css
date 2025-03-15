@@ -21,6 +21,10 @@
   --action-bar-height: 3rem;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
@@ -35,7 +39,8 @@ body {
   color: var(--color);
 }
 
-button {
+button,
+.button {
   border: solid 2px transparent;
   background-color: var(--bg);
   padding: 0.75rem 1rem;
@@ -44,11 +49,14 @@ button {
 }
 
 button:hover,
-button:active {
+button:active,
+.button:hover,
+.button:active {
   background-color: var(--color-7);
 }
 
-button:focus {
+button:focus,
+.button:focus {
   border: solid 2px var(--accent);
 }
 
@@ -74,6 +82,10 @@ leaflet-map {
   height: var(--action-bar-height);
   width: 100%;
   z-index: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .location-list-toggle {
