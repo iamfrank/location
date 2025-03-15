@@ -1,6 +1,6 @@
 {
   "name": "location",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Web application for mobile that tracks and displays a user's geolocations",
   "type": "module",
   "main": "index.html",
