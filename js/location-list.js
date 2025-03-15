@@ -21,7 +21,7 @@ export class LocationList extends HTMLElement {
 
   render() {
     if (!this.expanded) {
-      this.innerHTML = `<button>Locations</button>`
+      this.innerHTML = `<button class="location-list-toggle"><img src="/img/marker.svg" alt="Locations"></button>`
       this.querySelector('button').addEventListener('click', () => {
         this.expanded = true
         this.render()
