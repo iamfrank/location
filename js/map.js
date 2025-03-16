@@ -53,6 +53,7 @@ export class LeafletMap extends HTMLElement {
       }
       this.current_marker = L.marker([position.latitude, position.longitude], { icon: this.icon_a }).addTo(this.ui_map)
       this.current_marker._icon.location_data = position
+      this.ui_map.flyTo([position.latitude, position.longitude], 14)
     }
 
     if (name === 'data-saved-positions' && newValue !== oldValue) {

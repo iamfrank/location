@@ -1,0 +1,35 @@
+location-list {
+  
+  ul {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+    background-color: var(--bg);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  ul li {
+    display: block;
+    border-bottom: solid 1px var(--color-9);
+  }
+
+  ul li button {
+    display: flex;
+    width: 100%;
+    text-align: left;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  ul li button svg {
+    width: 1rem;
+    height: auto;
+  }
+}
