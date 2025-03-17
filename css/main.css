@@ -1,6 +1,7 @@
 @import "./leaflet.css";
 @import "./location-list.css";
 @import "./location-info.css";
+@import "./message.css";
 
 :root {
   --color-blue: #aad3df;

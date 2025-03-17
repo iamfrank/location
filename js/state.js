@@ -1,3 +1,8 @@
+const localstorage_key = 'locator-iegh383hd8'
+const locations_change_event = new CustomEvent('updatelocations')
+let currentLocation = null
+let locations = []
+
 class Location {
 
   constructor() {
@@ -45,28 +50,23 @@ class Location {
         (position) => {
           this.#throttleHandler(() => {
             this.location_now = this.#normalizeGeolocation(position)
+            currentLocation = this.#normalizeGeolocation(position)
             document.dispatchEvent(this.position_event)
           }, this.timeout)
         },
         (error) => {
           this.#throttleHandler(() => {
             console.error("No location available :-( ", error)
-            document.dispatchEvent(this.position_event)
             return false
           }, this.timeout)
         },
         this.geo_options
       )
     } else {
-      document.dispatchEvent(this.position_event)
       console.error("No geolocation on this device")
     }
   }
 }
-
-let locations = []
-const localstorage_key = 'locator-iegh383hd8'
-const locations_change_event = new CustomEvent('updatelocations')
 
 function getLocations() {
   const ls = JSON.parse(localStorage.getItem(localstorage_key))
@@ -76,6 +76,10 @@ function getLocations() {
 
 function getLocation(title) {
   return locations.find((l) => l.title === title)
+}
+
+function getCurrentLocation() {
+  return currentLocation
 }
 
 function saveLocation(location_data) {
@@ -100,6 +104,7 @@ export {
   Location,
   getLocations,
   getLocation,
+  getCurrentLocation,
   saveLocation,
   deleteLocation
 }

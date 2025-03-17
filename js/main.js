@@ -1,18 +1,20 @@
 // Import modules
 import { LeafletMap } from './map.js'
 import { LocationInfo } from './location-info.js'
-import { Location, getLocations } from './state.js'
+import { getLocations } from './state.js'
+import { fetchCurrentPosition } from './position.js'
 import { LocationList } from './location-list.js'
+import { LocationMessage } from './messages.js'
 
 // Init web components
 customElements.define('location-info', LocationInfo)
 customElements.define('leaflet-map', LeafletMap)
 customElements.define('location-list', LocationList)
+customElements.define('location-message', LocationMessage)
 
 // Init state and elements
 const map_el = document.getElementById('lflt')
-const location = new Location()
-location.getCurrentPosition()
+fetchCurrentPosition()
 
 /*
 // Register service worker for offline use
@@ -37,7 +39,7 @@ window.addEventListener('load', function () {
 })
 
 // On new location event, update map and action panel
-document.addEventListener('position', function (ev) {
+document.addEventListener('updateposition', function (ev) {
   map_el.setLocation = ev.detail.position()
 })
 
@@ -59,4 +61,9 @@ document.addEventListener('click', function (ev) {
 document.querySelector('.location-list-toggle').addEventListener('click', () => {
   const locationListElement = document.createElement('location-list')
   document.body.append(locationListElement)
+})
+
+// Triggers relocating position
+document.querySelector('.location-update').addEventListener('click', () => {
+  fetchCurrentPosition()
 })
