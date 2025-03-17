@@ -32,8 +32,8 @@ export class LocationInfo extends HTMLElement {
           ${location_data.latitude.toFixed(4)} N, ${location_data.longitude.toFixed(4)} E
         </p>
         <p class="location-details">
-          ${ location_data.accuracy !== null && location_data.accuracy > 5 ? `<small class="accuracy">Accuracy ${ Math.round(location_data.accuracy) } m</small>`:''}
-          ${ location_data.altitude !== null ? `<small class="altitude">Altitude ${ this.formatAltitude(location_data.altitude, locoation_data.altitudeAccuracy)}</small>`:''}
+          ${ location_data.accuracy !== null ? this.formatAccucary(location_data.accuracy) : ''}
+          ${ location_data.altitude !== null ? this.formatAltitude(location_data.altitude, locoation_data.altitudeAccuracy) : ''}
         </p>
       </article>
       <p class="actions">
@@ -60,10 +60,18 @@ export class LocationInfo extends HTMLElement {
 
   formatAltitude(altitude, accuracy) {
     if (!accuracy || accuracy < 2) {
-      return `${ Math.round(altitude) } m`
+      return `<small class="altitude">Altitude ${ Math.round(altitude) } m</small>`
     } else {
-      return `${ Math.round(altitude - accuracy) } - ${ Math.round(altitude + accuracy) } m`
+      return `<small class="altitude">Altitude ${ Math.round(altitude - accuracy) } - ${ Math.round(altitude + accuracy) } m</small>`
     }
+  }
+
+  formatAccucary(accuracy) {
+    if (accuracy > 5) {
+      return `<small class="accuracy">Accuracy ${ Math.round(accuracy) } m</small>`
+    } else {
+      return ''
+    } 
   }
 
 }
