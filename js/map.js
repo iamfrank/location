@@ -48,11 +48,9 @@ export class LeafletMap extends HTMLElement {
     this.saved_markers = L.layerGroup().addTo(this.ui_map)
 
     // Initialize Leaflet
-    if (navigator.onLine) { // Only load map tiles if online
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(this.ui_map)
-    }
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(this.ui_map)
   }
 
 }
