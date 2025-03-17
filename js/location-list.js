@@ -52,7 +52,6 @@ export class LocationList extends HTMLElement {
   listClickHandler(event) {
     // Handle the case where a user selects an item in the list
     if (event.target.classList.contains('location-list-item-btn')) {
-      console.log(event.target.title)
       const locationInfo = getLocation(event.target.title)
       const locationInfoElement = document.createElement('location-info')
       locationInfoElement.setLocation(locationInfo)

@@ -18,16 +18,13 @@ export class LocationInfo extends HTMLElement {
   connectedCallback() {
     // Disconnect already created location-info elements
     document.querySelectorAll('location-info').forEach((element) => {
-      if (element === this) {
-        console.log('identical')
-      } else {
+      if (element !== this) {
         element.remove()
       }
     })
   }
 
   render(location_data) {
-    console.log('location', location_data)
     this.innerHTML = `
       <button class="btn-close" title="Close">
         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

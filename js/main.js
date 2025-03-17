@@ -23,7 +23,7 @@ if ('serviceWorker' in navigator) {
     // Try to register the service worker.
     try {
       const reg = await navigator.serviceWorker.register(swURL)
-      console.log('Service worker registered! 😎', reg)
+      console.info('Service worker registered! 😎', reg)
     } catch (err) {
       console.error('😥 Service worker registration failed: ', err)
     }
@@ -33,7 +33,6 @@ if ('serviceWorker' in navigator) {
 
 // Show saved locations in map on page load
 window.addEventListener('load', function () {
-  console.log(JSON.stringify(getLocations()))
   map_el.setMarkers = getLocations()
 })
 
