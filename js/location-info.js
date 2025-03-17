@@ -15,6 +15,17 @@ export class LocationInfo extends HTMLElement {
     super()
   }
 
+  connectedCallback() {
+    // Disconnect already created location-info elements
+    document.querySelectorAll('location-info').forEach((element) => {
+      if (element === this) {
+        console.log('identical')
+      } else {
+        element.remove()
+      }
+    })
+  }
+
   render(location_data) {
     console.log('location', location_data)
     this.innerHTML = `
@@ -29,7 +40,7 @@ export class LocationInfo extends HTMLElement {
       <article>
         ${ location_data.title ? `<h3>${ location_data.title }</h3>`: ''}
         <p class="coordinates">
-          ${location_data.latitude.toFixed(4)} N, ${location_data.longitude.toFixed(4)} E
+          ${ this.formatCoords(location_data.latitude, location_data.longitude) }
         </p>
         <p class="location-details">
           ${ location_data.accuracy !== null ? this.formatAccuracy(location_data.accuracy) : ''}
@@ -58,6 +69,18 @@ export class LocationInfo extends HTMLElement {
     })
   }
 
+  formatCoords(lat, lon) {
+    let latStr = `${lat.toFixed(4)} N`
+    let lonStr = `${lon.toFixed(4)} E`
+    if (lat < 0) {
+      latStr = `${ Math.abs(lat).toFixed(4)} S`
+    }
+    if (lon < 0) {
+      lonStr = `${ Math.abs(lon).toFixed(4)} W`
+    }
+    return `${latStr} ${lonStr}`
+  }
+
   formatAltitude(altitude, accuracy) {
     if (accuracy < 2) {
       return `<small class="altitude">Altitude ${ Math.round(altitude) } m</small>`
@@ -67,8 +90,14 @@ export class LocationInfo extends HTMLElement {
   }
 
   formatAccuracy(accuracy) {
+    let color = 'black'
+    if (accuracy > 100) {
+      color = 'red' 
+    } else if (accuracy > 50) {
+      color = 'orange'
+    } 
     if (accuracy > 5) {
-      return `<small class="accuracy">Accuracy ${ Math.round(accuracy) } m</small>`
+      return `<small class="accuracy" style="color: ${color = 'red'};">Accuracy ${ Math.round(accuracy) } m</small>`
     } else {
       return ''
     } 
