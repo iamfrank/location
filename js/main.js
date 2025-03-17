@@ -33,6 +33,7 @@ if ('serviceWorker' in navigator) {
 
 // Show saved locations in map on page load
 window.addEventListener('load', function () {
+  console.log(JSON.stringify(getLocations()))
   map_el.setAttribute('data-saved-positions', JSON.stringify(getLocations()))
 })
 
@@ -56,6 +57,7 @@ document.addEventListener('click', function (ev) {
   }
 })
 
+// Opens the location list
 document.querySelector('.location-list-toggle').addEventListener('click', () => {
   const locationListElement = document.createElement('location-list')
   document.body.append(locationListElement)
