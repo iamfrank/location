@@ -31,6 +31,7 @@ export class LeafletMap extends HTMLElement {
     this.appendChild(this.map)
 
     this.ui_map = L.map('lftmap', {zoomControl: false}).setView([55, 11.5], 6)
+    L.control.scale({imperial: false}).addTo(this.ui_map)
     this.icon_a = L.icon({
       iconUrl: './img/marker-red.svg',
       iconSize: [30, 45],
