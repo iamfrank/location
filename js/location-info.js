@@ -31,10 +31,9 @@ export class LocationInfo extends HTMLElement {
         <p class="coordinates">
           ${location_data.latitude.toFixed(4)} N, ${location_data.longitude.toFixed(4)} E
         </p>
-        <p>
-          <small class="timestamp">${ new Date(location_data.timestamp).toLocaleString() }</small><br>    
-          <small class="accuracy">Accuracy ${ Math.round(location_data.accuracy) } m</small><br>
-          <small class="altitude">Altitude ${ Math.round(location_data.altitude) } m</small>
+        <p class="location-details">
+          ${ location_data.accuracy !== null ? `<small class="accuracy">Accuracy ${ Math.round(location_data.accuracy) } m</small>`:''}
+          ${ location_data.altitude !== null ? `<small class="altitude">Altitude ${ Math.round(location_data.altitude) } m <span style="opacity: 0.6;">+/- ${ Math.round(location_data.altitudeAccuracy) } m</span></small>`:''}
         </p>
       </article>
       <p class="actions">

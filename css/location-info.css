@@ -36,6 +36,10 @@ location-info {
     padding: 1rem;
   }
 
+  .location-details small {
+    display: block;
+  }
+
   .actions {
     margin: 0;
     background-color: var(--color-1);
