@@ -1,7 +1,7 @@
 // Import modules
 import { LeafletMap } from './map.js'
 import { LocationInfo } from './location-info.js'
-import { LocationState, getLocations } from './state.js'
+import { Location, getLocations } from './state.js'
 import { LocationList } from './location-list.js'
 
 // Init web components
@@ -10,8 +10,9 @@ customElements.define('leaflet-map', LeafletMap)
 customElements.define('location-list', LocationList)
 
 // Init state and elements
-const location = new LocationState()
 const map_el = document.getElementById('lflt')
+const location = new Location()
+location.getCurrentPosition()
 
 /*
 // Register service worker for offline use

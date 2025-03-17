@@ -1,20 +1,22 @@
-class LocationState {
+class Location {
 
-  location_now = null
-  shouldHandle = true
-  geo_options = {
-    enableHighAccuracy: true,
-    maximumAge: 30000,
-    timeout: 27000
-  }
-  position_event = new CustomEvent('position', {
-    detail: {
-      position: () => this.location_now
+  constructor() {
+    this.location_now = null
+    this.shouldHandle = true
+    this.geo_options = {
+      enableHighAccuracy: true,
+      maximumAge: 30000,
+      timeout: 27000
     }
-  })
-  timeout = 3000
+    this.position_event = new CustomEvent('position', {
+      detail: {
+        position: () => this.location_now
+      }
+    })
+    this.timeout = 3000 
+  }
 
-  normalizeGeolocation(geolocation) {
+  #normalizeGeolocation(geolocation) {
     return {
       accuracy: geolocation.coords.accuracy,
       latitude: geolocation.coords.latitude,
@@ -26,7 +28,7 @@ class LocationState {
       speed: geolocation.coords.speed
     }
   }
-  throttleHandler(callback, delay) {
+  #throttleHandler(callback, delay) {
     if (this.shouldHandle) {
       this.shouldHandle = false
       callback()
@@ -36,18 +38,18 @@ class LocationState {
     }
   }
 
-  constructor() {
+  getCurrentPosition() {
     if ("geolocation" in navigator) {
       // Watch geolocation
       navigator.geolocation.watchPosition(
         (position) => {
-          this.throttleHandler(() => {
-            this.location_now = this.normalizeGeolocation(position)
+          this.#throttleHandler(() => {
+            this.location_now = this.#normalizeGeolocation(position)
             document.dispatchEvent(this.position_event)
           }, this.timeout)
         },
         (error) => {
-          this.throttleHandler(() => {
+          this.#throttleHandler(() => {
             console.error("No location available :-( ", error)
             document.dispatchEvent(this.position_event)
             return false
@@ -97,7 +99,7 @@ function commitLocations(locations_array) {
 }
 
 export {
-  LocationState,
+  Location,
   getLocations,
   getLocation,
   saveLocation,

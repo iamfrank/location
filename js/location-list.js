@@ -3,15 +3,23 @@ import { getLocations, getLocation }from "./state.js"
 export class LocationList extends HTMLElement {
 
   locations = []
+  handlerFunction
 
   constructor() {
     super()
+    // Make the function refer to (this) instance and still be removable when used in a remote element's event listener
+    this.closeListHandler = this.closeListHandler.bind(this) 
   }
 
   connectedCallback() {
     this.locations = getLocations()
     this.render()
-    this.addEventListener('click', this.listClickHandler.bind(this))
+    this.addEventListener('click', this.listClickHandler)
+    document.querySelector('leaflet-map').addEventListener('click', this.closeListHandler)
+  }
+
+  disconnectedCallback() {
+    document.querySelector('leaflet-map').removeEventListener('click', this.closeListHandler)
   }
 
   render() {
@@ -52,6 +60,10 @@ export class LocationList extends HTMLElement {
       document.querySelector('#lflt').setAttribute('data-position', JSON.stringify(locationInfo))
       this.remove()
     }
+  }
+
+  closeListHandler() {
+    this.remove()
   }
 
 }
