@@ -1,7 +1,7 @@
 location-info {
   display: block;
   width: calc(100vw - 2rem);
-  height: calc(100vh -2rem);
+  height: calc(100vh - 2rem);
   position: fixed;
   top: 1rem;
   left: 1rem;
