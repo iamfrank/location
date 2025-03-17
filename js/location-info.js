@@ -33,7 +33,7 @@ export class LocationInfo extends HTMLElement {
         </p>
         <p class="location-details">
           ${ location_data.accuracy !== null ? `<small class="accuracy">Accuracy ${ Math.round(location_data.accuracy) } m</small>`:''}
-          ${ location_data.altitude !== null ? `<small class="altitude">Altitude ${ Math.round(location_data.altitude) } m <span style="opacity: 0.6;">+/- ${ Math.round(location_data.altitudeAccuracy) } m</span></small>`:''}
+          ${ location_data.altitude !== null ? `<small class="altitude">Altitude ${ this.formatAltitude(location_data.altitude, locoation_data.altitueAccuracy)}</small>`:''}
         </p>
       </article>
       <p class="actions">
@@ -56,6 +56,14 @@ export class LocationInfo extends HTMLElement {
         this.remove()
       }
     })
+  }
+
+  formatAltitude(altitude, accuracy) {
+    if (!accuracy || accuracy < 5) {
+      return `${ Math.round(altitude) } m`
+    } else {
+      return `${ Math.round(altitude - accuracy) } - ${ Math.round(altitude + accuracy) } m`
+    }
   }
 
 }
