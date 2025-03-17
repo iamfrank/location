@@ -3,11 +3,23 @@ import * as L from './leaflet/leaflet-src.esm.js'
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
 
-  static get observedAttributes() {
-    return [
-      'data-position',
-      'data-saved-positions'
-    ]
+  set setLocation(location) {
+    if (this.current_marker) {
+      this.current_marker.remove()
+    }
+    this.current_marker = L.marker([location.latitude, location.longitude], { icon: this.icon_a }).addTo(this.ui_map)
+    this.current_marker._icon.location_data = location
+    this.ui_map.flyTo([location.latitude, location.longitude], 14)
+  }
+
+  set setMarkers(locations) {
+    this.saved_markers.clearLayers()
+    for (let p in locations) {
+      let pos = locations[p]
+      const marker = L.marker([pos.latitude, pos.longitude], { icon: this.icon_b })
+      this.saved_markers.addLayer(marker)
+      marker._icon.location_data = pos
+    }
   }
 
   constructor() {
@@ -42,28 +54,4 @@ export class LeafletMap extends HTMLElement {
     }
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-
-    if (name === 'data-position' && newValue !== oldValue) { 
-      let position = JSON.parse(newValue)
-      position.title = null
-      if (this.current_marker) {
-        this.current_marker.remove()
-      }
-      this.current_marker = L.marker([position.latitude, position.longitude], { icon: this.icon_a }).addTo(this.ui_map)
-      this.current_marker._icon.location_data = position
-      this.ui_map.flyTo([position.latitude, position.longitude], 14)
-    }
-
-    if (name === 'data-saved-positions' && newValue !== oldValue) {
-      let positions = JSON.parse(newValue)
-      this.saved_markers.clearLayers()
-      for (let p in positions) {
-        let pos = positions[p]
-        const marker = L.marker([pos.latitude, pos.longitude], { icon: this.icon_b })
-        this.saved_markers.addLayer(marker)
-        marker._icon.location_data = pos
-      }
-    }
-  }
 }

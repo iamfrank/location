@@ -57,7 +57,7 @@ export class LocationList extends HTMLElement {
       const locationInfoElement = document.createElement('location-info')
       locationInfoElement.setLocation(locationInfo)
       document.body.append(locationInfoElement)
-      document.querySelector('#lflt').setAttribute('data-position', JSON.stringify(locationInfo))
+      document.querySelector('#lflt').setLocation = locationInfo
       this.remove()
     }
   }

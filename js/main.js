@@ -34,18 +34,17 @@ if ('serviceWorker' in navigator) {
 // Show saved locations in map on page load
 window.addEventListener('load', function () {
   console.log(JSON.stringify(getLocations()))
-  map_el.setAttribute('data-saved-positions', JSON.stringify(getLocations()))
+  map_el.setMarkers = getLocations()
 })
 
 // On new location event, update map and action panel
 document.addEventListener('position', function (ev) {
-  let pos_data = JSON.stringify(ev.detail.position())
-  map_el.setAttribute('data-position', pos_data)
+  map_el.setLocation = ev.detail.position()
 })
 
 // When locations are changed, update map markers
 document.addEventListener('updatelocations', function (ev) {
-  map_el.setAttribute('data-saved-positions', JSON.stringify(getLocations()))
+  map_el.setMarkers = getLocations()
 })
 
 // Handle clicks and touches

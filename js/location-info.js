@@ -43,7 +43,7 @@ export class LocationInfo extends HTMLElement {
     `
 
     this.addEventListener('click', (event) => {
-      if (event.target.className === 'btn-close') {
+      if (event.target.closest('.btn-close')) {
         this.remove()
       } else if (event.target.className === 'btn-save-location') {
         this.location.title = prompt('Save location as:')

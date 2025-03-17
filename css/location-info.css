@@ -13,7 +13,7 @@ location-info {
   padding: 0;
   box-sizing: border-box;
 
-  .btn-close {
+  button.btn-close {
     position: absolute;
     top: 0;
     right: 0;
