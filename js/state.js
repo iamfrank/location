@@ -75,8 +75,6 @@ function getLocations() {
 }
 
 function getLocation(title) {
-  const ls = JSON.parse(localStorage.getItem(localstorage_key))
-  locations = ls ? ls : []
   return locations.find((l) => l.title === title)
 }
 

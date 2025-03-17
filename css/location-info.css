@@ -1,19 +1,43 @@
 location-info {
   display: block;
   width: calc(100vw - 2rem);
-  height: calc(100vh - 2rem);
+  height: auto;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
   position: fixed;
   top: 1rem;
   left: 1rem;
   background-color: var(--color);
   color: var(--bg);
   z-index: 99999;
-  padding: 1rem;
+  padding: 0;
   box-sizing: border-box;
-}
-location-info .btn-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 1rem;
+
+  .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    background-color: var(--color);
+    color: var(--bg);
+
+    &:hover,
+    &:active {
+      background-color: var(--color-1);
+    }
+
+    svg {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
+
+  article {
+    padding: 1rem;
+  }
+
+  .actions {
+    margin: 0;
+    background-color: var(--color-1);
+  }
 }

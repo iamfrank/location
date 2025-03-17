@@ -46,7 +46,6 @@ export class LeafletMap extends HTMLElement {
 
     if (name === 'data-position' && newValue !== oldValue) { 
       let position = JSON.parse(newValue)
-      position.is_current = true
       position.title = null
       if (this.current_marker) {
         this.current_marker.remove()
@@ -61,7 +60,6 @@ export class LeafletMap extends HTMLElement {
       this.saved_markers.clearLayers()
       for (let p in positions) {
         let pos = positions[p]
-        pos.is_current = false
         const marker = L.marker([pos.latitude, pos.longitude], { icon: this.icon_b })
         this.saved_markers.addLayer(marker)
         marker._icon.location_data = pos

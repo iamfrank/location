@@ -16,18 +16,30 @@ export class LocationInfo extends HTMLElement {
   }
 
   render(location_data) {
+    console.log('location', location_data)
     this.innerHTML = `
-      <button class="btn-close">x</button>
-      ${ location_data.title ? `<h3>${ location_data.title }</h3>`: ''}
-      <p class="coordinates">
-        ${location_data.latitude.toFixed(4)} N, ${location_data.longitude.toFixed(4)} E
+      <button class="btn-close" title="Close">
+        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="black" stroke-width="2" stroke-linejoin="round">
+            <path d="M18 6L6 18" />
+            <path d="M6 6L18 18" />
+          </g>
+        </svg>
+      </button>
+      <article>
+        ${ location_data.title ? `<h3>${ location_data.title }</h3>`: ''}
+        <p class="coordinates">
+          ${location_data.latitude.toFixed(4)} N, ${location_data.longitude.toFixed(4)} E
+        </p>
+        <p>
+          <small class="timestamp">${ new Date(location_data.timestamp).toLocaleString() }</small><br>    
+          <small class="accuracy">Accuracy ${ Math.round(location_data.accuracy) } m</small><br>
+          <small class="altitude">Altitude ${ Math.round(location_data.altitude) } m</small>
+        </p>
+      </article>
+      <p class="actions">
+        ${ !location_data.title ? '<button class="btn-save-location">Save location</button>' : '<button class="btn-delete-location">Delete</button>' }
       </p>
-      <p>
-        <small class="timestamp">${ new Date(location_data.timestamp).toLocaleString() }</small><br>    
-        <small class="accuracy">Accuracy ${ Math.round(location_data.accuracy) } m</small><br>
-        <small class="altitude">Altitude ${ Math.round(location_data.altitude) } m</small>
-      </p>
-      ${ !location_data.is_current ? '<button class="btn-delete-location">Delete</button>':'<button class="btn-save-location">Save location</button>' }
     `
 
     this.addEventListener('click', (event) => {
