@@ -12,3 +12,7 @@ leaflet-map {
   width: 100%;
   background-color: var(--color);
 }
+
+.leaflet-control-attribution a {
+  color: var(--bg);
+}

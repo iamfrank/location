@@ -43,6 +43,9 @@ function error(err) {
 }
 
 export function fetchCurrentPosition() {
+  if (currentLocation) {
+    document.dispatchEvent(position_event)
+  }
   document.querySelector('location-message').message = 'Aquiring position ...'
   retry = 0
   watcherId = navigator.geolocation.watchPosition(success, error, options)

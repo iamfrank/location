@@ -45,7 +45,7 @@ export class LocationInfo extends HTMLElement {
         </p>
       </article>
       <p class="actions">
-        ${ !location_data.title ? '<button class="btn-save-location">Save location</button>' : '<button class="btn-delete-location">Delete</button>' }
+        ${ !location_data.title ? '<button class="btn-save-location">Save location</button>' : '<button class="btn-track-location">Track</button><button class="btn-delete-location">Delete</button>' }
       </p>
     `
 
@@ -61,6 +61,9 @@ export class LocationInfo extends HTMLElement {
         this.remove()
       } else if (event.target.className === 'btn-delete-location' && confirm('Do you want to delete this waypoint?')) {
         deleteLocation(this.location)
+        this.remove()
+      } else if (event.target.className === 'btn-track-location') {
+        // attach tracker element with 2 locations as arguments
         this.remove()
       }
     })

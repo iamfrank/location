@@ -43,5 +43,8 @@ location-info {
   .actions {
     margin: 0;
     background-color: var(--color-1);
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1px;
   }
 }

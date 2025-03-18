@@ -1,72 +1,6 @@
 const localstorage_key = 'locator-iegh383hd8'
 const locations_change_event = new CustomEvent('updatelocations')
-let currentLocation = null
 let locations = []
-
-class Location {
-
-  constructor() {
-    this.location_now = null
-    this.shouldHandle = true
-    this.geo_options = {
-      enableHighAccuracy: true,
-      maximumAge: 30000,
-      timeout: 27000
-    }
-    this.position_event = new CustomEvent('position', {
-      detail: {
-        position: () => this.location_now
-      }
-    })
-    this.timeout = 3000 
-  }
-
-  #normalizeGeolocation(geolocation) {
-    return {
-      accuracy: geolocation.coords.accuracy,
-      latitude: geolocation.coords.latitude,
-      longitude: geolocation.coords.longitude,
-      timestamp: geolocation.timestamp,
-      altitude: geolocation.coords.altitude,
-      altitudeAccuracy: geolocation.coords.altitudeAccuracy,
-      heading: geolocation.coords.heading,
-      speed: geolocation.coords.speed
-    }
-  }
-  #throttleHandler(callback, delay) {
-    if (this.shouldHandle) {
-      this.shouldHandle = false
-      callback()
-      setTimeout(function () {
-        this.shouldHandle = true
-      }, delay)
-    }
-  }
-
-  getCurrentPosition() {
-    if ("geolocation" in navigator) {
-      // Watch geolocation
-      navigator.geolocation.watchPosition(
-        (position) => {
-          this.#throttleHandler(() => {
-            this.location_now = this.#normalizeGeolocation(position)
-            currentLocation = this.#normalizeGeolocation(position)
-            document.dispatchEvent(this.position_event)
-          }, this.timeout)
-        },
-        (error) => {
-          this.#throttleHandler(() => {
-            console.error("No location available :-( ", error)
-            return false
-          }, this.timeout)
-        },
-        this.geo_options
-      )
-    } else {
-      console.error("No geolocation on this device")
-    }
-  }
-}
 
 function getLocations() {
   const ls = JSON.parse(localStorage.getItem(localstorage_key))
@@ -76,10 +10,6 @@ function getLocations() {
 
 function getLocation(title) {
   return locations.find((l) => l.title === title)
-}
-
-function getCurrentLocation() {
-  return currentLocation
 }
 
 function saveLocation(location_data) {
@@ -101,10 +31,8 @@ function commitLocations(locations_array) {
 }
 
 export {
-  Location,
   getLocations,
   getLocation,
-  getCurrentLocation,
   saveLocation,
   deleteLocation
 }

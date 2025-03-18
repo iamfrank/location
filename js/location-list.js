@@ -3,7 +3,6 @@ import { getLocations, getLocation }from "./state.js"
 export class LocationList extends HTMLElement {
 
   locations = []
-  handlerFunction
 
   constructor() {
     super()
