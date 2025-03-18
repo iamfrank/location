@@ -64,6 +64,10 @@ button:focus,
   border: solid 2px var(--accent);
 }
 
+button[disabled] {
+  opacity: 0.3;
+}
+
 #go-github {
   position: fixed;
   z-index: 3;

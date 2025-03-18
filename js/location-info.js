@@ -45,7 +45,7 @@ export class LocationInfo extends HTMLElement {
         </p>
       </article>
       <p class="actions">
-        ${ !location_data.title ? '<button class="btn-save-location">Save location</button>' : '<button class="btn-track-location">Track</button><button class="btn-delete-location">Delete</button>' }
+        ${ !location_data.title ? '<button class="btn-save-location">Save location</button>' : '<button disabled class="btn-track-location">Track</button><button class="btn-delete-location">Delete</button>' }
       </p>
     `
 
