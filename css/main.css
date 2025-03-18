@@ -3,6 +3,7 @@
 @import "./location-list.css";
 @import "./location-info.css";
 @import "./message.css";
+@import "./actions.css";
 
 :root {
   --color-blue: #aad3df;
@@ -61,26 +62,4 @@ button:active,
 button:focus,
 .button:focus {
   border: solid 2px var(--accent);
-}
-
-#actions {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  height: var(--action-bar-height);
-  width: 100%;
-  z-index: 1;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.location-list-toggle {
-  padding: 0.25rem;
-}
-
-.location-list-toggle img {
-  height: 2rem;
-  width: auto;
 }

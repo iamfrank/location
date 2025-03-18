@@ -1,0 +1,27 @@
+#actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: var(--action-bar-height);
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  gap: 1.5rem;
+  align-items: center;
+
+  & > button,
+  & > a {
+    height: 3rem; width: 3rem;
+  }
+
+  .location-list-toggle {
+    padding: 0.25rem;
+  }
+  
+  .location-list-toggle img {
+    height: 2rem;
+    width: auto;
+  }
+}
