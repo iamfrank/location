@@ -90,11 +90,11 @@ export class LocationInfo extends HTMLElement {
     let color = 'black'
     if (accuracy > 100) {
       color = 'red' 
-    } else if (accuracy > 50) {
+    } else if (accuracy > 25) {
       color = 'orange'
     } 
     if (accuracy > 5) {
-      return `<small class="accuracy" style="color: ${color = 'red'};">Accuracy ${ Math.round(accuracy) } m</small>`
+      return `<small class="accuracy" style="color: ${ color };">Accuracy ${ Math.round(accuracy) } m</small>`
     } else {
       return ''
     } 

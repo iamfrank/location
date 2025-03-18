@@ -1,0 +1,14 @@
+leaflet-map {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: calc(100% - var(--action-bar-height));
+  width: 100%;
+  z-index: 1;
+}
+
+#lftmap {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color);
+}
