@@ -82,7 +82,7 @@ export default class GeoLoc {
     );
   }
 
-  trackPosition() {
+  trackStart() {
     this.geolocationResultCache = [];
     this.trackerId = navigator.geolocation.watchPosition(
       (position) => {

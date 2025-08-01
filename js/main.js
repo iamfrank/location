@@ -14,7 +14,7 @@ customElements.define("location-message", LocationMessage);
 
 // Init state and elements
 const map_el = document.getElementById("lflt");
-const geol = new GeoLoc();
+const geoloc = new GeoLoc();
 
 /*
 // Register service worker for offline use
@@ -69,7 +69,7 @@ document
 document
   .querySelector(".location-update")
   .addEventListener("click", async () => {
-    await geol.getPosition();
+    geoloc.trackStart();
   });
 
-geol.getPosition();
+geoloc.trackStart();
