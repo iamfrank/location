@@ -20,6 +20,7 @@
   },
   "homepage": "https://iamfrank.github.io/location",
   "dependencies": {
+    "geolocation": "github:iamfrank/geolocation",
     "leaflet": "^1.8.0"
   },
   "devDependencies": {
