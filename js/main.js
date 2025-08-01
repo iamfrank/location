@@ -3,7 +3,6 @@ import { LeafletMap } from "./map.js";
 import GeoLoc from "./geolocation/index.js";
 import { LocationInfo } from "./location-info.js";
 import { getLocations } from "./state.js";
-import { fetchCurrentPosition } from "./position.js";
 import { LocationList } from "./location-list.js";
 import { LocationMessage } from "./messages.js";
 
