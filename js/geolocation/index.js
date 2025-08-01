@@ -7,7 +7,7 @@ export default class GeoLoc {
   };
   geolocationResult = null;
   geolocationResultCache = [];
-  status = null;
+  status = "Ready";
   trackerId = null;
 
   constructor(options) {
@@ -47,31 +47,6 @@ export default class GeoLoc {
     }
   }
 
-  getPosition() {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          if (position instanceof GeolocationPosition) {
-            this.status = "Ready";
-            this.geolocationResult = position;
-            this.dispatchPosition(position);
-            resolve(position);
-          }
-        },
-        (posError) => {
-          if (posError instanceof GeolocationPositionError) {
-            this.status = "Error";
-            this.geolocationResult = null;
-            reject(posError);
-          } else {
-            reject("Geolocation API returned an unknown error");
-          }
-        },
-        this.options,
-      );
-    });
-  }
-
   dispatchPosition(position) {
     document.body.dispatchEvent(
       new CustomEvent("change:geolocation", {
@@ -86,8 +61,8 @@ export default class GeoLoc {
     this.geolocationResultCache = [];
     this.trackerId = navigator.geolocation.watchPosition(
       (position) => {
+        this.status = "Tracking";
         if (position instanceof GeolocationPosition) {
-          this.status = "Tracking";
           this.geolocationResultCache.push(position);
           if (this.geolocationResultCache.length > 10) {
             this.geolocationResultCache.shift();
@@ -98,9 +73,9 @@ export default class GeoLoc {
       },
       (posError) => {
         if (posError instanceof GeolocationPositionError) {
-          this.status = "Error";
           this.geolocationResult = null;
-          this.trackEnd();
+          this.status = "Error";
+          navigator.geolocation.clearWatch(this.trackerId);
           console.log(posError);
         } else {
           console.log("Geolocation API returned an unknown error");
@@ -111,17 +86,24 @@ export default class GeoLoc {
   }
 
   trackEnd() {
+    this.status = "Idle";
     navigator.geolocation.clearWatch(this.trackerId);
   }
 
-  positionErrorHandler(posError) {
-    if (posError instanceof GeolocationPositionError) {
-      this.status = "Error";
-      this.geolocationResult = null;
-      reject(posError);
-    } else {
-      reject("Geolocation API returned an unknown error");
-    }
+  getPosition(iteration = 1) {
+    this.trackStart();
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (this.accuracy < this.options.accuracyThreshold) {
+          this.trackEnd();
+          resolve(this.geolocationResult);
+        } else if (iteration > 120) {
+          reject("getPosition timed out");
+        } else {
+          this.getPosition(iteration++);
+        }
+      }, 1000);
+    });
   }
 
   renderHTML() {
