@@ -16,23 +16,6 @@ customElements.define("location-message", LocationMessage);
 const map_el = document.getElementById("lflt");
 const geoloc = new GeoLoc();
 
-/*
-// Register service worker for offline use
-const swURL = 'service-worker.js'
-if ('serviceWorker' in navigator) {
-  // Wait for the 'load' event to not block other work
-  window.addEventListener('load', async () => {
-    // Try to register the service worker.
-    try {
-      const reg = await navigator.serviceWorker.register(swURL)
-      console.info('Service worker registered! 😎', reg)
-    } catch (err) {
-      console.error('😥 Service worker registration failed: ', err)
-    }
-  })
-}
-*/
-
 // Show saved locations in map on page load
 window.addEventListener("load", function () {
   map_el.setMarkers = getLocations();
@@ -50,7 +33,11 @@ document.addEventListener("updatelocations", function (ev) {
 
 // Handle clicks and touches
 document.addEventListener("click", function (ev) {
-  if (ev.target.classList.contains("leaflet-marker-icon")) {
+  console.log(ev.target);
+  if (
+    ev.target.classList.contains("leaflet-marker-icon") ||
+    ev.target.classList.contains("leaflet-interactive")
+  ) {
     const locationInfoElement = document.createElement("location-info");
     locationInfoElement.setLocation(ev.target.location_data);
     document.body.append(locationInfoElement);
@@ -71,5 +58,10 @@ document
   .addEventListener("click", async () => {
     geoloc.trackStart();
   });
+
+// Triggers centering on current position
+document.querySelector(".location-center").addEventListener("click", () => {
+  console.log("nothing yet");
+});
 
 geoloc.trackStart();

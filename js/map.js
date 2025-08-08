@@ -3,21 +3,24 @@ import * as L from "./leaflet/leaflet-src.esm.js";
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
   set setLocation(location) {
-    if (this.current_marker && this.circle_marker) {
+    if (this.current_marker) {
       this.current_marker.remove();
-      this.circle_marker.remove();
     }
-    this.current_marker = L.marker([location.latitude, location.longitude], {
-      icon: this.icon_a,
-    }).addTo(this.ui_map);
-    this.circle_marker = L.circle([location.latitude, location.longitude], {
-      radius: location.accuracy,
-    }).addTo(this.ui_map);
-    this.current_marker._icon.location_data = location;
-    this.ui_map.flyTo([location.latitude, location.longitude], 14);
+    if (location.accuracy < 10 || true) {
+      this.current_marker = L.marker([location.latitude, location.longitude], {
+        icon: this.icon_a,
+      }).addTo(this.ui_map);
+      this.current_marker._icon.location_data = location;
+    } else {
+      this.current_marker = L.circle([location.latitude, location.longitude], {
+        radius: location.accuracy,
+      }).addTo(this.ui_map);
+      this.current_marker._path.location_data = location;
+    }
   }
 
   set setMarkers(locations) {
+    console.log(locations);
     this.saved_markers.clearLayers();
     for (let p in locations) {
       let pos = locations[p];
@@ -27,6 +30,10 @@ export class LeafletMap extends HTMLElement {
       this.saved_markers.addLayer(marker);
       marker._icon.location_data = pos;
     }
+  }
+
+  centerOnLocation(location) {
+    this.ui_map.flyTo([location.latitude, location.longitude], 14);
   }
 
   constructor() {
@@ -43,19 +50,18 @@ export class LeafletMap extends HTMLElement {
     );
     L.control.scale({ imperial: false }).addTo(this.ui_map);
     this.icon_a = L.icon({
-      iconUrl: "./img/marker-red.svg",
-      iconSize: [30, 45],
-      iconAnchor: [15, 45],
-      popupAnchor: [0, -30],
+      iconUrl: "./img/marker-a.svg",
+      iconSize: [30, 20],
+      iconAnchor: [15, 20],
+      popupAnchor: [0, 0],
     });
     this.icon_b = L.icon({
-      iconUrl: "./img/marker-black.svg",
-      iconSize: [30, 45],
-      iconAnchor: [15, 45],
-      popupAnchor: [0, -30],
+      iconUrl: "./img/marker-b.svg",
+      iconSize: [30, 20],
+      iconAnchor: [15, 0],
+      popupAnchor: [0, 0],
     });
     this.current_marker = null;
-    this.circle_marker = null;
     this.saved_markers = L.layerGroup().addTo(this.ui_map);
 
     // Initialize Leaflet
