@@ -1,6 +1,17 @@
+import FlatGeoLocation from "./location-object.js";
+
 const localstorage_key = "locator-iegh383hd8";
 const locations_change_event = new CustomEvent("updatelocations");
 let locations = [];
+let currentLocation = null;
+
+function setCurrentLocation(location) {
+  currentLocation = location;
+}
+
+function getCurrentLocation() {
+  return currentLocation;
+}
 
 function getLocations() {
   const ls = JSON.parse(localStorage.getItem(localstorage_key));
@@ -13,16 +24,7 @@ function getLocation(title) {
 }
 
 function saveLocation(title, location_data) {
-  const locationObject = {
-    title: title,
-    latitude: location_data.latitude,
-    longitude: location_data.longitude,
-    accuracy: location_data.accuracy,
-    altitude: location_data.altitude,
-    altitude_accuracy: location_data.altitude_accuracy,
-    speed: location_data.speed,
-    heading: location_data.heading,
-  };
+  const locationObject = new FlatGeoLocation(title, location_data);
   locations.push(locationObject);
   commitLocations(locations);
 }
@@ -40,4 +42,11 @@ function commitLocations(locations_array) {
   document.dispatchEvent(locations_change_event);
 }
 
-export { getLocations, getLocation, saveLocation, deleteLocation };
+export {
+  getLocations,
+  getLocation,
+  saveLocation,
+  deleteLocation,
+  getCurrentLocation,
+  setCurrentLocation,
+};

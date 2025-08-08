@@ -1,16 +1,23 @@
 // Import modules
 import { LeafletMap } from "./map.js";
 import GeoLoc from "./geolocation/index.js";
+import FlatGeoLocation from "./location-object.js";
 import { LocationInfo } from "./location-info.js";
-import { getLocations } from "./state.js";
+import {
+  getLocations,
+  setCurrentLocation,
+  getCurrentLocation,
+} from "./state.js";
 import { LocationList } from "./location-list.js";
 import { LocationMessage } from "./messages.js";
+import { StatusBar } from "./status.js";
 
 // Init web components
 customElements.define("location-info", LocationInfo);
 customElements.define("leaflet-map", LeafletMap);
 customElements.define("location-list", LocationList);
 customElements.define("location-message", LocationMessage);
+customElements.define("location-status", StatusBar);
 
 // Init state and elements
 const map_el = document.getElementById("lflt");
@@ -23,7 +30,9 @@ window.addEventListener("load", function () {
 
 // On new location event, update map and action panel
 document.addEventListener("change:geolocation", function (ev) {
-  map_el.setLocation = ev.detail.coords;
+  const l = new FlatGeoLocation("Current location", ev.detail);
+  setCurrentLocation(l);
+  map_el.setLocation = getCurrentLocation();
 });
 
 // When locations are changed, update map markers
@@ -59,9 +68,9 @@ document
     geoloc.trackStart();
   });
 
-// Triggers centering on current position
+// Centers on current position
 document.querySelector(".location-center").addEventListener("click", () => {
-  console.log("nothing yet");
+  map_el.centerOnLocation(getCurrentLocation());
 });
 
 geoloc.trackStart();

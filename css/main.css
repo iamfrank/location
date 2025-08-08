@@ -4,6 +4,7 @@
 @import "./location-info.css";
 @import "./message.css";
 @import "./actions.css";
+@import "./statusbar.css";
 
 :root {
   --color-blue: #aad3df;
@@ -82,4 +83,11 @@ button[disabled] {
   &:active {
     background-color: var(--accent);
   }
+}
+
+dl,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
 }
