@@ -66,6 +66,7 @@ export class LocationList extends HTMLElement {
       locationInfoElement.setLocation(locationInfo);
       document.body.append(locationInfoElement);
       document.querySelector("#lflt").setLocation = locationInfo;
+      this.querySelector("#locationlist").hidePopover();
     }
   }
 }
