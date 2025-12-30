@@ -1,0 +1,6 @@
+location-pin {
+  position: fixed;
+  bottom: 5rem;
+  right: 1rem;
+  z-index: 2;
+}

@@ -1,4 +1,4 @@
-import * as L from "./leaflet/leaflet-src.esm.js";
+import * as L from "../../leaflet/leaflet-src.esm.js";
 
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {

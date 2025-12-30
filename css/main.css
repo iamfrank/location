@@ -1,10 +1,12 @@
-@import "./leaflet.css";
-@import "./map.css";
-@import "./location-list.css";
-@import "./location-info.css";
-@import "./message.css";
+@import "../js/leaflet/leaflet.css";
+@import "../js/components/map/map.css";
+@import "../js/components/list/list.css";
+@import "../js/components/locate/locate.css";
+@import "../js/components/pin/pin.css";
+@import "../js/components/info/info.css";
+@import "../js/components/message/message.css";
 @import "./actions.css";
-@import "./statusbar.css";
+@import "../js/components/status/status.css";
 
 :root {
   --color-blue: #aad3df;
@@ -51,6 +53,11 @@ button,
   padding: 0.75rem 1rem;
   color: var(--color);
   font-weight: 700;
+
+  img {
+    width: 1.5rem;
+    height: auto;
+  }
 }
 
 button:hover,

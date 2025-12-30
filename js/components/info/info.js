@@ -1,4 +1,4 @@
-import { saveLocation, deleteLocation } from "./state.js";
+import { saveLocation, deleteLocation } from "../../state.js";
 
 // Define component
 export class LocationInfo extends HTMLElement {

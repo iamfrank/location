@@ -1,23 +1,27 @@
 // Import modules
-import { LeafletMap } from "./map.js";
-import GeoLoc from "./geolocation/index.js";
 import FlatGeoLocation from "./location-object.js";
-import { LocationInfo } from "./location-info.js";
+import GeoLoc from "./geolocation/index.js";
+import { LeafletMap } from "./components/map/map.js";
+import { LocationInfo } from "./components/info/info.js";
+import { LocationList } from "./components/list/list.js";
+import { LocationPin } from "./components/pin/pin.js";
+import { LocationMessage } from "./components/message/message.js";
+import { LocationLocator } from "./components/locate/locate.js";
+import { StatusBar } from "./components/status/status.js";
 import {
   getLocations,
   setCurrentLocation,
   getCurrentLocation,
 } from "./state.js";
-import { LocationList } from "./location-list.js";
-import { LocationMessage } from "./messages.js";
-import { StatusBar } from "./status.js";
 
 // Init web components
 customElements.define("location-info", LocationInfo);
 customElements.define("leaflet-map", LeafletMap);
 customElements.define("location-list", LocationList);
+customElements.define("location-pin", LocationPin);
 customElements.define("location-message", LocationMessage);
 customElements.define("location-status", StatusBar);
+customElements.define("location-locator", LocationLocator);
 
 // Init state and elements
 const map_el = document.getElementById("lflt");
@@ -52,14 +56,6 @@ document.addEventListener("click", function (ev) {
     document.body.append(locationInfoElement);
   }
 });
-
-// Opens the location list
-document
-  .querySelector(".location-list-toggle")
-  .addEventListener("click", () => {
-    const locationListElement = document.createElement("location-list");
-    document.body.append(locationListElement);
-  });
 
 // Triggers relocating position
 document

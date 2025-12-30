@@ -1,4 +1,4 @@
-import { getCurrentLocation } from "./state.js";
+import { getCurrentLocation } from "../../state.js";
 
 export class StatusBar extends HTMLElement {
   constructor() {
