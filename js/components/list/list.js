@@ -3,6 +3,11 @@ import { getLocations, getLocation } from "../../state.js";
 export class LocationList extends HTMLElement {
   locations = [];
 
+  set setLocations(locations) {
+    this.locations = locations;
+    this.render();
+  }
+
   constructor() {
     super();
   }

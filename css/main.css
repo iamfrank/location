@@ -5,7 +5,6 @@
 @import "../js/components/pin/pin.css";
 @import "../js/components/info/info.css";
 @import "../js/components/message/message.css";
-@import "./actions.css";
 @import "../js/components/status/status.css";
 
 :root {

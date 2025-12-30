@@ -69,5 +69,16 @@ export class LeafletMap extends HTMLElement {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.ui_map);
+
+    // Add event listeners
+    this.ui_map.on("click", (ev) => {
+      this.dispatchEvent(
+        new CustomEvent("click:map", {
+          detail: ev.latlng,
+          bubbles: true,
+          composed: true,
+        }),
+      );
+    });
   }
 }

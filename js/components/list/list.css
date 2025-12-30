@@ -28,6 +28,7 @@ location-list {
     width: auto;
     height: auto;
     z-index: 2;
+    padding: 0;
   }
 
   ul {

@@ -1,6 +1,12 @@
+import GeoLoc from "../../geolocation/index.js";
+
 export class LocationLocator extends HTMLElement {
+  geoloc;
+
   constructor() {
     super();
+    this.geoloc = new GeoLoc();
+    this.geoloc.trackStart();
   }
 
   connectedCallback() {
@@ -19,5 +25,7 @@ export class LocationLocator extends HTMLElement {
     `;
   }
 
-  clickHandler() {}
+  clickHandler() {
+    this.geoloc.trackStart();
+  }
 }

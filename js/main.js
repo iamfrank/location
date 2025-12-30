@@ -1,6 +1,5 @@
 // Import modules
 import FlatGeoLocation from "./location-object.js";
-import GeoLoc from "./geolocation/index.js";
 import { LeafletMap } from "./components/map/map.js";
 import { LocationInfo } from "./components/info/info.js";
 import { LocationList } from "./components/list/list.js";
@@ -25,7 +24,7 @@ customElements.define("location-locator", LocationLocator);
 
 // Init state and elements
 const map_el = document.getElementById("lflt");
-const geoloc = new GeoLoc();
+const list_el = document.querySelector("location-list");
 
 // Show saved locations in map on page load
 window.addEventListener("load", function () {
@@ -39,14 +38,15 @@ document.addEventListener("change:geolocation", function (ev) {
   map_el.setLocation = getCurrentLocation();
 });
 
-// When locations are changed, update map markers
-document.addEventListener("updatelocations", function (ev) {
-  map_el.setMarkers = getLocations();
+// When locations are changed, update map markers and location list
+document.addEventListener("updatelocations", function () {
+  const newLocations = getLocations();
+  map_el.setMarkers = newLocations;
+  list_el.setLocations = newLocations;
 });
 
 // Handle clicks and touches
 document.addEventListener("click", function (ev) {
-  console.log(ev.target);
   if (
     ev.target.classList.contains("leaflet-marker-icon") ||
     ev.target.classList.contains("leaflet-interactive")
@@ -56,17 +56,3 @@ document.addEventListener("click", function (ev) {
     document.body.append(locationInfoElement);
   }
 });
-
-// Triggers relocating position
-document
-  .querySelector(".location-update")
-  .addEventListener("click", async () => {
-    geoloc.trackStart();
-  });
-
-// Centers on current position
-document.querySelector(".location-center").addEventListener("click", () => {
-  map_el.centerOnLocation(getCurrentLocation());
-});
-
-geoloc.trackStart();
