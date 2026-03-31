@@ -1,4 +1,5 @@
 import { saveLocation, deleteLocation } from "../../state.js";
+import { getBFE } from "../../services/matriklen.js";
 
 // Define component
 export class LocationInfo extends HTMLElement {
@@ -23,7 +24,7 @@ export class LocationInfo extends HTMLElement {
     });
   }
 
-  render(location_data) {
+  async render(location_data) {
     this.innerHTML = `
       <button class="btn-close" title="Close">
         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,6 +42,9 @@ export class LocationInfo extends HTMLElement {
         <p class="location-details">
           ${location_data.accuracy !== null ? this.formatAccuracy(location_data.accuracy) : ""}
           ${location_data.altitude !== null ? this.formatAltitude(location_data.altitude, location_data.altitudeAccuracy) : ""}
+        </p>
+        <p>
+          ${await this.formatOISlinks([location_data.latitude, location_data.longitude])}
         </p>
       </article>
       <p class="actions">
@@ -72,13 +76,13 @@ export class LocationInfo extends HTMLElement {
   }
 
   formatCoords(lat, lon) {
-    let latStr = `${lat.toFixed(4)} N`;
-    let lonStr = `${lon.toFixed(4)} E`;
+    let latStr = `${lat.toFixed(6)} N`;
+    let lonStr = `${lon.toFixed(6)} E`;
     if (lat < 0) {
-      latStr = `${Math.abs(lat).toFixed(4)} S`;
+      latStr = `${Math.abs(lat).toFixed(6)} S`;
     }
     if (lon < 0) {
-      lonStr = `${Math.abs(lon).toFixed(4)} W`;
+      lonStr = `${Math.abs(lon).toFixed(6)} W`;
     }
     return `${latStr} ${lonStr}`;
   }
@@ -103,5 +107,16 @@ export class LocationInfo extends HTMLElement {
     } else {
       return "";
     }
+  }
+
+  async formatOISlinks(latlon) {
+    const result = await getBFE(latlon);
+    const htmlStr = result.reduce((str, bfeNo) => {
+      return (
+        str +
+        `<a style="display: block" href="https://www.ois.dk/search/${bfeNo}/sfe" target="_blank">Se BFEnr ${bfeNo} på OIS.dk</a>`
+      );
+    }, "");
+    return htmlStr;
   }
 }

@@ -2,10 +2,28 @@ import FlatGeoLocation from "./location-object.js";
 
 const localstorage_key = "locator-iegh383hd8";
 const locations_change_event = new CustomEvent("updatelocations");
+const callbacks = {}; // 'update'
 let locations = [];
 let currentLocation = null;
 
+function on(actionId, callback) {
+  if (!callbacks[actionId]) callbacks[actionId] = [];
+  callbacks[actionId].push(callback);
+  return () => off(actionId, callback); // returns unsubscribe fn
+}
+
+function off(actionId, callback) {
+  callbacks[actionId] = (callbacks[actionId] || []).filter(
+    (cb) => cb !== callback,
+  );
+}
+
+function publish(actionId, newState, prevState = undefined) {
+  (callbacks[actionId] || []).forEach((cb) => cb(newState, prevState));
+}
+
 function setCurrentLocation(location) {
+  publish("currentlocation", location, currentLocation);
   currentLocation = location;
 }
 
@@ -13,9 +31,11 @@ function getCurrentLocation() {
   return currentLocation;
 }
 
+/** Fetches locations from localStorage */
 function getLocations() {
   const ls = JSON.parse(localStorage.getItem(localstorage_key));
   locations = ls ? ls : [];
+  publish("locations", locations);
   return locations;
 }
 
@@ -24,7 +44,11 @@ function getLocation(title) {
 }
 
 function saveLocation(title, location_data) {
-  const locationObject = new FlatGeoLocation(title, location_data);
+  let _title = title;
+  if (!title || title === "") {
+    _title = "unknown";
+  }
+  const locationObject = new FlatGeoLocation(_title, location_data);
   locations.push(locationObject);
   commitLocations(locations);
 }
@@ -40,6 +64,7 @@ function deleteLocation(location_data) {
 function commitLocations(locations_array) {
   localStorage.setItem(localstorage_key, JSON.stringify(locations_array));
   document.dispatchEvent(locations_change_event);
+  publish("locations", locations_array);
 }
 
 export {
@@ -49,4 +74,6 @@ export {
   deleteLocation,
   getCurrentLocation,
   setCurrentLocation,
+  on,
+  off,
 };

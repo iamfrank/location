@@ -1,3 +1,6 @@
+import { setCurrentLocation } from "../state.js";
+import FlatGeoLocation from "../location-object.js";
+
 export default class GeoLoc {
   options = {
     enableHighAccuracy: true,
@@ -7,13 +10,13 @@ export default class GeoLoc {
   };
   geolocationResult = null;
   geolocationResultCache = [];
-  status = "Ready";
+  _status = "Ready";
   trackerId = null;
 
   constructor(options) {
     if (!navigator.geolocation) {
-      this.status = "Geolocation is not supported by your browser";
-      console.error(this.status);
+      this._status = "Geolocation is not supported by your browser";
+      console.error(this._status);
     } else if (options) {
       this.options = Object.assign({}, options);
     }
@@ -32,7 +35,7 @@ export default class GeoLoc {
     return this.geolocationResult.timestamp;
   }
   get status() {
-    return this.status;
+    return this._status;
   }
   get crs() {
     return "WGS84";
@@ -48,6 +51,9 @@ export default class GeoLoc {
   }
 
   dispatchPosition(position) {
+    const l = new FlatGeoLocation("Current location", position);
+    setCurrentLocation(l);
+    // DEPRECATED: Send event to other components
     document.body.dispatchEvent(
       new CustomEvent("change:geolocation", {
         detail: position,
@@ -61,7 +67,7 @@ export default class GeoLoc {
     this.geolocationResultCache = [];
     this.trackerId = navigator.geolocation.watchPosition(
       (position) => {
-        this.status = "Tracking";
+        this._status = "Tracking";
         if (position instanceof GeolocationPosition) {
           this.geolocationResultCache.push(position);
           if (this.geolocationResultCache.length > 10) {
@@ -74,7 +80,7 @@ export default class GeoLoc {
       (posError) => {
         if (posError instanceof GeolocationPositionError) {
           this.geolocationResult = null;
-          this.status = "Error";
+          this._status = "Error";
           navigator.geolocation.clearWatch(this.trackerId);
           console.log(posError);
         } else {
@@ -86,7 +92,7 @@ export default class GeoLoc {
   }
 
   trackEnd() {
-    this.status = "Idle";
+    this._status = "Idle";
     navigator.geolocation.clearWatch(this.trackerId);
   }
 

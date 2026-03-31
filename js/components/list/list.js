@@ -1,12 +1,7 @@
-import { getLocations, getLocation } from "../../state.js";
+import { getLocations, getLocation, on } from "../../state.js";
 
 export class LocationList extends HTMLElement {
   locations = [];
-
-  set setLocations(locations) {
-    this.locations = locations;
-    this.render();
-  }
 
   constructor() {
     super();
@@ -16,6 +11,10 @@ export class LocationList extends HTMLElement {
     this.locations = getLocations();
     this.render();
     this.addEventListener("click", this.listClickHandler);
+    on("locations", (locations) => {
+      this.locations = locations;
+      this.render();
+    });
   }
 
   render() {
@@ -65,7 +64,6 @@ export class LocationList extends HTMLElement {
       const locationInfoElement = document.createElement("location-info");
       locationInfoElement.setLocation(locationInfo);
       document.body.append(locationInfoElement);
-      document.querySelector("#lflt").setLocation = locationInfo;
       this.querySelector("#locationlist").hidePopover();
     }
   }

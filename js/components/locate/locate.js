@@ -20,7 +20,7 @@ export class LocationLocator extends HTMLElement {
   render() {
     this.innerHTML = `
       <button title="Locate my position">
-        <img src="./img/crosshair.svg" />
+        <img src="./img/pin.svg" />
       </button>
     `;
   }

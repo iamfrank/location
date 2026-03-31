@@ -1,37 +1,8 @@
 import * as L from "../../leaflet/leaflet-src.esm.js";
+import { on } from "../../state.js";
 
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
-  set setLocation(location) {
-    if (this.current_marker) {
-      this.current_marker.remove();
-    }
-    if (location.accuracy < 10 || true) {
-      this.current_marker = L.marker([location.latitude, location.longitude], {
-        icon: this.icon_a,
-      }).addTo(this.ui_map);
-      this.current_marker._icon.location_data = location;
-    } else {
-      this.current_marker = L.circle([location.latitude, location.longitude], {
-        radius: location.accuracy,
-      }).addTo(this.ui_map);
-      this.current_marker._path.location_data = location;
-    }
-  }
-
-  set setMarkers(locations) {
-    console.log(locations);
-    this.saved_markers.clearLayers();
-    for (let p in locations) {
-      let pos = locations[p];
-      const marker = L.marker([pos.latitude, pos.longitude], {
-        icon: this.icon_b,
-      });
-      this.saved_markers.addLayer(marker);
-      marker._icon.location_data = pos;
-    }
-  }
-
   centerOnLocation(location) {
     this.ui_map.flyTo([location.latitude, location.longitude], 14);
   }
@@ -79,6 +50,43 @@ export class LeafletMap extends HTMLElement {
           composed: true,
         }),
       );
+    });
+  }
+
+  connectedCallback() {
+    on("locations", (locations) => {
+      this.saved_markers.clearLayers();
+      for (let p in locations) {
+        let pos = locations[p];
+        const marker = L.marker([pos.latitude, pos.longitude], {
+          icon: this.icon_b,
+        });
+        this.saved_markers.addLayer(marker);
+        marker._icon.location_data = pos;
+      }
+    });
+
+    on("currentlocation", (currentLocation) => {
+      if (this.current_marker) {
+        this.current_marker.remove();
+      }
+      if (currentLocation.accuracy < 10) {
+        this.current_marker = L.marker(
+          [currentLocation.latitude, currentLocation.longitude],
+          {
+            icon: this.icon_a,
+          },
+        ).addTo(this.ui_map);
+        this.current_marker._icon.location_data = currentLocation;
+      } else {
+        this.current_marker = L.circle(
+          [currentLocation.latitude, currentLocation.longitude],
+          {
+            radius: currentLocation.accuracy,
+          },
+        ).addTo(this.ui_map);
+        this.current_marker._path.location_data = currentLocation;
+      }
     });
   }
 }
