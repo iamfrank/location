@@ -1,6 +1,6 @@
 import FlatGeoLocation from "./location-object.js";
 
-const localstorage_key = "locator-iegh383hd8";
+const localstorage_key = "locator-iegh383hd9";
 const locations_change_event = new CustomEvent("updatelocations");
 const callbacks = {}; // 'update'
 let locations = [];
