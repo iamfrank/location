@@ -11,7 +11,6 @@ export class StatusBar extends HTMLElement {
   }
 
   render(currentLocation) {
-    console.log(currentLocation);
     if (currentLocation) {
       this.innerHTML = `
         <dl class="location-status">

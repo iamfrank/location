@@ -132,13 +132,17 @@ export class LocationInfo extends HTMLElement {
   }
 
   async formatOISlinks(latlon) {
-    const result = await getBFE(latlon);
-    const htmlStr = result.reduce((str, bfeNo) => {
-      return (
-        str +
-        `<a style="display: block" href="https://www.ois.dk/search/${bfeNo}/sfe" target="_blank">Se BFEnr ${bfeNo} på OIS.dk</a>`
-      );
-    }, "");
-    return htmlStr;
+    try {
+      const result = await getBFE(latlon);
+      const htmlStr = result.reduce((str, bfeNo) => {
+        return (
+          str +
+          `<a style="display: block" href="https://www.ois.dk/search/${bfeNo}/sfe" target="_blank">Se BFEnr ${bfeNo} på OIS.dk</a>`
+        );
+      }, "");
+      return htmlStr;
+    } catch {
+      return "";
+    }
   }
 }

@@ -82,9 +82,8 @@ export default class GeoLoc {
           this.geolocationResult = null;
           this._status = "Error";
           navigator.geolocation.clearWatch(this.trackerId);
-          console.log(posError);
         } else {
-          console.log("Geolocation API returned an unknown error");
+          console.error("Geolocation API returned an unknown error");
         }
       },
       this.options,
