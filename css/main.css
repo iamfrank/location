@@ -1,4 +1,4 @@
-@import "../js/leaflet/leaflet.css";
+@import "../js/modules/leaflet/leaflet.css";
 @import "../js/components/map/map.css";
 @import "../js/components/list/list.css";
 @import "../js/components/locate/locate.css";

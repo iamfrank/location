@@ -1,4 +1,4 @@
-import { saveLocation } from "../../state.js";
+import { saveLocation } from "../../modules/state.js";
 
 export class LocationPin extends HTMLElement {
   active = false;
@@ -43,6 +43,8 @@ export class LocationPin extends HTMLElement {
           timestamp: new Date().getTime(),
         },
       });
+      this.active = !this.active;
+      this.render();
     }
   }
 }

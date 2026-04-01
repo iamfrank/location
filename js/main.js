@@ -6,7 +6,7 @@ import { LocationPin } from "./components/pin/pin.js";
 import { LocationMessage } from "./components/message/message.js";
 import { LocationLocator } from "./components/locate/locate.js";
 import { StatusBar } from "./components/status/status.js";
-import { getLocations } from "./state.js";
+import { getLocations } from "./modules/state.js";
 
 // Init web components
 customElements.define("location-info", LocationInfo);

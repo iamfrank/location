@@ -1,4 +1,4 @@
-import GeoLoc from "../../geolocation/index.js";
+import GeoLoc from "../../modules/geolocation/index.js";
 
 export class LocationLocator extends HTMLElement {
   geoloc;

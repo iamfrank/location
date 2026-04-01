@@ -1,4 +1,4 @@
-import { getCurrentLocation } from "../../state.js";
+import { getCurrentLocation, on, off } from "../../modules/state.js";
 
 export class StatusBar extends HTMLElement {
   constructor() {
@@ -7,11 +7,10 @@ export class StatusBar extends HTMLElement {
 
   connectedCallback() {
     // On new location event, update status bar
-    document.addEventListener("change:geolocation", this.render.bind(this));
+    on("currentlocation", this.render.bind(this));
   }
 
-  render() {
-    const currentLocation = getCurrentLocation();
+  render(currentLocation) {
     console.log(currentLocation);
     if (currentLocation) {
       this.innerHTML = `
@@ -24,6 +23,6 @@ export class StatusBar extends HTMLElement {
   }
 
   disconnectedCallback() {
-    document.removeEventListener("change:geolocation", this.render);
+    off("currentlocation", this.render.bind(this));
   }
 }

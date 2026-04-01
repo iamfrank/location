@@ -1,5 +1,5 @@
-import { saveLocation, deleteLocation } from "../../state.js";
-import { getBFE } from "../../services/matriklen.js";
+import { saveLocation, deleteLocation } from "../../modules/state.js";
+import { getBFE } from "../../modules/matriklen.js";
 
 // Define component
 export class LocationInfo extends HTMLElement {
@@ -25,6 +25,7 @@ export class LocationInfo extends HTMLElement {
   }
 
   async render(location_data) {
+    console.log(location_data.title === "Current location");
     this.innerHTML = `
       <button class="btn-close" title="Close">
         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,13 +44,25 @@ export class LocationInfo extends HTMLElement {
           ${location_data.accuracy !== null ? this.formatAccuracy(location_data.accuracy) : ""}
           ${location_data.altitude !== null ? this.formatAltitude(location_data.altitude, location_data.altitudeAccuracy) : ""}
         </p>
-        <p>
-          ${await this.formatOISlinks([location_data.latitude, location_data.longitude])}
-        </p>
+        ${
+          location_data.accuracy < 25
+            ? `
+          <p>
+            ${await this.formatOISlinks([location_data.latitude, location_data.longitude])}
+          </p>
+        `
+            : ""
+        }
       </article>
+      ${
+        location_data.title !== "Current location"
+          ? `
       <p class="actions">
         ${!location_data.title ? '<button class="btn-save-location">Save location</button>' : '<button disabled class="btn-track-location">Track</button><button class="btn-delete-location">Delete</button>'}
       </p>
+      `
+          : ""
+      }
     `;
 
     this.addEventListener("click", (event) => {

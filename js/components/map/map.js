@@ -1,5 +1,5 @@
-import * as L from "../../leaflet/leaflet-src.esm.js";
-import { on } from "../../state.js";
+import * as L from "../../modules/leaflet/leaflet-src.esm.js";
+import { on } from "../../modules/state.js";
 
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
@@ -70,23 +70,23 @@ export class LeafletMap extends HTMLElement {
       if (this.current_marker) {
         this.current_marker.remove();
       }
-      if (currentLocation.accuracy < 10) {
-        this.current_marker = L.marker(
-          [currentLocation.latitude, currentLocation.longitude],
-          {
-            icon: this.icon_a,
-          },
-        ).addTo(this.ui_map);
-        this.current_marker._icon.location_data = currentLocation;
-      } else {
-        this.current_marker = L.circle(
-          [currentLocation.latitude, currentLocation.longitude],
-          {
-            radius: currentLocation.accuracy,
-          },
-        ).addTo(this.ui_map);
-        this.current_marker._path.location_data = currentLocation;
-      }
+      //if (currentLocation.accuracy < 10) {
+      this.current_marker = L.marker(
+        [currentLocation.latitude, currentLocation.longitude],
+        {
+          icon: this.icon_a,
+        },
+      ).addTo(this.ui_map);
+      this.current_marker._icon.location_data = currentLocation;
+      //} else { // Draw a circle indicating the radius of inaccuracy
+      //  this.current_marker = L.circle(
+      //    [currentLocation.latitude, currentLocation.longitude],
+      //    {
+      //      radius: currentLocation.accuracy,
+      //    },
+      //  ).addTo(this.ui_map);
+      //  this.current_marker._path.location_data = currentLocation;
+      //}
     });
   }
 }

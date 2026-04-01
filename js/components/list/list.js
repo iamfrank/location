@@ -1,4 +1,4 @@
-import { getLocations, getLocation, on } from "../../state.js";
+import { getLocations, getLocation, on } from "../../modules/state.js";
 
 export class LocationList extends HTMLElement {
   locations = [];
