@@ -1,13 +1,24 @@
 import { on, set } from "../../modules/state.js";
 
 export class LocationNavigator extends HTMLElement {
+  tracking = {
+    active: false,
+    from: null,
+    to: null,
+  };
+
   constructor() {
     super();
   }
 
   connectedCallback() {
     on("track", (trackingData) => {
-      this.render(trackingData);
+      this.tracking = trackingData;
+      this.render(this.tracking);
+    });
+    on("currentlocation", (newLocation) => {
+      this.tracking.from = newLocation;
+      this.render(this.tracking);
     });
   }
 

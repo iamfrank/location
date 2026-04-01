@@ -23,8 +23,8 @@ function off(actionId, callback) {
   );
 }
 
-function publish(actionId, newState, prevState = undefined) {
-  (callbacks[actionId] || []).forEach((cb) => cb(newState, prevState));
+function publish(actionId, newState) {
+  (callbacks[actionId] || []).forEach((cb) => cb(newState));
 }
 
 function set(actionId, data) {
@@ -49,8 +49,8 @@ function set(actionId, data) {
 }
 
 function setCurrentLocation(location) {
-  publish("currentlocation", location, currentLocation);
   currentLocation = location;
+  publish("currentlocation", currentLocation);
 }
 
 function getCurrentLocation() {
