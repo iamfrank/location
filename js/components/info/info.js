@@ -1,11 +1,6 @@
-import {
-  saveLocation,
-  deleteLocation,
-  getCurrentLocation,
-  set,
-  get,
-} from "../../modules/state.js";
+import { saveLocation, deleteLocation, set, get } from "../../modules/state.js";
 import { getBFE } from "../../modules/matriklen.js";
+import { formatCoords } from "../../modules/format.js";
 
 // Define component
 export class LocationInfo extends HTMLElement {
@@ -43,7 +38,7 @@ export class LocationInfo extends HTMLElement {
       <article>
         ${location_data.title ? `<h3>${location_data.title}</h3>` : ""}
         <p class="coordinates">
-          ${this.formatCoords(location_data.latitude, location_data.longitude)}
+          ${formatCoords(location_data.latitude, location_data.longitude)}
         </p>
         <p class="location-details">
           ${location_data.accuracy !== null ? this.formatAccuracy(location_data.accuracy) : ""}
@@ -62,10 +57,12 @@ export class LocationInfo extends HTMLElement {
       ${
         location_data.title !== "Current location"
           ? `<p class="actions">
-          <button class="btn-track-location">Track</button>
+          <button class="btn-track-location-from">Navigate from here</button>
           <button class="btn-delete-location">Delete</button>
+          <button class="btn-track-location-to">Navigate to here</button>
         </p>`
           : `<p class="actions">
+          <button class="btn-track-location-from">Navigate from here</button>
           <button class="btn-save-location">Save location</button>
         </p>`
       }
@@ -87,27 +84,25 @@ export class LocationInfo extends HTMLElement {
       ) {
         deleteLocation(this.location);
         this.remove();
-      } else if (event.target.className === "btn-track-location") {
-        set("track", {
+      } else if (event.target.className === "btn-track-location-to") {
+        const oldNav = get("navigate");
+        set("navigate", {
+          fromCurrent: oldNav.fromCurrent,
           active: true,
-          from: get("current"),
+          from: oldNav.from ? oldNav.from : get("current"),
           to: this.location,
+        });
+        this.remove();
+      } else if (event.target.className === "btn-track-location-from") {
+        set("navigate", {
+          active: false,
+          from: this.location,
+          to: get("navigate").to,
+          fromCurrent: false,
         });
         this.remove();
       }
     });
-  }
-
-  formatCoords(lat, lon) {
-    let latStr = `${lat.toFixed(6)} N`;
-    let lonStr = `${lon.toFixed(6)} E`;
-    if (lat < 0) {
-      latStr = `${Math.abs(lat).toFixed(6)} S`;
-    }
-    if (lon < 0) {
-      lonStr = `${Math.abs(lon).toFixed(6)} W`;
-    }
-    return `${latStr} ${lonStr}`;
   }
 
   formatAltitude(altitude, accuracy) {

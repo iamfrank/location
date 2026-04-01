@@ -1,24 +1,22 @@
-import { on, set } from "../../modules/state.js";
+import { on, set, get } from "../../modules/state.js";
+import { formatCoords } from "../../modules/format.js";
 
 export class LocationNavigator extends HTMLElement {
-  tracking = {
-    active: false,
-    from: null,
-    to: null,
-  };
-
   constructor() {
     super();
   }
 
   connectedCallback() {
-    on("track", (trackingData) => {
-      this.tracking = trackingData;
-      this.render(this.tracking);
+    on("navigate", (navObj) => {
+      this.render(navObj);
     });
-    on("currentlocation", (newLocation) => {
-      this.tracking.from = newLocation;
-      this.render(this.tracking);
+    on("current", (newLocation) => {
+      if (get("navigate").updateFrom) {
+        set("navigate", {
+          ...get("navigate"),
+          from: newLocation,
+        });
+      }
     });
   }
 
@@ -44,16 +42,21 @@ export class LocationNavigator extends HTMLElement {
             <dd>
               ${trackingData.to.title}
               <br>
-              ${trackingData.to.latitude}, ${trackingData.to.longitude}
+              ${formatCoords(trackingData.to.latitude, trackingData.to.longitude)}
             </dd>
-            <dt>Current location</dt>
-            <dd>${trackingData.from.latitude}, ${trackingData.from.longitude}</dd>
+            <dt>${trackingData.from.title ? trackingData.from.title : "Current location"}</dt>
+            <dd>${formatCoords(trackingData.from.latitude, trackingData.from.longitude)}</dd>
           </dl>
           <button class="track-stop">Stop tracking</button>
         </section>
       `;
       this.querySelector(".track-stop").addEventListener("click", () => {
-        set("track", { active: false });
+        set("navigate", {
+          active: false,
+          from: null,
+          to: null,
+          fromCurrent: true,
+        });
       });
     } else {
       this.innerHTML = "";
