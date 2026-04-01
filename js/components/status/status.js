@@ -1,13 +1,15 @@
 import { on, off } from "../../modules/state.js";
 
 export class StatusBar extends HTMLElement {
+  renderBound = this.render.bind(this);
+
   constructor() {
     super();
   }
 
   connectedCallback() {
     // On new location event, update status bar
-    on("currentlocation", this.render.bind(this));
+    on("currentlocation", this.renderBound);
   }
 
   render(currentLocation) {
@@ -22,6 +24,6 @@ export class StatusBar extends HTMLElement {
   }
 
   disconnectedCallback() {
-    off("currentlocation", this.render.bind(this));
+    off("currentlocation", this.renderBound);
   }
 }

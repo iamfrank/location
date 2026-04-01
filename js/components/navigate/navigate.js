@@ -42,12 +42,12 @@ export class LocationNavigator extends HTMLElement {
           <dl>
             <dt>Target location</dt>
             <dd>
-              ${trackingData.to._title}
+              ${trackingData.to.title}
               <br>
-              ${trackingData.to._latitude}, ${trackingData.to._longitude}
+              ${trackingData.to.latitude}, ${trackingData.to.longitude}
             </dd>
             <dt>Current location</dt>
-            <dd>${trackingData.from._latitude}, ${trackingData.from._longitude}</dd>
+            <dd>${trackingData.from.latitude}, ${trackingData.from.longitude}</dd>
           </dl>
           <button class="track-stop">Stop tracking</button>
         </section>
@@ -73,10 +73,10 @@ export class LocationNavigator extends HTMLElement {
    */
   calculateDistanceAndHeading(from, to) {
     const R = 6371e3; // Earth radius in meters
-    const lat1 = from._latitude;
-    const lon1 = from._longitude;
-    const lat2 = to._latitude;
-    const lon2 = to._longitude;
+    const lat1 = from.latitude;
+    const lon1 = from.longitude;
+    const lat2 = to.latitude;
+    const lon2 = to.longitude;
     const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
     const φ2 = (lat2 * Math.PI) / 180;
     const Δφ = ((lat2 - lat1) * Math.PI) / 180;

@@ -2,6 +2,7 @@ import { saveLocation } from "../../modules/state.js";
 
 export class LocationPin extends HTMLElement {
   active = false;
+  mapClickHandlerBound = this.mapClickHandler.bind(this);
 
   constructor() {
     super();
@@ -9,11 +10,11 @@ export class LocationPin extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    document.addEventListener("click:map", this.mapClickHandler.bind(this));
+    document.addEventListener("click:map", this.mapClickHandlerBound);
   }
 
   disconnectedCallback() {
-    document.removeEventListener("click:map", this.mapClickHandler);
+    document.removeEventListener("click:map", this.mapClickHandlerBound);
   }
 
   render() {

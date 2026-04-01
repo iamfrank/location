@@ -40,26 +40,26 @@ export class LocationInfo extends HTMLElement {
         </svg>
       </button>
       <article>
-        ${location_data._title ? `<h3>${location_data._title}</h3>` : ""}
+        ${location_data.title ? `<h3>${location_data.title}</h3>` : ""}
         <p class="coordinates">
-          ${this.formatCoords(location_data._latitude, location_data._longitude)}
+          ${this.formatCoords(location_data.latitude, location_data.longitude)}
         </p>
         <p class="location-details">
-          ${location_data.accuracy !== null ? this.formatAccuracy(location_data._accuracy) : ""}
-          ${location_data.altitude !== null ? this.formatAltitude(location_data._altitude, location_data._altitudeAccuracy) : ""}
+          ${location_data.accuracy !== null ? this.formatAccuracy(location_data.accuracy) : ""}
+          ${location_data.altitude !== null ? this.formatAltitude(location_data.altitude, location_data.altitude_accuracy) : ""}
         </p>
         ${
-          location_data._accuracy < 25
+          location_data.accuracy < 25
             ? `
           <p>
-            ${await this.formatOISlinks([location_data._latitude, location_data._longitude])}
+            ${await this.formatOISlinks([location_data.latitude, location_data.longitude])}
           </p>
         `
             : ""
         }
       </article>
       ${
-        location_data._title !== "Current location"
+        location_data.title !== "Current location"
           ? `<p class="actions">
           <button class="btn-track-location">Track</button>
           <button class="btn-delete-location">Delete</button>
