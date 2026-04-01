@@ -30,7 +30,6 @@ export class LocationInfo extends HTMLElement {
   }
 
   async render(location_data) {
-    console.log(location_data.title === "Current location");
     this.innerHTML = `
       <button class="btn-close" title="Close">
         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,7 +40,7 @@ export class LocationInfo extends HTMLElement {
         </svg>
       </button>
       <article>
-        ${location_data.title ? `<h3>${location_data._title}</h3>` : ""}
+        ${location_data._title ? `<h3>${location_data._title}</h3>` : ""}
         <p class="coordinates">
           ${this.formatCoords(location_data._latitude, location_data._longitude)}
         </p>
