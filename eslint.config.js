@@ -9,5 +9,5 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: globals.browser },
   },
-  { ignores: ["js/leaflet/*.js"] },
+  { ignores: ["js/modules/leaflet/*.js"] },
 ]);
