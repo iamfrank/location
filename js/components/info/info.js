@@ -1,4 +1,9 @@
-import { saveLocation, deleteLocation } from "../../modules/state.js";
+import {
+  saveLocation,
+  deleteLocation,
+  getCurrentLocation,
+  set,
+} from "../../modules/state.js";
 import { getBFE } from "../../modules/matriklen.js";
 
 // Define component
@@ -36,32 +41,33 @@ export class LocationInfo extends HTMLElement {
         </svg>
       </button>
       <article>
-        ${location_data.title ? `<h3>${location_data.title}</h3>` : ""}
+        ${location_data.title ? `<h3>${location_data._title}</h3>` : ""}
         <p class="coordinates">
-          ${this.formatCoords(location_data.latitude, location_data.longitude)}
+          ${this.formatCoords(location_data._latitude, location_data._longitude)}
         </p>
         <p class="location-details">
-          ${location_data.accuracy !== null ? this.formatAccuracy(location_data.accuracy) : ""}
-          ${location_data.altitude !== null ? this.formatAltitude(location_data.altitude, location_data.altitudeAccuracy) : ""}
+          ${location_data.accuracy !== null ? this.formatAccuracy(location_data._accuracy) : ""}
+          ${location_data.altitude !== null ? this.formatAltitude(location_data._altitude, location_data._altitudeAccuracy) : ""}
         </p>
         ${
-          location_data.accuracy < 25
+          location_data._accuracy < 25
             ? `
           <p>
-            ${await this.formatOISlinks([location_data.latitude, location_data.longitude])}
+            ${await this.formatOISlinks([location_data._latitude, location_data._longitude])}
           </p>
         `
             : ""
         }
       </article>
       ${
-        location_data.title !== "Current location"
-          ? `
-      <p class="actions">
-        ${!location_data.title ? '<button class="btn-save-location">Save location</button>' : '<button disabled class="btn-track-location">Track</button><button class="btn-delete-location">Delete</button>'}
-      </p>
-      `
-          : ""
+        location_data._title !== "Current location"
+          ? `<p class="actions">
+          <button class="btn-track-location">Track</button>
+          <button class="btn-delete-location">Delete</button>
+        </p>`
+          : `<p class="actions">
+          <button class="btn-save-location">Save location</button>
+        </p>`
       }
     `;
 
@@ -82,7 +88,11 @@ export class LocationInfo extends HTMLElement {
         deleteLocation(this.location);
         this.remove();
       } else if (event.target.className === "btn-track-location") {
-        // attach tracker element with 2 locations as arguments
+        set("track", {
+          active: true,
+          from: getCurrentLocation(),
+          to: this.location,
+        });
         this.remove();
       }
     });

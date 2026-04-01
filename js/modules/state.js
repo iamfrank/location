@@ -5,6 +5,11 @@ const locations_change_event = new CustomEvent("updatelocations");
 const callbacks = {}; // 'update'
 let locations = [];
 let currentLocation = null;
+let tracking = {
+  active: false,
+  from: null,
+  to: null,
+};
 
 function on(actionId, callback) {
   if (!callbacks[actionId]) callbacks[actionId] = [];
@@ -20,6 +25,27 @@ function off(actionId, callback) {
 
 function publish(actionId, newState, prevState = undefined) {
   (callbacks[actionId] || []).forEach((cb) => cb(newState, prevState));
+}
+
+function set(actionId, data) {
+  switch (actionId) {
+    case "track":
+      tracking.active = data.active;
+      if (data.from) {
+        tracking.from = data.from;
+      } else {
+        tracking.from = null;
+      }
+      if (data.to) {
+        tracking.to = data.to;
+      } else {
+        tracking.to = null;
+      }
+      publish("track", tracking);
+      break;
+    default:
+    // Nothing
+  }
 }
 
 function setCurrentLocation(location) {
@@ -76,4 +102,5 @@ export {
   setCurrentLocation,
   on,
   off,
+  set,
 };

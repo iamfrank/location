@@ -58,7 +58,7 @@ export class LeafletMap extends HTMLElement {
       this.saved_markers.clearLayers();
       for (let p in locations) {
         let pos = locations[p];
-        const marker = L.marker([pos.latitude, pos.longitude], {
+        const marker = L.marker([pos._latitude, pos._longitude], {
           icon: this.icon_b,
         });
         this.saved_markers.addLayer(marker);
@@ -72,7 +72,7 @@ export class LeafletMap extends HTMLElement {
       }
       //if (currentLocation.accuracy < 10) {
       this.current_marker = L.marker(
-        [currentLocation.latitude, currentLocation.longitude],
+        [currentLocation._latitude, currentLocation._longitude],
         {
           icon: this.icon_a,
         },

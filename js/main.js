@@ -6,6 +6,7 @@ import { LocationPin } from "./components/pin/pin.js";
 import { LocationMessage } from "./components/message/message.js";
 import { LocationLocator } from "./components/locate/locate.js";
 import { StatusBar } from "./components/status/status.js";
+import { LocationNavigator } from "./components/navigate/navigate.js";
 import { getLocations } from "./modules/state.js";
 
 // Init web components
@@ -16,6 +17,7 @@ customElements.define("location-pin", LocationPin);
 customElements.define("location-message", LocationMessage);
 customElements.define("location-status", StatusBar);
 customElements.define("location-locator", LocationLocator);
+customElements.define("location-navigator", LocationNavigator);
 
 // Show saved locations in map on page load
 window.addEventListener("load", function () {
