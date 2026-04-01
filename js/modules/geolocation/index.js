@@ -1,4 +1,4 @@
-import { setCurrentLocation } from "../state.js";
+import { set } from "../state.js";
 import FlatGeoLocation from "../location-object.js";
 
 export default class GeoLoc {
@@ -52,7 +52,7 @@ export default class GeoLoc {
 
   dispatchPosition(position) {
     const l = new FlatGeoLocation("Current location", position);
-    setCurrentLocation(l);
+    set("current", l);
     // DEPRECATED: Send event to other components
     document.body.dispatchEvent(
       new CustomEvent("change:geolocation", {

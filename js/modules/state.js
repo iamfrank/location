@@ -1,72 +1,55 @@
 import FlatGeoLocation from "./location-object.js";
 
 const localstorage_key = "locator-iegh383hd9";
-const locations_change_event = new CustomEvent("updatelocations");
-const callbacks = {}; // 'update'
-let locations = [];
-let currentLocation = null;
-let tracking = {
-  active: false,
-  from: null,
-  to: null,
+const state = {
+  callbacks: {},
+  locations: [],
+  current: null,
+  tracking: {
+    active: false,
+    from: null,
+    to: null,
+  },
 };
 
+/**
+ * Events:
+ * `tracking`
+ * `current`
+ * `locations`
+ */
 function on(actionId, callback) {
-  if (!callbacks[actionId]) callbacks[actionId] = [];
-  callbacks[actionId].push(callback);
+  if (!state.callbacks[actionId]) state.callbacks[actionId] = [];
+  state.callbacks[actionId].push(callback);
   return () => off(actionId, callback); // returns unsubscribe fn
 }
 
 function off(actionId, callback) {
-  callbacks[actionId] = (callbacks[actionId] || []).filter(
+  state.callbacks[actionId] = (state.callbacks[actionId] || []).filter(
     (cb) => cb !== callback,
   );
 }
 
-function publish(actionId, newState) {
-  (callbacks[actionId] || []).forEach((cb) => cb(newState));
+function set(stateProp, data) {
+  state[stateProp] = data;
+  (state.callbacks[stateProp] || []).forEach((cb) => cb(state[stateProp]));
+  return state;
 }
 
-function set(actionId, data) {
-  switch (actionId) {
-    case "track":
-      tracking.active = data.active;
-      if (data.from) {
-        tracking.from = data.from;
-      } else {
-        tracking.from = null;
-      }
-      if (data.to) {
-        tracking.to = data.to;
-      } else {
-        tracking.to = null;
-      }
-      publish("track", tracking);
-      break;
-    default:
-    // Nothing
-  }
-}
-
-function setCurrentLocation(location) {
-  currentLocation = location;
-  publish("currentlocation", currentLocation);
-}
-
-function getCurrentLocation() {
-  return currentLocation;
+function get(stateProp) {
+  return state[stateProp];
 }
 
 /** Fetches locations from localStorage */
-function getLocations() {
+function loadLocations() {
   const ls = JSON.parse(localStorage.getItem(localstorage_key));
-  locations = ls ? ls : [];
-  publish("locations", locations);
-  return locations;
+  state.locations = ls ? ls : [];
+  set("locations", state.locations);
+  return state.locations;
 }
 
-function getLocation(title) {
-  return locations.find((l) => l.title === title);
+function findLocation(title) {
+  return state.locations.find((l) => l.title === title);
 }
 
 function saveLocation(title, location_data) {
@@ -75,32 +58,32 @@ function saveLocation(title, location_data) {
     _title = "unknown";
   }
   const locationObject = new FlatGeoLocation(_title, location_data);
-  locations.push(locationObject);
-  commitLocations(locations);
+  return saveLocations([...state.locations, locationObject]);
 }
 
 function deleteLocation(location_data) {
-  let loc_idx = locations.findIndex(function (loc) {
+  const loc_idx = state.locations.findIndex((loc) => {
     return loc.title === location_data.title;
   });
-  locations.splice(loc_idx, 1);
-  commitLocations(locations);
+  if (loc_idx === -1) {
+    return;
+  }
+  return saveLocations(state.locations.splice(loc_idx, 1));
 }
 
-function commitLocations(locations_array) {
+function saveLocations(locations_array) {
+  set("locations", locations_array);
   localStorage.setItem(localstorage_key, JSON.stringify(locations_array));
-  document.dispatchEvent(locations_change_event);
-  publish("locations", locations_array);
+  return locations_array;
 }
 
 export {
-  getLocations,
-  getLocation,
+  loadLocations,
+  findLocation,
   saveLocation,
   deleteLocation,
-  getCurrentLocation,
-  setCurrentLocation,
   on,
   off,
   set,
+  get,
 };

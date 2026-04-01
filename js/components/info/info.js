@@ -3,6 +3,7 @@ import {
   deleteLocation,
   getCurrentLocation,
   set,
+  get,
 } from "../../modules/state.js";
 import { getBFE } from "../../modules/matriklen.js";
 
@@ -89,7 +90,7 @@ export class LocationInfo extends HTMLElement {
       } else if (event.target.className === "btn-track-location") {
         set("track", {
           active: true,
-          from: getCurrentLocation(),
+          from: get("current"),
           to: this.location,
         });
         this.remove();

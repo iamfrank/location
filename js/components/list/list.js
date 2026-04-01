@@ -1,4 +1,4 @@
-import { getLocations, getLocation, on } from "../../modules/state.js";
+import { findLocation, on, get } from "../../modules/state.js";
 
 export class LocationList extends HTMLElement {
   locations = [];
@@ -8,7 +8,7 @@ export class LocationList extends HTMLElement {
   }
 
   connectedCallback() {
-    this.locations = getLocations();
+    this.locations = get("locations");
     this.render();
     this.addEventListener("click", this.listClickHandler);
     on("locations", (locations) => {
@@ -60,7 +60,7 @@ export class LocationList extends HTMLElement {
   listClickHandler(event) {
     // Handle the case where a user selects an item in the list
     if (event.target.classList.contains("location-list-item-btn")) {
-      const locationInfo = getLocation(event.target.getAttribute("title"));
+      const locationInfo = findLocation(event.target.getAttribute("title"));
       const locationInfoElement = document.createElement("location-info");
       locationInfoElement.setLocation(locationInfo);
       document.body.append(locationInfoElement);
