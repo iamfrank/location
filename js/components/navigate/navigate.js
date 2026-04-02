@@ -21,7 +21,7 @@ export class LocationNavigator extends HTMLElement {
   }
 
   render(trackingData) {
-    if (trackingData.active) {
+    if (trackingData.active && trackingData.to && trackingData.from) {
       const result = this.calculateDistanceAndHeading(
         trackingData.from,
         trackingData.to,
