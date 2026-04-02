@@ -29,7 +29,7 @@ export class LocationNavigator extends HTMLElement {
       this.innerHTML = `
         <section class="navigator">
           <figure>
-            <img src="../../img/compass.svg" alt="">
+            <img src="./img/compass.svg" alt="">
             <span class="pointer" style="transform: rotate(${result.heading}deg);"></span>
             <figcaption>
               ${result.heading}°
