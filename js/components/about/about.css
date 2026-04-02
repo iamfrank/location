@@ -4,3 +4,8 @@
   right: 1rem;
   z-index: 100;
 }
+
+#go-github svg {
+  width: 3rem;
+  height: 3rem;
+}

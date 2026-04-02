@@ -12,14 +12,12 @@ export class AboutPage extends HTMLElement {
       <button popovertarget="aboutdialog" title="About this app">?</button>
       <dialog id="aboutdialog" popover>
         <button class="close">X</button>
-        <p>A web application to track and display geolocations</p>
+        <p>A web application to track and display geolocations by <a href="https://iamfrank.github.io">Iamfrank</a>.</p>
         <p>
           <a
             id="go-github"
-            class="button"
             href="https://github.com/iamfrank/location"
             title="Check this out on Github"
-            style="padding: 0.5rem"
             target="_blank"
           >
             <svg height="100%" viewBox="0 0 24 24" version="1.1" width="100%">
@@ -35,7 +33,6 @@ export class AboutPage extends HTMLElement {
     `;
 
     this.querySelector(".close").addEventListener("click", () => {
-      console.log("hiding");
       this.querySelector("[popover]").hidePopover();
     });
   }
