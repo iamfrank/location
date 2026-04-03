@@ -17,8 +17,8 @@ body {
 }
 
 main {
-  height: calc(100vh - 2.5rem);
-  width: 100%;
+  height: var(--map-height);
+  width: 100vw;
 }
 
 button,
@@ -60,7 +60,7 @@ dd {
 
 #main-tools {
   position: fixed;
-  height: 2.5rem;
+  height: var(--action-bar-height);
   width: 100%;
   bottom: 0;
   left: 0;
@@ -71,7 +71,7 @@ dd {
   justify-content: space-around;
 
   button.popover-btn {
-    height: 2.5rem;
+    height: var(--action-bar-height);
     min-width: 4rem;
   }
 }

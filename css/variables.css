@@ -15,5 +15,7 @@
 
   --accent: #ffaa66;
 
-  --action-bar-height: 3rem;
+  --action-bar-height: 2.5rem;
+
+  --map-height: calc(100vh - var(--action-bar-height));
 }

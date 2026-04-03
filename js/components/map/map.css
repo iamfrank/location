@@ -1,12 +1,13 @@
 leaflet-map {
   display: block;
-  height: 100%;
-  width: 100%;
+  height: var(--map-height);
+  width: 100vw;
 }
 
 #lftmap {
-  height: 100%;
-  width: 100%;
+  display: block;
+  height: var(--map-height);
+  width: 100vw;
   background-color: var(--color);
 }
 
