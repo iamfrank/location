@@ -3,6 +3,8 @@ import { on } from "../../modules/state.js";
 
 // Define LeafletMap component
 export class LeafletMap extends HTMLElement {
+  navigationPath;
+
   centerOnLocation(location) {
     this.ui_map.flyTo([location.latitude, location.longitude], 14);
   }
@@ -21,7 +23,7 @@ export class LeafletMap extends HTMLElement {
     );
     L.control.scale({ imperial: false }).addTo(this.ui_map);
     this.icon_a = L.icon({
-      iconUrl: "./img/marker-a.svg",
+      iconUrl: "./img/pin.svg",
       iconSize: [30, 20],
       iconAnchor: [15, 20],
       popupAnchor: [0, 0],
@@ -29,7 +31,7 @@ export class LeafletMap extends HTMLElement {
     this.icon_b = L.icon({
       iconUrl: "./img/marker-b.svg",
       iconSize: [30, 20],
-      iconAnchor: [15, 0],
+      iconAnchor: [15, 20],
       popupAnchor: [0, 0],
     });
     this.current_marker = null;
@@ -54,6 +56,21 @@ export class LeafletMap extends HTMLElement {
   }
 
   connectedCallback() {
+    on("navigate", (navigation) => {
+      if (this.navigationPath) {
+        this.navigationPath.remove();
+      }
+      if (navigation.to || navigation.from) {
+        const latlngs = [
+          [navigation.from.latitude, navigation.from.longitude],
+          [navigation.to.latitude, navigation.to.longitude],
+        ];
+        this.navigationPath = L.polyline(latlngs, { color: "red" }).addTo(
+          this.ui_map,
+        );
+      }
+    });
+
     on("locations", (locations) => {
       this.saved_markers.clearLayers();
       for (let p in locations) {
@@ -66,7 +83,7 @@ export class LeafletMap extends HTMLElement {
       }
     });
 
-    on("currentlocation", (currentLocation) => {
+    on("current", (currentLocation) => {
       if (this.current_marker) {
         this.current_marker.remove();
       }
