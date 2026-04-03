@@ -16,6 +16,11 @@ body {
   color: var(--color);
 }
 
+main {
+  height: calc(100vh - 2.5rem);
+  width: 100%;
+}
+
 button,
 .button {
   border: solid 2px transparent;
