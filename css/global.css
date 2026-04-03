@@ -70,6 +70,7 @@ dd {
   flex-flow: row nowrap;
   align-items: stretch;
   justify-content: space-around;
+  background-color: var(--bg);
 
   button.popover-btn {
     height: var(--action-bar-height);
@@ -84,5 +85,5 @@ dd {
   color: var(--bg);
   font-size: 0.7rem;
   bottom: 2.5rem;
-  right: 10.5rem;
+  left: 0.5rem;
 }

@@ -1,12 +1,8 @@
-leaflet-map {
-  display: block;
-  height: var(--map-height);
-  width: 100vw;
-}
-
 #lftmap {
+  position: fixed;
+  z-index: 1;
   display: block;
-  height: var(--map-height);
+  height: 100vh;
   width: 100vw;
   background-color: var(--color);
 }
