@@ -21,7 +21,7 @@
   text-align: center;
   z-index: 100;
   width: 8rem;
-  height: 4rem;
+  height: 5rem;
   margin: -2rem 0 0 -4rem;
   font-size: 1rem;
 }
@@ -38,4 +38,8 @@
   text-indent: -1000rem;
   transform: rotate(0deg);
   transform-origin: 50% 5rem;
+}
+
+.navigation-display button {
+  padding: 0.25rem;
 }

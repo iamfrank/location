@@ -7,7 +7,6 @@ import { LocationLocator } from "./components/locate/locate.js";
 import { StatusBar } from "./components/status/status.js";
 import { AboutPage } from "./components/about/about.js";
 import { CloseButton } from "./components/closebutton/closebutton.js";
-import { NavButton } from "./components/navigate/navbutton.js";
 import { NavDisplay } from "./components/navigate/navdisplay.js";
 import { get, loadLocations } from "./modules/state.js";
 
@@ -18,7 +17,6 @@ customElements.define("location-list", LocationList);
 customElements.define("location-pin", LocationPin);
 customElements.define("location-status", StatusBar);
 customElements.define("location-locator", LocationLocator);
-customElements.define("location-navbutton", NavButton);
 customElements.define("location-navdisplay", NavDisplay);
 customElements.define("location-about", AboutPage);
 customElements.define("button-close", CloseButton);

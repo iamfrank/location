@@ -8,6 +8,7 @@
 }
 
 .leaflet-control-attribution {
+  bottom: var(--action-bar-height);
   background-color: hsl(0, 0%, 100%, 0.3) !important;
 }
 .leaflet-control-attribution a {

@@ -32,8 +32,16 @@ export class NavDisplay extends HTMLElement {
           ${heading}°
           <br>
           <small>${formatDistance(distance)}</small>
+          <br>
+          <button>Cancel</button>
         </p>
       `;
+      this.querySelector("button").addEventListener("click", () => {
+        set("track", {
+          to: null,
+          from: null,
+        });
+      });
     } else {
       this.innerHTML = "";
     }

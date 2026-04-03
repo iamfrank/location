@@ -14,8 +14,8 @@
 
 .location-status dt,
 .location-status dd {
-  background-color: hsla(0, 0%, 0%, 0.4);
-  color: var(--color);
+  background-color: hsla(0, 0%, 100%, 0.5);
+  color: var(--bg);
   padding: 0.125rem 0.5rem;
   width: auto;
   display: inline-block;
