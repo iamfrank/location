@@ -71,18 +71,16 @@ export class LocationInfo extends HTMLElement {
         deleteLocation(this.location);
         this.remove();
       } else if (event.target.className === "btn-track-location-to") {
-        const oldNav = get("navigate");
-        set("navigate", {
-          fromCurrent: oldNav.fromCurrent,
-          from: oldNav.from ? oldNav.from : get("current"),
+        const oldNav = get("track");
+        set("track", {
+          from: oldNav.from !== null ? oldNav.from : get("current"),
           to: this.location,
         });
         this.remove();
       } else if (event.target.className === "btn-track-location-from") {
-        set("navigate", {
+        set("track", {
           from: this.location,
-          to: get("navigate").to,
-          fromCurrent: false,
+          to: get("track").to ? get("track").to : null,
         });
         this.remove();
       }

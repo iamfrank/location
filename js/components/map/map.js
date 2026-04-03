@@ -56,11 +56,11 @@ export class LeafletMap extends HTMLElement {
   }
 
   connectedCallback() {
-    on("navigate", (navigation) => {
+    on("track", (navigation) => {
       if (this.navigationPath) {
         this.navigationPath.remove();
       }
-      if (navigation.to || navigation.from) {
+      if (navigation.to && navigation.from) {
         const latlngs = [
           [navigation.from.latitude, navigation.from.longitude],
           [navigation.to.latitude, navigation.to.longitude],

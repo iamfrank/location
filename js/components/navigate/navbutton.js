@@ -7,7 +7,7 @@ export class NavButton extends HTMLElement {
 
   connectedCallback() {
     this.render(null);
-    on("navigate", (navigation) => {
+    on("track", (navigation) => {
       this.render(navigation);
     });
   }
@@ -23,7 +23,7 @@ export class NavButton extends HTMLElement {
       </button>
     `;
     this.querySelector("button").addEventListener("click", () => {
-      const newNav = set("navigate", {
+      const newNav = set("track", {
         to: null,
         from: null,
       });

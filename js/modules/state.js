@@ -5,8 +5,7 @@ const state = {
   callbacks: {},
   locations: [],
   current: null,
-  navigate: {
-    fromCurrent: true,
+  track: {
     from: null,
     to: null,
   },
@@ -14,7 +13,7 @@ const state = {
 
 /**
  * Events:
- * `navigate`
+ * `track`
  * `current`
  * `locations`
  */

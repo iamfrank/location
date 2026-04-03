@@ -13,7 +13,7 @@ export class NavDisplay extends HTMLElement {
   connectedCallback() {
     this.className = "navigation-display";
     this.render(null);
-    on("navigate", (navigation) => {
+    on("track", (navigation) => {
       this.render(navigation);
     });
   }
