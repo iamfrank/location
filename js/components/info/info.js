@@ -10,6 +10,7 @@ export class LocationInfo extends HTMLElement {
   setLocation(data) {
     this.location = data;
     this.render(this.location);
+    this.renderOIS(this.location);
   }
 
   constructor() {
@@ -25,7 +26,7 @@ export class LocationInfo extends HTMLElement {
     });
   }
 
-  async render(location_data) {
+  render(location_data) {
     this.innerHTML = `
       <button title="Close"></button>
       <article>
@@ -37,15 +38,7 @@ export class LocationInfo extends HTMLElement {
           ${location_data.accuracy !== null ? this.formatAccuracy(location_data.accuracy) : ""}
           ${location_data.altitude !== null ? this.formatAltitude(location_data.altitude, location_data.altitude_accuracy) : ""}
         </p>
-        ${
-          location_data.accuracy < 25
-            ? `
-          <p>
-            ${await this.formatOISlinks([location_data.latitude, location_data.longitude])}
-          </p>
-        `
-            : ""
-        }
+        <div class="location-ois"></div>
       </article>
       ${
         location_data.title !== "Current location"
@@ -96,6 +89,14 @@ export class LocationInfo extends HTMLElement {
         this.remove();
       }
     });
+  }
+
+  async renderOIS(location_data) {
+    if (location_data && location_data.accuracy < 25) {
+      this.querySelector(".location-ois").innerHTML = `
+        <p>${await this.formatOISlinks([location_data.latitude, location_data.longitude])}</p>
+      `;
+    }
   }
 
   formatAltitude(altitude, accuracy) {

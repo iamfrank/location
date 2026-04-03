@@ -63,13 +63,9 @@ function saveLocation(title, location_data) {
 }
 
 function deleteLocation(location_data) {
-  const loc_idx = state.locations.findIndex((loc) => {
-    return loc.title === location_data.title;
-  });
-  if (loc_idx === -1) {
-    return;
-  }
-  return saveLocations(state.locations.splice(loc_idx, 1));
+  return saveLocations(
+    state.locations.filter((loc) => loc.title !== location_data.title),
+  );
 }
 
 function saveLocations(locations_array) {
