@@ -1,3 +1,6 @@
 #aboutdialog {
   padding: 1rem;
+  background-color: var(--bg);
+  color: var(--color);
+  border: none;
 }

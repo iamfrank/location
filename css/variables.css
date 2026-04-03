@@ -5,15 +5,16 @@
   --color-lightgreen: #cdebb0;
   --color-lightgrey: #f2efe9;
 
-  --color: #fff;
-  --color-1: #ddd;
-  --color-3: #bbb;
+  --color: #333;
+  --color-1: #555;
+  --color-3: #777;
   --color-5: #999;
-  --color-7: #666;
-  --color-9: #333;
-  --bg: #000;
+  --color-7: #bbb;
+  --color-9: #ddd;
+  --bg: #efede5;
+  --bg-transparent: hsla(0, 0%, 100%, 0.5);
 
-  --accent: #ffaa66;
+  --accent: hsl(102, 100%, 20%);
 
   --action-bar-height: 2.5rem;
 }

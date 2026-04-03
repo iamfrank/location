@@ -12,13 +12,15 @@
 }
 
 .navigation-display p {
-  color: var(--bg);
-  background-color: transparent;
-  display: block;
+  color: var(--color);
+  display: flex;
   position: absolute;
   top: 50%;
   left: 50%;
   text-align: center;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
   z-index: 100;
   width: 8rem;
   height: 5rem;

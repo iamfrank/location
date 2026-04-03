@@ -29,6 +29,10 @@ button,
   color: var(--color);
   font-weight: 700;
   cursor: pointer;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
 
   img {
     width: 1.5rem;
@@ -36,11 +40,22 @@ button,
   }
 }
 
+a,
+a:link,
+a:visited {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover,
+a:active {
+  background-color: var(--color-lightgreen);
+}
+
 button:hover,
 button:active,
 .button:hover,
 .button:active {
-  background-color: var(--color-7);
+  background-color: var(--color-lightgreen);
 }
 
 button:focus,
@@ -79,6 +94,7 @@ dd {
     text-transform: capitalize;
     font-weight: 600;
     font-size: smaller;
+    padding: 0;
   }
 
   button.active {

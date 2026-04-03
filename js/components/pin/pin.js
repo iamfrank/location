@@ -20,7 +20,7 @@ export class LocationPin extends HTMLElement {
   render() {
     this.innerHTML = `
       <button title="Manually add new location" ${this.active ? 'class="popover-btn active"' : 'class="popover-btn"'}>
-        <img src="./img/add-pin.svg" />
+        +<img src="./img/marker-b.svg" alt="">
       </button>
     `;
     this.querySelector("button").addEventListener(
