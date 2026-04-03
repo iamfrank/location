@@ -78,6 +78,6 @@ dd {
   }
 
   button.active {
-    background-color: green;
+    background-color: var(--accent);
   }
 }
