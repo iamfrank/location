@@ -3,10 +3,18 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
   height: auto;
-  width: 100%;
-  background-color: hsla(0, 0%, 0%, 0.6);
-  color: white;
-  padding: 0.125rem;
+  width: auto;
+}
+
+.location-status dl {
+}
+
+.location-status dt,
+.location-status dd {
+  background-color: hsla(0, 0%, 0%, 0.4);
+  color: var(--color);
+  padding: 0.25rem 0.5rem;
+  width: auto;
+  display: inline-block;
 }

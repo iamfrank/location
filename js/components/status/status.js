@@ -1,29 +1,24 @@
-import { on, off } from "../../modules/state.js";
+import { on, get } from "../../modules/state.js";
+import { formatCoords } from "../../modules/format.js";
 
 export class StatusBar extends HTMLElement {
-  renderBound = this.render.bind(this);
-
   constructor() {
     super();
   }
 
   connectedCallback() {
-    // On new location event, update status bar
-    on("currentlocation", this.renderBound);
+    this.className = "location-status";
+    on("navigate", this.render.bind(this));
+    on("current", this.render.bind(this));
   }
 
-  render(currentLocation) {
-    if (currentLocation) {
-      this.innerHTML = `
-        <dl class="location-status">
-          <dt>Tracking location</dt>
-          <dd>${currentLocation.latitude} ${currentLocation.longitude}</dd>
-        </dl>
-      `;
-    }
-  }
-
-  disconnectedCallback() {
-    off("currentlocation", this.renderBound);
+  render() {
+    const navigation = get("navigate");
+    const current = get("current");
+    this.innerHTML = `
+      ${current ? `<dl><dt>pos</dt><dd>${formatCoords(current.latitude, current.longitude)}</dd></dl>` : ""}
+      ${navigation?.from ? `<dl><dt>orig</dt><dd>${formatCoords(navigation.from.latitude, navigation.from.longitude)}</dd></dl>` : ""}
+      ${navigation?.to ? `<dl><dt>dest</dt><dd>${formatCoords(navigation.to.latitude, navigation.to.longitude)}</dd></dl>` : ""}
+    `;
   }
 }
