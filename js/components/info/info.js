@@ -74,14 +74,12 @@ export class LocationInfo extends HTMLElement {
         const oldNav = get("navigate");
         set("navigate", {
           fromCurrent: oldNav.fromCurrent,
-          active: true,
           from: oldNav.from ? oldNav.from : get("current"),
           to: this.location,
         });
         this.remove();
       } else if (event.target.className === "btn-track-location-from") {
         set("navigate", {
-          active: false,
           from: this.location,
           to: get("navigate").to,
           fromCurrent: false,

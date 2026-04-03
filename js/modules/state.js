@@ -7,7 +7,6 @@ const state = {
   current: null,
   navigate: {
     fromCurrent: true,
-    active: false,
     from: null,
     to: null,
   },
