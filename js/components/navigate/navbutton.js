@@ -16,7 +16,7 @@ export class NavButton extends HTMLElement {
     const isNavigating = nav && nav.to && nav.from ? true : false;
     this.innerHTML = `
       <button
-        class="${isNavigating ? "active" : ""}"
+        class="${isNavigating ? "active" : ""} popover-button"
         ${!isNavigating ? "disabled" : ""}
         title="Stop path tracking">
         O

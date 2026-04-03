@@ -76,4 +76,8 @@ dd {
     height: var(--action-bar-height);
     min-width: 4rem;
   }
+
+  button.active {
+    background-color: green;
+  }
 }
