@@ -6,3 +6,11 @@ export function formatCoords(latitude, longitude) {
   const lonLabel = lon >= 0 ? "E" : "W";
   return `${lat} ${latLabel} ${lon} ${lonLabel}`;
 }
+
+export function formatHeading(degrees) {
+  if (degrees >= 0 && degrees <= 360) {
+    return `${degrees}°`;
+  } else {
+    return "";
+  }
+}

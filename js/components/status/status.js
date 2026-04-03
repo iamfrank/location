@@ -1,5 +1,5 @@
 import { on, get } from "../../modules/state.js";
-import { formatCoords } from "../../modules/format.js";
+import { formatCoords, formatHeading } from "../../modules/format.js";
 import { calculateDistanceAndHeading } from "../navigate/navigate.js";
 
 export class StatusBar extends HTMLElement {
@@ -19,7 +19,7 @@ export class StatusBar extends HTMLElement {
     this.innerHTML = `
       ${current ? `<dl><dt>pos</dt><dd>${formatCoords(current.latitude, current.longitude)}</dd></dl>` : ""}
       ${navigation?.from ? `<dl><dt>orig</dt><dd>${formatCoords(navigation.from.latitude, navigation.from.longitude)}</dd></dl>` : ""}
-      ${navigation?.to ? `<dl><dt>dest</dt><dd>${formatCoords(navigation.to.latitude, navigation.to.longitude)}</dd></dl>` : ""}
+      ${navigation?.to ? `<dl><dt>target</dt><dd>${formatCoords(navigation.to.latitude, navigation.to.longitude)}</dd></dl>` : ""}
       ${navigation?.from && navigation?.to ? this.renderDistanceAndHeading(navigation.from, navigation.to) : ""}
     `;
   }
@@ -27,7 +27,7 @@ export class StatusBar extends HTMLElement {
   renderDistanceAndHeading(from, to) {
     const { heading, distance } = calculateDistanceAndHeading(from, to);
     return `
-      <dl><dt>heading</dt><dd>${heading}</dd></dl>
+      <dl><dt>heading</dt><dd>${formatHeading(heading)}</dd></dl>
       <dl><dt>dist</dt><dd>${distance}</dd></dl>
     `;
   }
