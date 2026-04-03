@@ -60,6 +60,7 @@ dd {
 
 #main-tools {
   position: fixed;
+  z-index: 999;
   height: var(--action-bar-height);
   width: 100%;
   bottom: 0;
