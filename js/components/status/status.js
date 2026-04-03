@@ -1,6 +1,10 @@
 import { on, get } from "../../modules/state.js";
-import { formatCoords, formatHeading } from "../../modules/format.js";
-import { calculateDistanceAndHeading } from "../navigate/navigate.js";
+import {
+  formatCoords,
+  formatHeading,
+  formatDistance,
+  calculateDistanceAndHeading,
+} from "../../modules/utils.js";
 
 export class StatusBar extends HTMLElement {
   constructor() {
@@ -28,7 +32,7 @@ export class StatusBar extends HTMLElement {
     const { heading, distance } = calculateDistanceAndHeading(from, to);
     return `
       <dl><dt>heading</dt><dd>${formatHeading(heading)}</dd></dl>
-      <dl><dt>dist</dt><dd>${distance}</dd></dl>
+      <dl><dt>dist</dt><dd>${formatDistance(distance)}</dd></dl>
     `;
   }
 }

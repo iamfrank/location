@@ -1,7 +1,3 @@
-[popovertarget="aboutdialog"] {
-}
-
-#go-github svg {
-  width: 3rem;
-  height: 3rem;
+#aboutdialog {
+  padding: 1rem;
 }

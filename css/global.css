@@ -77,13 +77,3 @@ dd {
     min-width: 4rem;
   }
 }
-
-.locator-version {
-  position: fixed;
-  margin: 0;
-  z-index: 1000;
-  color: var(--bg);
-  font-size: 0.7rem;
-  bottom: 2.5rem;
-  left: 0.5rem;
-}

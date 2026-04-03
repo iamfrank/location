@@ -1,6 +1,6 @@
 import { saveLocation, deleteLocation, set, get } from "../../modules/state.js";
 import { getBFE } from "../../modules/matriklen.js";
-import { formatCoords } from "../../modules/format.js";
+import { formatCoords } from "../../modules/utils.js";
 
 // Define component
 export class LocationInfo extends HTMLElement {
