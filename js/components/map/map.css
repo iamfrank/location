@@ -15,6 +15,15 @@ leaflet-map {
   background-color: var(--color);
 }
 
+.leaflet-control-attribution {
+  background-color: hsl(0, 0%, 100%, 0.3) !important;
+}
 .leaflet-control-attribution a {
   color: var(--bg);
+}
+
+.leaflet-control-scale {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
 }

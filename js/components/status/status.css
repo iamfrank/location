@@ -5,6 +5,7 @@
   left: 0;
   height: auto;
   width: auto;
+  font-size: smaller;
 }
 
 .location-status dl {
