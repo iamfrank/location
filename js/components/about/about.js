@@ -24,7 +24,7 @@ export class AboutPage extends HTMLElement {
             target="_blank"
           >Check this out on Github</a>
         </p>
-        <p><small>v1.0.2</small></p>
+        <p><small>v1.0.3</small></p>
       </dialog>
     `;
   }

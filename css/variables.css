@@ -15,6 +15,7 @@
   --bg-transparent: hsla(0, 0%, 100%, 0.5);
 
   --accent: hsl(102, 100%, 20%);
+  --accent2: red;
 
   --action-bar-height: 2.5rem;
 }

@@ -1,7 +1,7 @@
 .navigation-display {
   position: fixed;
-  left: 0.5rem;
-  bottom: 4rem;
+  left: 0;
+  bottom: 2.5rem;
   z-index: 10;
   height: 10rem;
   width: 10rem;
@@ -31,12 +31,12 @@
 .navigation-display span {
   position: absolute;
   display: block;
-  width: 0.5rem;
+  width: 0.25rem;
   height: 2rem;
-  background-color: var(--accent);
+  background-color: var(--accent2);
   top: 0;
   left: 50%;
-  margin-left: -0.25rem;
+  margin-left: -0.125rem;
   text-indent: -1000rem;
   transform: rotate(0deg);
   transform-origin: 50% 5rem;
