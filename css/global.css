@@ -21,6 +21,17 @@ main {
   width: 100vw;
 }
 
+a,
+a:link,
+a:visited {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover,
+a:active {
+  background-color: var(--color-lightgreen);
+}
+
 button,
 .button {
   border: solid 2px transparent;
@@ -38,17 +49,6 @@ button,
     width: 1.5rem;
     height: auto;
   }
-}
-
-a,
-a:link,
-a:visited {
-  color: var(--accent);
-  text-decoration: none;
-}
-a:hover,
-a:active {
-  background-color: var(--color-lightgreen);
 }
 
 button:hover,
