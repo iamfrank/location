@@ -1,6 +1,37 @@
 import { on, set, get } from "../../modules/state.js";
 import { formatCoords } from "../../modules/format.js";
 
+/**
+ * Calculate distance (meters) and heading (degrees) between two WGS84 coordinate pairs.
+ */
+export function calculateDistanceAndHeading(from, to) {
+  const R = 6371e3; // Earth radius in meters
+  const lat1 = from.latitude;
+  const lon1 = from.longitude;
+  const lat2 = to.latitude;
+  const lon2 = to.longitude;
+  const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
+  const φ2 = (lat2 * Math.PI) / 180;
+  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+  // Haversine formula for distance
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = Math.round(R * c);
+
+  // Bearing formula
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x =
+    Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  let heading = (Math.atan2(y, x) * 180) / Math.PI;
+  heading = Math.round((heading + 360) % 360); // Normalize to 0-360
+
+  return { distance, heading };
+}
+
 export class LocationNavigator extends HTMLElement {
   constructor() {
     super();
@@ -22,7 +53,7 @@ export class LocationNavigator extends HTMLElement {
 
   render(trackingData) {
     if (trackingData.active && trackingData.to && trackingData.from) {
-      const result = this.calculateDistanceAndHeading(
+      const result = calculateDistanceAndHeading(
         trackingData.from,
         trackingData.to,
       );
@@ -70,36 +101,5 @@ export class LocationNavigator extends HTMLElement {
     } else {
       return `${meters} m`;
     }
-  }
-
-  /**
-   * Calculate distance (meters) and heading (degrees) between two WGS84 coordinate pairs.
-   */
-  calculateDistanceAndHeading(from, to) {
-    const R = 6371e3; // Earth radius in meters
-    const lat1 = from.latitude;
-    const lon1 = from.longitude;
-    const lat2 = to.latitude;
-    const lon2 = to.longitude;
-    const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
-    const φ2 = (lat2 * Math.PI) / 180;
-    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-    // Haversine formula for distance
-    const a =
-      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = Math.round(R * c);
-
-    // Bearing formula
-    const y = Math.sin(Δλ) * Math.cos(φ2);
-    const x =
-      Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
-    let heading = (Math.atan2(y, x) * 180) / Math.PI;
-    heading = Math.round((heading + 360) % 360); // Normalize to 0-360
-
-    return { distance, heading };
   }
 }

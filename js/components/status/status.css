@@ -8,11 +8,15 @@
   font-size: smaller;
 }
 
+.location-status dl {
+  margin: 0 0 0.125rem 0;
+}
+
 .location-status dt,
 .location-status dd {
   background-color: hsla(0, 0%, 0%, 0.4);
   color: var(--color);
-  padding: 0.25rem 0.5rem;
+  padding: 0.125rem 0.5rem;
   width: auto;
   display: inline-block;
 }
