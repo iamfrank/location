@@ -19,7 +19,7 @@ export class LocationLocator extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <button title="Locate my position">
+      <button title="Locate my position" class="popover-btn">
         <img src="./img/pin.svg" />
       </button>
     `;

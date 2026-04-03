@@ -4,4 +4,11 @@ button[title="Close"] {
   right: 0;
   height: 2.5rem;
   width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button[title="Close"]::after {
+  content: "✕";
 }

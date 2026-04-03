@@ -19,7 +19,7 @@ export class LocationList extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <button title="List locations" popovertarget="locationlist" popovertargetaction="show">
+      <button class="popover-btn" title="List locations" popovertarget="locationlist" popovertargetaction="show">
         <img src="./img/list.svg" />
       </button>
       <dialog popover id="locationlist">

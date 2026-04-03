@@ -9,7 +9,7 @@ export class AboutPage extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <button popovertarget="aboutdialog" title="About this app">?</button>
+      <button popovertarget="aboutdialog" title="About this app" class="popover-btn">?</button>
       <dialog id="aboutdialog" popover>
         <button-close for="aboutdialog"></button-close>
         <p>A web application to track and display geolocations by <a href="https://iamfrank.github.io">Iamfrank</a>.</p>

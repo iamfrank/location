@@ -65,7 +65,7 @@ dd {
   align-items: stretch;
   justify-content: space-around;
 
-  button {
+  button.popover-btn {
     height: 2.5rem;
     min-width: 4rem;
   }

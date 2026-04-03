@@ -27,14 +27,7 @@ export class LocationInfo extends HTMLElement {
 
   async render(location_data) {
     this.innerHTML = `
-      <button class="btn-close" title="Close">
-        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g stroke="black" stroke-width="2" stroke-linejoin="round">
-            <path d="M18 6L6 18" />
-            <path d="M6 6L18 18" />
-          </g>
-        </svg>
-      </button>
+      <button title="Close"></button>
       <article>
         ${location_data.title ? `<h3>${location_data.title}</h3>` : ""}
         <p class="coordinates">
@@ -69,7 +62,7 @@ export class LocationInfo extends HTMLElement {
     `;
 
     this.addEventListener("click", (event) => {
-      if (event.target.closest(".btn-close")) {
+      if (event.target.closest('[title="Close"]')) {
         this.remove();
       } else if (event.target.className === "btn-save-location") {
         let title = prompt("Save location as:");

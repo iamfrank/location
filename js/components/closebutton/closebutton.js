@@ -9,7 +9,7 @@ export class CloseButton extends HTMLElement {
 
   render(targetId) {
     this.innerHTML = `
-      <button title="Close" popovertarget="${targetId}" popovertargetaction="hide">✖</button>
+      <button title="Close" popovertarget="${targetId}" popovertargetaction="hide"></button>
     `;
   }
 }
