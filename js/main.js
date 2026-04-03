@@ -7,6 +7,7 @@ import { LocationLocator } from "./components/locate/locate.js";
 import { StatusBar } from "./components/status/status.js";
 import { LocationNavigator } from "./components/navigate/navigate.js";
 import { AboutPage } from "./components/about/about.js";
+import { CloseButton } from "./components/closebutton/closebutton.js";
 import { get, loadLocations } from "./modules/state.js";
 
 // Init web components
@@ -18,6 +19,7 @@ customElements.define("location-status", StatusBar);
 customElements.define("location-locator", LocationLocator);
 customElements.define("location-navigator", LocationNavigator);
 customElements.define("location-about", AboutPage);
+customElements.define("button-close", CloseButton);
 
 // Show saved locations in map on page load
 window.addEventListener("load", function () {

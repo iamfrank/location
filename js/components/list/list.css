@@ -1,22 +1,9 @@
 location-list {
   button[popovertargetaction] {
-    position: fixed;
-    z-index: 3;
-
     img {
-      width: 1.5rem;
+      width: 1rem;
       height: auto;
     }
-  }
-
-  button[popovertargetaction="show"] {
-    right: 1rem;
-    bottom: 1rem;
-  }
-
-  button[popovertargetaction="hide"] {
-    top: 1rem;
-    right: 1rem;
   }
 
   #locationlist {

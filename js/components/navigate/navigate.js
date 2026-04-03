@@ -27,7 +27,8 @@ export class LocationNavigator extends HTMLElement {
         trackingData.to,
       );
       this.innerHTML = `
-        <section class="navigator">
+        <dialog id="navigator" popover>
+          <button-close for="navigator"></button-close>
           <figure>
             <img src="./img/compass.svg" alt="">
             <span class="pointer" style="transform: rotate(${result.heading}deg);"></span>
@@ -48,7 +49,7 @@ export class LocationNavigator extends HTMLElement {
             <dd>${formatCoords(trackingData.from.latitude, trackingData.from.longitude)}</dd>
           </dl>
           <button class="track-stop">Stop tracking</button>
-        </section>
+        </dialog>
       `;
       this.querySelector(".track-stop").addEventListener("click", () => {
         set("navigate", {

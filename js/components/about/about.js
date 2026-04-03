@@ -11,7 +11,7 @@ export class AboutPage extends HTMLElement {
     this.innerHTML = `
       <button popovertarget="aboutdialog" title="About this app">?</button>
       <dialog id="aboutdialog" popover>
-        <button class="close">X</button>
+        <button-close for="aboutdialog"></button-close>
         <p>A web application to track and display geolocations by <a href="https://iamfrank.github.io">Iamfrank</a>.</p>
         <p>
           <a
@@ -31,9 +31,5 @@ export class AboutPage extends HTMLElement {
         </p>
       </dialog>
     `;
-
-    this.querySelector(".close").addEventListener("click", () => {
-      this.querySelector("[popover]").hidePopover();
-    });
   }
 }

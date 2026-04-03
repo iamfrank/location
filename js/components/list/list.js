@@ -22,14 +22,12 @@ export class LocationList extends HTMLElement {
       <button title="List locations" popovertarget="locationlist" popovertargetaction="show">
         <img src="./img/list.svg" />
       </button>
-      <div popover id="locationlist">
-        <button title="Close" popovertarget="locationlist" popovertargetaction="hide">
-          X
-        </button>
+      <dialog popover id="locationlist">
+        <button-close for="locationlist"></button-close>
         <ul>
           ${this.renderListItems(this.locations)}
         </ul
-      </div>
+      </dialog>
     `;
   }
 

@@ -1,8 +1,10 @@
 leaflet-map {
   position: fixed;
+  display: block;
   top: 0;
   left: 0;
-  height: 100%;
+  right: 0;
+  height: calc(100vh - 2.5rem);
   width: 100%;
   z-index: 1;
 }

@@ -1,8 +1,4 @@
 [popovertarget="aboutdialog"] {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 100;
 }
 
 #go-github svg {

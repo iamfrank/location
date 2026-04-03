@@ -1,0 +1,19 @@
+:root {
+  --color-blue: #aad3df;
+  --color-darkgreen: #235a0c;
+  --color-mediumgreen: #add19e;
+  --color-lightgreen: #cdebb0;
+  --color-lightgrey: #f2efe9;
+
+  --color: #fff;
+  --color-1: #ddd;
+  --color-3: #bbb;
+  --color-5: #999;
+  --color-7: #666;
+  --color-9: #333;
+  --bg: #000;
+
+  --accent: #ffaa66;
+
+  --action-bar-height: 3rem;
+}
